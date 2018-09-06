@@ -12,12 +12,19 @@ we allowed ourselves to freely incorporate references to other media as well.
 ### Concept
 
 When using the term zero-player game, we refer to a specific definition
-where the human player has no _direct_ influence on the actions of game characters;
-the latter may progress with no user interaction at all past their creation.
+where the involvement of a human player is not _necessary_ for the game
+characters to develop. The [role of the player](#players-role) is therefore
+to _speed up_ the progress, not enable it in the first place.
 
-Multiple players coexist in the same world. __The way players interact is yet to be discussed__.
+The game experience is more comparable to brief interactions
+with a news feed rather than conventional drawn-out game sessions.
+The interface is text-based, and [the character's diary](#diary) plays
+an important role in keeping the player up to date with ongoing developments.
 
-The interface is text-based.
+The player's interest is constantly piqued by new gameplay mechanics
+being unlocked and further possibilities being hinted at. Furthermore,
+the exact kind of [controls available](#players-controls) changes
+from time to time.
 
 ### Setting
 
@@ -31,49 +38,44 @@ got attendance to keep up.
 ### Player's Role
 
 The player takes up a role of a _ghost_, a supernatural entity that is
-assigned to every student who enrolls in the school. Some can be likened to
-guarding angels, while others are more of personal demonds — that depends on
-the player's wishes.
+assigned to every student who enrolls in the school. Ghosts can be likened
+to guardian angels, although their motives may be less than pure — and that
+is up to the player.
 
-A ghost can't physically control the student, but it can affect the environment.
-If the ghost gets lucky, the student will pick subtle clues and follow them,
-attributing their successes to intuition and luck. At the same time, there is
-no guarantee that the actions of the ghost will get noticed at all.
+Try as it might, a ghost can never physically control its student.
+This is where owls come to the rescue...
 
 ### Player's Controls
 
-__(The controls are yet to be designed).__ There are several requirements:
+Inside tiny cages scattered around the building, countless owls are
+kept in captivity by monsters of the hallways. Students free them out of the
+goodness of their hearts, not awaiting anything in return — perhaps
+they simply empathize with how bleak life in captivity is.
 
-Firstly, they need to be abstract enough to suit all game situations without
-the need for manual relabelling. Think of how choices are presented in visual
-novels as an example of what we _do not_ want: they are specific to a
-particular location, character, time, etc.
+Owls, being creatures of dignity, always repay the favor to the student's
+ghost. Some of them are, for example, natural healers, and the ghost may take
+advantage of that to save the student from a particularly nasty monster.
 
-Secondly, performing a certain action needs to have an element of surprise
-and randomness to it. The player should never be completely certain
-of the outcome (otherwise, we risk making the gameplay dull and repetitive),
-but at the same time, the actions should carry enough meaning so that
-choosing the "right" one is quite possible.
+An owl only helps once, so the ghost must be careful not to spend the favors
+on gratuitous whims.
 
 ### Game Progression
 
 Every student has to get through 7 years of tough subjects, strict teachers,
-and dangerous creatures of the hallways... On top of that, advancing to the
-next year takes more than remaining alive: each subject in the study plan
-needs to be passed. Passing is directly linked to attendance __(what happens
-when the requirement is not met is yet to be discussed)__.
+and dangerous creatures of the hallways... On top of that, [advancing to the
+next year](#levelling-up) takes more than remaining alive.
 
 Students get better at beating the monsters when moving from classroom
 to classroom by discovering new spells and finding information about specific
 creatures from _books_ available in the school library. The library is very
-strict about who can touch its catalog, though (see the
-[Acquiring Books](#acquiring-books) section).
+[strict about who can touch its catalog](#acquiring-books), though.
 
 Studying and slaying monsters eventually becomes a daily routine, and to keep
-students from getting bored, teachers organize various events __(the exact
-nature of events is yet to be discussed)__.
+students from getting bored, teachers organize various [events](#events).
 
 ## Mechanics
+
+### Diary
 
 ### Character Creation
 
