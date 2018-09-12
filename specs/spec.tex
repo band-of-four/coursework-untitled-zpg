@@ -1,0 +1,111 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[a4paper, includeheadfoot, mag=1000, left=2cm, right=1.5cm, top=1.5cm, bottom=1.5cm, headsep=0.8cm, footskip=0.8cm]{geometry}
+% Fonts
+\usepackage{fontspec, unicode-math}
+\setmainfont[Ligatures=TeX]{CMU Serif}
+\setmonofont{CMU Typewriter Text}
+\usepackage[english, russian]{babel}
+% Indent first paragraph
+\usepackage{indentfirst}
+\setlength{\parskip}{5pt}
+% Page headings
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{16pt}
+\newfontfamily\namefont[Scale=1.2]{Gloria Hallelujah}
+\fancyhead{}
+
+\begin{document}
+
+% Title page
+\include{spectitlepage}
+
+% Table of contents
+\begin{center}
+{\namefont\huge Sumaju nikki}\\[6mm]
+\textsc{Браузерная многопользовательская текстовая игра\\
+жанра Zero-Player Game}
+\vspace{4mm}
+\end{center}
+\tableofcontents
+\newpage
+
+% Contents
+\fancyhead[R]{\namefont Sumaju nikki}
+
+\section{Введение}
+
+Предметом разработки является платформа для многопользовательской текстовой игры
+жанра \textit{Zero-Player Game (ZPG)}, использующая браузерный интерфейс и
+сохраняющая прогресс игрока на игровом сервере.
+
+В основе жанра лежит концепция протекания игрового процесса
+без вмешательства со стороны пользователя. При этом игроку предоставляются
+возможности ускорения своего игрового прогресса и
+взаимодействия с другими пользователями.
+
+Предполагается, что взаимодействие с платформой будет представлять собой
+не длинные сессии, свойственные традиционным играм, а короткие, но частые
+посещения, характерные для социальных сетей.
+
+\subsection{Цель создания}
+
+Платформа разрабатывается с целью предоставления творческим молодым людям
+возможности самовыражения в игровой форме. Платформа предоставляет набор
+базовых игровых механик, в то время как содержательная часть создается
+самими пользователями.
+
+\subsection{Целевая аудитория}
+
+...
+
+\section{Требования к аппаратно-программному обеспечению}
+
+\subsection{Требования к серверному обеспечению}
+
+Система, которая обеспечивает выполнение программных продуктов сервера приложений
+и хранение данных платформы, должна отвечать следующим требованиям:
+
+\begin{itemize}
+\item Поддержка операционной системой бинарного интерфейса приложений (ABI) Linux
+\item Наличие сервера баз данных PostgreSQL версии 9.6 и выше
+\end{itemize}
+
+\subsection{Требования к клиентскому обеспечению}
+
+Браузерный интерфейс разрабатывается с учетом следующих требований к
+программному обеспечению на стороне пользователя:
+
+\begin{itemize}
+\item веб-браузер Google Chrome версии 67 и выше или
+Mozilla Firefox версии 61 и выше c включенным интерпретатором сценариев JavaScript,
+\item отсутствие запрета веб-страницам платформы доступа к внешним ресурсам,
+а именно изображениям, шрифтам, таблицам стилей CSS и сценариям JavaScript,
+в том числе блокировщиками рекламы.
+\end{itemize}
+
+\section{Технические особенности проектирования системы}
+
+\subsection{Глоссарий}
+
+\textbf{Уровень back-end} — серверное приложение, с которым взаимодействует
+пользовательский интерфейс игры. Уровень back-end обеспечивает хранение данных,
+расчет игровых процессов, взаимодействие между пользователями.
+
+\textbf{Уровень front-end} — браузерное приложение, которое реализует
+пользовательский интерфейс игры. Уровень front-end включает в себя
+HTML-страницы, сценарии JavaScript, таблицы стилей CSS.
+
+\subsection{Список требований}
+
+\begin{enumerate}
+\item Уровень front-end реализуется с использованием фреймворка Vue.js
+\item Уровень back-end реализуется с использованием фреймворков Akka и Play
+на платформе JVM
+\item Взаимодействие между уровнями front-end и back-end организовано
+посредством REST API
+
+\end{enumerate}
+
+\end{document}
