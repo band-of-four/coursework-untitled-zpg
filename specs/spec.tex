@@ -15,6 +15,28 @@
 \setlength{\headheight}{16pt}
 \newfontfamily\namefont[Scale=1.2]{Gloria Hallelujah}
 \fancyhead{}
+% Use case template
+\newcommand{\uctitle}[1]{\renewcommand{\givenuctitle}{#1}}
+\newcommand{\givenuctitle}{Не указано}
+\newcommand{\ucgoal}[1]{\renewcommand{\givenucgoal}{#1}}
+\newcommand{\givenucgoal}{Не указано}
+\newcommand{\ucscenario}[1]{\renewcommand{\givenucscenario}{#1}}
+\newcommand{\givenucscenario}{\item Не указано}
+\newcommand{\ucextensions}[1]{\renewcommand{\givenucextensions}{#1}}
+\newcommand{\givenucextensions}{\item Не указано}
+\newenvironment{usecase}{}{
+  \noindent\fbox{
+    \parbox{0.98\textwidth}{
+      \vspace{2mm}
+      \textbf{\large \givenuctitle}\\[3mm]
+      \textbf{Цель:} \givenucgoal\\[2mm]
+      \textbf{Главный успешный сценарий:}
+      \begin{enumerate}\givenucscenario\end{enumerate}
+      \textbf{Расширения:}
+      \begin{itemize}\givenucextensions\end{itemize}
+    }
+  }
+}
 
 \begin{document}
 
@@ -63,6 +85,31 @@
 активные пользователи интернета. Не имеют времени/желания проводить много
 времени за игрой в компьютерные игры, ищут более подходящего под свой стиль
 жизни формата.
+
+\section{Прецеденты использования}
+
+\begin{usecase}
+\uctitle{Регистрация}
+\ucgoal{Завести аккаунт в cистеме создать персонажа}
+\ucscenario{
+  \item Незарегестрированный пользователь открывает любую страницу платформы.
+  \item Система перенаправляет пользователя на главную страницу
+    с формой регистрации.
+  \item Пользователь вводит адрес электронной почты и пароль, отправляет форму.
+  \item Система создает аккаунт и перенаправляет пользователя на страницу
+    создания персонажа.
+  \item Пользователь указывает имя и пол персонажа, опционально загружает картинку,
+    отправляет форму.
+  \item Система авторизует пользователя.
+}
+\ucextensions{
+  \item На шаге 3 пользователю предоставляется возможность авторизоваться, используя
+    аккаунт социальной сети.
+  \item На шаге 4 в случае возникновения ошибки (адрес электронной почты уже
+    используется, пароль содержит менее восьми символов) пользователь видит
+    ошибку в форме.
+}
+\end{usecase}
 
 \section{Требования к аппаратно-программному обеспечению}
 
