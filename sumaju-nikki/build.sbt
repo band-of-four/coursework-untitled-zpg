@@ -5,7 +5,15 @@ version := "1.0.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.7"
 
-libraryDependencies += guice
+/* Database */
+libraryDependencies ++= Seq(
+  jdbc,
+  evolutions,
+  "org.postgresql" % "postgresql" % "42.2.5",
+  "io.getquill" %% "quill-jdbc" % "2.5.4"
+)
+
+/* Testing */
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
