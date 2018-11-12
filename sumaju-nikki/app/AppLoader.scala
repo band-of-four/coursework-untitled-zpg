@@ -20,7 +20,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
                                   with _root_.controllers.AssetsComponents {
   applicationEvolutions
 
-  lazy val db = new _root_.db.DbCtx(SnakeCase, "default")
+  lazy val db = new _root_.db.DbCtx(SnakeCase, "db.default.hikaricp")
 
   lazy val users = new _root_.models.Users(db)
 
