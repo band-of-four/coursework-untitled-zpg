@@ -14,9 +14,12 @@ class AppLoader extends ApplicationLoader {
 
 class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
                                   with play.api.db.DBComponents
+                                  with play.api.db.evolutions.EvolutionsComponents
                                   with play.api.db.HikariCPComponents
                                   with play.filters.HttpFiltersComponents
                                   with _root_.controllers.AssetsComponents {
+  applicationEvolutions
+
   lazy val db = new _root_.db.DbCtx(SnakeCase, "default")
 
   lazy val users = new _root_.models.Users(db)

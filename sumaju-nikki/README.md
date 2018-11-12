@@ -20,6 +20,5 @@ psql -U postgres -c "CREATE ROLE nikki WITH LOGIN PASSWORD 'nikki' CREATEDB;"
 ## Running the app
 
 ```bash
-sbt
-> run
+sbt run
 ```
