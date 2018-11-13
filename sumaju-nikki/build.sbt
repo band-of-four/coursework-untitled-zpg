@@ -18,7 +18,12 @@ libraryDependencies ++= Seq(
 )
 
 /* Auth */
-libraryDependencies += "com.mohiva" %% "play-silhouette" % "5.0.6"
+val silhouetteVersion = "5.0.6"
+libraryDependencies ++= Seq(
+  "com.mohiva" %% "play-silhouette" % silhouetteVersion,
+  "com.mohiva" %% "play-silhouette-persistence" % silhouetteVersion,
+  "com.mohiva" %% "play-silhouette-password-bcrypt" % silhouetteVersion
+)
 
 /* Testing */
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test

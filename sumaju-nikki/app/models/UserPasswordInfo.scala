@@ -1,0 +1,66 @@
+package models
+
+import com.mohiva.play.silhouette.api.LoginInfo
+import com.mohiva.play.silhouette.api.util.PasswordInfo
+import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
+
+import scala.concurrent.{ExecutionContext, Future}
+import db.DbCtx
+
+case class UserPasswordInfo(infoId: Long, hasher: String, password: String, salt: Option[String])
+
+class UserPasswordInfoDao(val db: DbCtx,
+                          val loginInfoDao: UserLoginInfoDao,
+                          implicit val ec: ExecutionContext) extends DelegableAuthInfoDAO[PasswordInfo] {
+  import db._
+
+  private val schema = quote(querySchema[UserPasswordInfo]("user_password_info"))
+
+  override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = Future {
+    run(
+      schema
+        .join(query[UserLoginInfo])
+        .on((pi, li) => pi.infoId == li.id)
+        .map(_._1)
+    )
+      .headOption
+      .map(r => PasswordInfo(r.hasher, r.password, r.salt))
+  }
+
+  override def add(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] =
+    loginInfoDao.findIdByLoginInfo(li).value.map(_.get).flatMap { liId => Future {
+      run(schema.insert(lift(UserPasswordInfo(liId, pi.hasher, pi.password, pi.salt))))
+      pi
+    }}
+
+  override def update(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] =
+    loginInfoDao.findIdByLoginInfo(li).value.map(_.get).flatMap { liId => Future {
+      run(
+        schema
+          .filter(_.infoId == lift(liId))
+          .update(_.hasher -> lift(pi.hasher),
+                  _.password -> lift(pi.password),
+                  _.salt -> lift(pi.salt))
+      )
+      pi
+    }}
+
+  override def save(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] =
+    loginInfoDao.findIdByLoginInfo(li).value.map(_.get).flatMap { liId => Future {
+      run(
+        schema
+          .insert(lift(UserPasswordInfo(liId, pi.hasher, pi.password, pi.salt)))
+          .onConflictUpdate(_.infoId)(
+            (r, _) => r.hasher -> lift(pi.hasher),
+            (r, _) => r.password -> lift(pi.password),
+            (r, _) => r.salt -> lift(pi.salt))
+      )
+      pi
+    }}
+
+  override def remove(li: LoginInfo): Future[Unit] = {
+    loginInfoDao.findIdByLoginInfo(li).value.map(_.get).flatMap { liId => Future {
+      run(schema.filter(_.infoId == lift(liId)).delete)
+    }}
+  }
+}
