@@ -31,6 +31,9 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val userDao = new _root_.models.UserDao(db, dbExecCtx)
   lazy val userLoginInfoDao = new _root_.models.UserLoginInfoDao(db, dbExecCtx)
 
+  lazy val userService = new _root_.services.UserService(
+    userDao, userLoginInfoDao, db, dbExecCtx, configuration)
+
   lazy val homeController = new _root_.controllers.HomeController(controllerComponents)
 
   lazy val router: Router = new _root_.router.Routes(httpErrorHandler, homeController, assets)

@@ -7,6 +7,9 @@ import play.api.{Application, ApplicationLoader, Configuration, Environment}
 import play.api.inject.DefaultApplicationLifecycle
 import play.core.DefaultWebCommands
 
+import scala.concurrent.{Await, Awaitable}
+import scala.concurrent.duration._
+
 package object test {
   trait AppFactory extends FakeApplicationFactory {
     override def fakeApplication: Application = {
@@ -24,6 +27,9 @@ package object test {
 
   trait DataSpec extends PlaySpec with OneAppPerSuiteWithComponents with AppFactory with BeforeAndAfterAll {
     override def components = new AppComponents(context)
+
+    def await[T](awaitable: Awaitable[T]): T =
+      Await.result(awaitable, 500 millis)
 
     override protected def beforeAll(): Unit = {
       val conn = components.dbApi.database("default").getConnection()

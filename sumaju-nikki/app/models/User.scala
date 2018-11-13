@@ -5,7 +5,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import db.DbCtx
 import utils.FutureOption
 
-case class User(id: Long, email: String) extends Identity
+case class User(email: String, id: Long = -1) extends Identity
 
 class UserDao(val db: DbCtx, implicit val ec: ExecutionContext) {
   import db._

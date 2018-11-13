@@ -19,7 +19,8 @@ create unique index user_login_info_provider_idx on
   user_login_info (provider_id, provider_key);
 
 create table user_password_info (
-  login_info_id bigint not null references user_login_info (id),
+  info_id bigint not null references user_login_info (id),
+  hasher text not null,
   password text not null,
   salt text
 );

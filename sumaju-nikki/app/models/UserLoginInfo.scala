@@ -8,7 +8,9 @@ import utils.FutureOption
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class UserLoginInfo(userId: Long, providerId: String, providerKey: String, id: Long = 0)
+case class UserLoginInfo(userId: Long, providerId: String, providerKey: String, id: Long = -1) {
+  def toLoginInfo: LoginInfo = LoginInfo(providerId, providerKey)
+}
 
 class UserLoginInfoDao(val db: DbCtx, implicit val ec: ExecutionContext) {
   import db._
@@ -19,8 +21,15 @@ class UserLoginInfoDao(val db: DbCtx, implicit val ec: ExecutionContext) {
     new UserPasswordInfoDao(db, this, ec)
   )
 
-  def create(li: UserLoginInfo): Future[UserLoginInfo] = Future {
-    li.copy(id = run(schema.insert(lift(li)).returning(_.id)))
+  def create(uli: UserLoginInfo): Future[UserLoginInfo] = Future {
+    uli.copy(id = run(schema.insert(lift(uli)).returning(_.id)))
+  }
+
+  def createForUser(user: User, li: LoginInfo): Future[UserLoginInfo] =
+    create(UserLoginInfo(user.id, li.providerID, li.providerKey))
+
+  def findByUserId(userId: Long): FutureOption[UserLoginInfo] = Future {
+    run(schema.filter(_.userId == lift(userId))).headOption
   }
 
   def findByLoginInfo(li: LoginInfo): FutureOption[UserLoginInfo] = Future {
