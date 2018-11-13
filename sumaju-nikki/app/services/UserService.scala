@@ -7,9 +7,15 @@ import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import models.{User, UserDao, UserLoginInfoDao}
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
 import db.DbCtx
+import org.postgresql.util.PSQLException
 import play.api.Configuration
+import services.UserService.EmailAlreadyTakenException
 
 import scala.concurrent.{ExecutionContext, Future}
+
+object UserService {
+  class EmailAlreadyTakenException extends RuntimeException
+}
 
 class UserService(val userDao: UserDao,
                   val loginInfoDao: UserLoginInfoDao,
@@ -20,24 +26,29 @@ class UserService(val userDao: UserDao,
   private val bcryptRounds = config.get[Int]("auth.bcrypt-rounds")
   private val passwordRegistry = PasswordHasherRegistry(new BCryptPasswordHasher(bcryptRounds))
 
-  override def retrieve(li: LoginInfo): Future[Option[User]] =
+  override def retrieve(li: LoginInfo): Future[Option[User]] = Future {
     for {
       userId <- loginInfoDao.findUserIdByLoginInfo(li)
       user <- userDao.findById(userId)
     } yield user
+  }
 
-  def saveWithPassword(user: User, password: String): Future[User] = Future {
-    db.transaction {
+  def saveWithPassword(newUser: User, password: String): Future[User] =
+    Future {
       val passwordInfo = passwordRegistry.current.hash(password)
-      for {
-        user <- userDao.create(user)
-        userLoginInfo <- loginInfoDao.createForUser(
-          user, LoginInfo(CredentialsProvider.ID, user.email)
-        )
-        authInfo <- loginInfoDao.repository.add(
-          userLoginInfo.toLoginInfo, passwordInfo
-        )
-      } yield user
+      db.transaction {
+        val user = userDao.create(newUser)
+        val userLoginInfo = loginInfoDao.createForUser(
+          user, LoginInfo(CredentialsProvider.ID, user.email))
+        val authInfo = loginInfoDao.repository.add(
+          userLoginInfo.toLoginInfo, passwordInfo)
+        user
+      }
+    } recoverWith {
+      case e: PSQLException =>
+        if (e.getMessage.startsWith("ERROR: duplicate key value"))
+          Future.failed(new EmailAlreadyTakenException())
+        else
+          Future.failed(e)
     }
-  }.flatten
 }

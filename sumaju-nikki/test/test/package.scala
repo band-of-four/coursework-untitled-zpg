@@ -29,7 +29,7 @@ package object test {
     override def components = new AppComponents(context)
 
     def await[T](awaitable: Awaitable[T]): T =
-      Await.result(awaitable, 500 millis)
+      Await.result(awaitable, 10 minutes)
 
     override protected def beforeAll(): Unit = {
       val conn = components.dbApi.database("default").getConnection()

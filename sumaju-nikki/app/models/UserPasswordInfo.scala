@@ -27,40 +27,41 @@ class UserPasswordInfoDao(val db: DbCtx,
       .map(r => PasswordInfo(r.hasher, r.password, r.salt))
   }
 
-  override def add(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] =
-    loginInfoDao.findIdByLoginInfo(li).value.map(_.get).flatMap { liId => Future {
-      run(schema.insert(lift(UserPasswordInfo(liId, pi.hasher, pi.password, pi.salt))))
-      pi
-    }}
+  override def add(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] = Future {
+    val liId = loginInfoDao.findIdByLoginInfo(li).get
+    run(
+      schema.insert(lift(UserPasswordInfo(liId, pi.hasher, pi.password, pi.salt)))
+    )
+    pi
+  }
 
-  override def update(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] =
-    loginInfoDao.findIdByLoginInfo(li).value.map(_.get).flatMap { liId => Future {
-      run(
-        schema
-          .filter(_.infoId == lift(liId))
-          .update(_.hasher -> lift(pi.hasher),
-                  _.password -> lift(pi.password),
-                  _.salt -> lift(pi.salt))
+  override def update(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] = Future {
+    val liId = loginInfoDao.findIdByLoginInfo(li).get
+    run(
+      schema
+        .filter(_.infoId == lift(liId))
+        .update(_.hasher -> lift(pi.hasher),
+          _.password -> lift(pi.password),
+          _.salt -> lift(pi.salt))
       )
-      pi
-    }}
+    pi
+  }
 
-  override def save(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] =
-    loginInfoDao.findIdByLoginInfo(li).value.map(_.get).flatMap { liId => Future {
-      run(
-        schema
-          .insert(lift(UserPasswordInfo(liId, pi.hasher, pi.password, pi.salt)))
-          .onConflictUpdate(_.infoId)(
-            (r, _) => r.hasher -> lift(pi.hasher),
-            (r, _) => r.password -> lift(pi.password),
-            (r, _) => r.salt -> lift(pi.salt))
-      )
-      pi
-    }}
+  override def save(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] = Future {
+    val liId = loginInfoDao.findIdByLoginInfo(li).get
+    run(
+      schema
+        .insert(lift(UserPasswordInfo(liId, pi.hasher, pi.password, pi.salt)))
+        .onConflictUpdate(_.infoId)(
+          (r, _) => r.hasher -> lift(pi.hasher),
+          (r, _) => r.password -> lift(pi.password),
+          (r, _) => r.salt -> lift(pi.salt))
+    )
+    pi
+  }
 
-  override def remove(li: LoginInfo): Future[Unit] = {
-    loginInfoDao.findIdByLoginInfo(li).value.map(_.get).flatMap { liId => Future {
-      run(schema.filter(_.infoId == lift(liId)).delete)
-    }}
+  override def remove(li: LoginInfo): Future[Unit] = Future {
+    val liId = loginInfoDao.findIdByLoginInfo(li).get
+    run(schema.filter(_.infoId == lift(liId)).delete)
   }
 }

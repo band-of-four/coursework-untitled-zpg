@@ -28,7 +28,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
 
   lazy val dbExecCtx = new _root_.db.DbExecutionContext(actorSystem, "db.default.executor")
 
-  lazy val userDao = new _root_.models.UserDao(db, dbExecCtx)
+  lazy val userDao = new _root_.models.UserDao(db)
   lazy val userLoginInfoDao = new _root_.models.UserLoginInfoDao(db, dbExecCtx)
 
   lazy val userService = new _root_.services.UserService(
