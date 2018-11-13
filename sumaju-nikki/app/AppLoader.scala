@@ -1,7 +1,10 @@
+import java.io.Closeable
+
 import play.api._
 import play.api.ApplicationLoader.Context
 import play.api.routing.Router
 import io.getquill._
+import javax.sql.DataSource
 
 class AppLoader extends ApplicationLoader {
   private var components: AppComponents = _
@@ -20,9 +23,13 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
                                   with _root_.controllers.AssetsComponents {
   applicationEvolutions
 
-  lazy val db = new _root_.db.DbCtx(SnakeCase, "db.default.hikaricp")
+  lazy val db = new _root_.db.DbCtx(SnakeCase,
+    dbApi.database("default").dataSource.asInstanceOf[DataSource with Closeable])
 
-  lazy val users = new _root_.models.Users(db)
+  lazy val dbExecCtx = new _root_.db.DbExecutionContext(actorSystem, "db.default.executor")
+
+  lazy val users = new _root_.models.UserDao(db)
+  lazy val loginInfos = new _root_.models.LoginInfoDao(db, dbExecCtx)
 
   lazy val homeController = new _root_.controllers.HomeController(controllerComponents)
 

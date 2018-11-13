@@ -1,23 +1,21 @@
 import org.scalatest.Matchers._
 import com.mohiva.play.silhouette.api.LoginInfo
-import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.components.OneAppPerSuiteWithComponents
-import models.LoginInfos
 
-class UserDaoTest extends PlaySpec with OneAppPerSuiteWithComponents with test.AppFactory {
-  override def components = new AppComponents(context)
+import scala.concurrent.Await.result
+import scala.concurrent.duration._
 
+class UserDaoTest extends test.DataSpec {
   "UserDao" should {
     "find a user by their LoginInfo" in {
-      val loginInfos = new LoginInfos(components.db)
+      val liDao = components.loginInfos
 
-      var res = loginInfos.find(new LoginInfo("id", "key"))
-      res shouldBe None
+      result(liDao.find(new LoginInfo("id", "key")), 500 millis) shouldBe None
+      result(liDao.create(new LoginInfo("id", "key")), 500 millis) should not be None
 
-      loginInfos.create(new LoginInfo("id", "key"))
-      res = loginInfos.find(new LoginInfo("id", "key"))
-      res.map(_.providerID) shouldBe Some("id")
-      res.map(_.providerKey) shouldBe Some("key")
+      val fetched = result(liDao.find(new LoginInfo("id", "key")), 500 millis).orNull
+      fetched should not be null
+      fetched.providerID shouldBe "id"
+      fetched.providerKey shouldBe "key"
     }
   }
 }
