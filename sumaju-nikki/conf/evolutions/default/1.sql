@@ -4,7 +4,7 @@
 
 create table users (
   id bigserial primary key,
-  email text not null,
+  email text,
   is_activated boolean default false
 );
 

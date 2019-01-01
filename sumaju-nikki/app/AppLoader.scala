@@ -4,9 +4,8 @@ import play.api._
 import play.api.ApplicationLoader.Context
 import play.api.routing.Router
 import io.getquill._
-import com.mohiva.play.silhouette.api.Silhouette
 import javax.sql.DataSource
-import utils.auth.{CookieAuthEnv, SilhouetteLoader}
+import utils.auth.SilhouetteLoader
 
 class AppLoader extends ApplicationLoader {
   private var components: AppComponents = _

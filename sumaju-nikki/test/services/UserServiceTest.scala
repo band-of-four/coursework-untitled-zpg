@@ -10,8 +10,8 @@ class UserServiceTest extends test.DataSpec {
 
   "UserService" should {
     "create a new user with password" in {
-      val user = await(service.saveWithPassword(User("peridot@homeworld"), "yellow"))
-      user.email shouldBe "peridot@homeworld"
+      val user = await(service.saveEmail("peridot@homeworld", "yellow"))
+      user.email shouldBe Some("peridot@homeworld")
 
       val loginInfo = components.userLoginInfoDao.findByUserId(user.id).orNull
       loginInfo should not be null
@@ -19,12 +19,12 @@ class UserServiceTest extends test.DataSpec {
     }
 
     "creates a user transactionally" in {
-      val user = components.userDao.create(User("firstcome@firstserve"))
+      val user = components.userDao.create(User(Some("firstcome@firstserve")))
       val existingLoginInfo = components.userLoginInfoDao.create(
         UserLoginInfo(user.id, CredentialsProvider.ID, "newcomer@wired"))
 
       an [UserService.EmailAlreadyTakenException] should be thrownBy
-        await(service.saveWithPassword(User("newcomer@wired"), "presentdaypresenttime"))
+        await(service.saveEmail("newcomer@wired", "presentdaypresenttime"))
 
       components.userDao.findByEmail("newcomer@wired") shouldBe None
     }
@@ -32,7 +32,7 @@ class UserServiceTest extends test.DataSpec {
     "find a user by their LoginInfo" in {
       val liDao = components.userLoginInfoDao
 
-      val user = components.userDao.create(User("h"))
+      val user = components.userDao.create(User(Some("h")))
 
       liDao.findUserIdByLoginInfo(LoginInfo("id", "key")) shouldBe None
       liDao.create(UserLoginInfo(user.id, "id", "key")) should not be None

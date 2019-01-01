@@ -40,15 +40,13 @@ class UserService(val userDao: UserDao,
     } yield user
   }
 
-  def saveWithPassword(newUser: User, password: String): Future[User] =
+  def saveEmail(email: String, password: String): Future[User] =
     Future {
       val passwordInfo = passwordRegistry.current.hash(password)
       db.transaction {
-        val user = userDao.create(newUser)
-        val userLoginInfo = loginInfoDao.createForUser(
-          user, LoginInfo(CredentialsProvider.ID, user.email))
-        val authInfo = repository.add(
-          userLoginInfo.toLoginInfo, passwordInfo)
+        val user = userDao.create(User(Some(email)))
+        val userLoginInfo = loginInfoDao.createForUser(user, LoginInfo(CredentialsProvider.ID, email))
+        val authInfo = repository.add(userLoginInfo.toLoginInfo, passwordInfo)
         user
       }
     } recoverWith {
