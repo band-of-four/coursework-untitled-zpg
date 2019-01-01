@@ -10,8 +10,8 @@ import db.DbCtx
 case class UserPasswordInfo(infoId: Long, hasher: String, password: String, salt: Option[String])
 
 class UserPasswordInfoDao(val db: DbCtx,
-                          val loginInfoDao: UserLoginInfoDao,
-                          implicit val ec: ExecutionContext) extends DelegableAuthInfoDAO[PasswordInfo] {
+                          val loginInfoDao: UserLoginInfoDao)
+                         (implicit val ec: ExecutionContext) extends DelegableAuthInfoDAO[PasswordInfo] {
   import db._
 
   private val schema = quote(querySchema[UserPasswordInfo]("user_password_info"))
@@ -31,9 +31,7 @@ class UserPasswordInfoDao(val db: DbCtx,
 
   override def add(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] = Future {
     val liId = loginInfoDao.findIdByLoginInfo(li).get
-    run(
-      schema.insert(lift(UserPasswordInfo(liId, pi.hasher, pi.password, pi.salt)))
-    )
+    run(schema.insert(lift(UserPasswordInfo(liId, pi.hasher, pi.password, pi.salt))))
     pi
   }
 

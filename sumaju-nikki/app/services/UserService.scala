@@ -1,11 +1,11 @@
 package services
 
-import com.mohiva.play.silhouette.api.LoginInfo
+import com.mohiva.play.silhouette.api.{AuthInfo, LoginInfo}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.IdentityService
 import com.mohiva.play.silhouette.api.util.PasswordHasherRegistry
-import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
-import models.{User, UserDao, UserLoginInfoDao, UserPasswordInfoDao}
+import com.mohiva.play.silhouette.impl.providers.{CredentialsProvider, SocialProfile}
+import models._
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import db.DbCtx
@@ -25,8 +25,9 @@ class UserService(val userDao: UserDao,
                   implicit val ec: ExecutionContext,
                   config: Configuration) extends IdentityService[User] {
   val repository: AuthInfoRepository = new DelegableAuthInfoRepository(
-    new UserPasswordInfoDao(db, loginInfoDao, ec)
-  )(ec)
+    new UserPasswordInfoDao(db, loginInfoDao),
+    new UserOAuth2InfoDao(db, loginInfoDao)
+  )
 
   val passwordRegistry: PasswordHasherRegistry = {
     val bcryptRounds = config.get[Int]("auth.bcrypt-rounds")
