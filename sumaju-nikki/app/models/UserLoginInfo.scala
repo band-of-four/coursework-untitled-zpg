@@ -16,10 +16,6 @@ class UserLoginInfoDao(val db: DbCtx, val ec: ExecutionContext) {
 
   private val schema = quote(querySchema[UserLoginInfo]("user_login_info"))
 
-  val repository: AuthInfoRepository = new DelegableAuthInfoRepository(
-    new UserPasswordInfoDao(db, this, ec)
-  )(ec)
-
   def create(uli: UserLoginInfo): UserLoginInfo =
     uli.copy(id = run(schema.insert(lift(uli)).returning(_.id)))
 

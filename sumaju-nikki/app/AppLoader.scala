@@ -4,7 +4,7 @@ import play.api._
 import play.api.ApplicationLoader.Context
 import play.api.routing.Router
 import io.getquill._
-import com.mohiva.play.silhouette.api.{EventBus, Silhouette}
+import com.mohiva.play.silhouette.api.Silhouette
 import javax.sql.DataSource
 import utils.auth.{CookieAuthEnv, SilhouetteLoader}
 
@@ -36,11 +36,11 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val userService = new _root_.services.UserService(
     userDao, userLoginInfoDao, db, dbExecCtx, configuration)
 
-  lazy val silhouetteEventBus = EventBus()
-  lazy val silhouette: Silhouette[CookieAuthEnv] =
-    SilhouetteLoader.instantiate(configuration, userService, materializer, silhouetteEventBus)
+  lazy val silhouette = new SilhouetteLoader(configuration, userService)
 
   lazy val homeController = new _root_.controllers.HomeController(controllerComponents)
+  lazy val authController = new _root_.controllers.AuthController(
+    controllerComponents, silhouette.env, silhouette.credentialsProvider, userService)
 
-  lazy val router: Router = new _root_.router.Routes(httpErrorHandler, homeController, assets)
+  lazy val router: Router = new _root_.router.Routes(httpErrorHandler, homeController, assets, authController)
 }

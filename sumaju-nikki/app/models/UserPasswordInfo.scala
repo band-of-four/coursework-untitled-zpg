@@ -20,7 +20,9 @@ class UserPasswordInfoDao(val db: DbCtx,
     run(
       schema
         .join(query[UserLoginInfo])
-        .on((pi, li) => pi.infoId == li.id)
+        .on((pi, li) => pi.infoId == li.id &&
+          li.providerId == lift(loginInfo.providerID) &&
+          li.providerKey == lift(loginInfo.providerKey))
         .map(_._1)
     )
       .headOption
