@@ -31,3 +31,4 @@ libraryDependencies += "com.iheart" %% "ficus" % "1.4.3"
 
 /* Testing */
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
+libraryDependencies += "io.lemonlabs" %% "scala-uri" % "1.4.0" % Test

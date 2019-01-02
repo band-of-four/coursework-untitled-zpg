@@ -1,5 +1,6 @@
 import java.io.File
 
+import com.typesafe.config.ConfigFactory
 import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.play.components.OneAppPerSuiteWithComponents
 import org.scalatestplus.play.{FakeApplicationFactory, PlaySpec}
@@ -12,20 +13,24 @@ import scala.concurrent.duration._
 
 package object test {
   trait AppFactory extends FakeApplicationFactory {
-    override def fakeApplication: Application = {
+    def buildContext(): ApplicationLoader.Context = {
       val env = Environment.simple(new File("."))
-      val ctx = ApplicationLoader.Context(
+      ApplicationLoader.Context(
         environment = env,
         sourceMapper = None,
         webCommands = new DefaultWebCommands(),
-        initialConfiguration = Configuration.load(env),
+        initialConfiguration = Configuration(ConfigFactory.load("application.test.conf")),
         lifecycle = new DefaultApplicationLifecycle()
       )
-      new AppLoader().load(ctx)
     }
+
+    override def fakeApplication: Application =
+      new AppLoader().load(buildContext())
   }
 
   trait DataSpec extends PlaySpec with OneAppPerSuiteWithComponents with AppFactory with BeforeAndAfterAll {
+    override lazy val context: ApplicationLoader.Context = buildContext()
+
     override def components = new AppComponents(context)
 
     def await[T](awaitable: Awaitable[T]): T =
@@ -33,7 +38,9 @@ package object test {
 
     override protected def beforeAll(): Unit = {
       val conn = components.dbApi.database("default").getConnection()
-      conn.createStatement().executeUpdate("DELETE FROM user_password_info; DELETE FROM user_login_info; DELETE FROM users;")
+      conn.createStatement().executeUpdate("""
+        DELETE FROM user_oauth2_info; DELETE FROM user_password_info; DELETE FROM user_login_info; DELETE FROM users;
+      """)
     }
   }
 }

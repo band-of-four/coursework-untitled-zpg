@@ -10,4 +10,4 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 POST    /auth/signin                controllers.AuthController.signIn
 POST    /auth/signup                controllers.AuthController.signUp
-POST    /auth/social/:provider      controllers.AuthController.social(provider: String)
+GET     /auth/social/:provider      controllers.AuthController.social(provider: String)

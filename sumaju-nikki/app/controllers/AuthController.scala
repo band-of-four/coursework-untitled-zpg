@@ -55,7 +55,7 @@ class AuthController @Inject()(cc: ControllerComponents,
     )
   }
 
-  def social(provider: String) = silhouette.UnsecuredAction(parse.json) async { implicit request =>
+  def social(provider: String) = silhouette.UnsecuredAction async { implicit request =>
     (socialProviderRegistry.get[SocialProvider](provider) match {
       case Some(p: SocialProvider with CommonSocialProfileBuilder) =>
         p.authenticate().flatMap {
