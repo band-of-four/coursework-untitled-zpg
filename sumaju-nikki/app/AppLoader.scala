@@ -21,6 +21,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
                                   with play.api.db.evolutions.EvolutionsComponents
                                   with play.api.db.HikariCPComponents
                                   with play.filters.HttpFiltersComponents
+                                  with play.api.libs.ws.ahc.AhcWSComponents
                                   with _root_.controllers.AssetsComponents {
   applicationEvolutions
 
@@ -35,11 +36,11 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val userService = new _root_.services.UserService(
     userDao, userLoginInfoDao, db, dbExecCtx, configuration)
 
-  lazy val silhouette = new SilhouetteLoader(configuration, userService)
+  lazy val silhouette = new SilhouetteLoader(configuration, userService, wsClient)
 
   lazy val homeController = new _root_.controllers.HomeController(controllerComponents)
   lazy val authController = new _root_.controllers.AuthController(
-    controllerComponents, silhouette.env, silhouette.credentialsProvider, userService)
+    controllerComponents, silhouette.env, silhouette.credentialsProvider, silhouette.socialProviderRegistry, userService)
 
   lazy val router: Router = new _root_.router.Routes(httpErrorHandler, homeController, assets, authController)
 }
