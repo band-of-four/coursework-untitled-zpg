@@ -41,14 +41,31 @@ class UserService(val userDao: UserDao,
     } yield user
   }
 
-  def saveEmail(email: String, password: String): Future[User] =
+  def saveEmail(email: String, password: String): Future[User] = {
+    val loginInfo = LoginInfo(CredentialsProvider.ID, email)
+    for {
+      user <- saveUser(User(Some(email)), loginInfo)
+      passwordInfo <- Future { passwordRegistry.current.hash(password) }
+      authInfo <- repository.add(loginInfo, passwordInfo)
+    } yield user
+  }
+
+  def saveSocial(profile: SocialProfile, authInfo: AuthInfo): Future[User] =
+    for {
+      existingUser <- Future { userDao.findByLoginInfo(profile.loginInfo) }
+      user <- existingUser match {
+        case Some(user) => Future.successful(user)
+        case _ => saveUser(User(email = None), profile.loginInfo)
+      }
+      authInfo <- repository.save(profile.loginInfo, authInfo)
+    } yield user
+
+  private def saveUser(user: User, loginInfo: LoginInfo): Future[User] =
     Future {
-      val passwordInfo = passwordRegistry.current.hash(password)
       db.transaction {
-        val user = userDao.create(User(Some(email)))
-        val userLoginInfo = loginInfoDao.createForUser(user, LoginInfo(CredentialsProvider.ID, email))
-        val authInfo = repository.add(userLoginInfo.toLoginInfo, passwordInfo)
-        user
+        val dbUser = userDao.create(user)
+        loginInfoDao.createForUser(dbUser, loginInfo)
+        dbUser
       }
     } recoverWith {
       case e: PSQLException =>
