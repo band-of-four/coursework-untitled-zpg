@@ -63,11 +63,17 @@ create table student_messages (
 );;
 
 create table phrases (
+  id bigserial primary key,
   creature_type_id bigint references creature_type,
   student_club_id bigint references student_clubs,
   lesson_id bigint references lessons,
   phrase_type varchar, -- enter the battle, winning the battle etc
   phrase varchar
+);;
+
+create table diary (
+  character_id bigint not null references characters,
+  phrase_id bigint not null references phrases
 );;
 
 -- personal creature battle modifier character can learn from a books
@@ -106,6 +112,7 @@ language 'plpgsql';;
 # --- !Downs
 drop function display_owls(username varchar);
 drop table rooms;
+drop table diary;
 drop table relationships;
 drop table phrases;
 drop table student_messages;
