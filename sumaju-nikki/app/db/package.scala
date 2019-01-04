@@ -18,6 +18,10 @@ package object db {
       def >=(rhs: LocalDateTime) = quote(infix"$lhs >= $rhs".as[Boolean])
       def <=(rhs: LocalDateTime) = quote(infix"$lhs <= $rhs".as[Boolean])
     }
+
+    implicit class ForUpdate[T](q: Query[T]) {
+      def forUpdate = quote(infix"$q FOR UPDATE".as[Query[T]])
+    }
   }
 
   class DbExecutionContext(system: ActorSystem, name: String)

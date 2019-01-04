@@ -11,11 +11,12 @@ class CharacterDao(val db: DbCtx) {
 
   private val schema = quote(querySchema[Character]("characters"))
 
-  def findPendingTurns(count: Int): Seq[Character] =
+  def findPendingTurnUpdates(count: Int): Seq[Character] =
     run(
       schema
         .filter(_.nextStageTime <= lift(LocalDateTime.now()))
         .sortBy(_.nextStageTime)(Ord.asc)
         .take(lift(count))
+        .forUpdate
     )
 }
