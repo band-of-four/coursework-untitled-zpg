@@ -4,7 +4,8 @@ import java.time.LocalDateTime
 
 import db.DbCtx
 
-case class Character(stage: String, nextStageTime: LocalDateTime)
+case class Character(stage: String, nextStageTime: LocalDateTime,
+  academic_year: Int)
 
 class CharacterDao(val db: DbCtx) {
   import db._
