@@ -7,7 +7,7 @@ object RandomEvent {
 }
 
 object WeightedSample {
-  def apply[A](elements: Seq[A])(weightMap: A => Double): A = {
+  def apply[A](elements: Seq[A])(weightMap: A => Double): Option[A] = {
     val weights = elements.map(weightMap)
 
     val r = ThreadLocalRandom.current().nextDouble(0, weights.sum)
@@ -15,9 +15,9 @@ object WeightedSample {
     var currentWeight = 0.0
     for ((item, weight) <- elements.zip(weights)) {
       currentWeight += weight
-      if (currentWeight >= r) return item
+      if (currentWeight >= r) return Some(item)
     }
 
-    throw new RuntimeException("Unable to choose a sample from given seq")
+    None
   }
 }
