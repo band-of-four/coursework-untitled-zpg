@@ -10,7 +10,7 @@ case class Student(stage: String, nextStageTime: LocalDateTime,
 object Student {
   val StageTravel = "travel"
   val StageFight = "fight"
-  val StageClub = "club"
+  val StageStudy = "study"
 }
 
 class StudentDao(val db: DbCtx) {
