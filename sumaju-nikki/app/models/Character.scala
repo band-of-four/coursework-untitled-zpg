@@ -5,7 +5,13 @@ import java.time.LocalDateTime
 import db.DbCtx
 
 case class Character(stage: String, nextStageTime: LocalDateTime,
-  academic_year: Int)
+                     academicYear: Int, currentRoom: Long, id: Long = -1)
+
+object Character {
+  val StageTravel = "travel"
+  val StageFight = "fight"
+  val StageClub = "club"
+}
 
 class CharacterDao(val db: DbCtx) {
   import db._
