@@ -54,7 +54,7 @@ create table characters (
 create table lesson_attendance (
   lesson_id bigint not null references lessons,
   character_id bigint not null references characters,
-  attendance bigint
+  classes_atternded integer
 );;
 
 create table student_letters (
