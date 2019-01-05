@@ -8,7 +8,7 @@ create table spells (
   type varchar
 );;
 
-create table creature_type (
+create table creatures (
   id bigserial primary key,
   name varchar,
   power int,
@@ -43,7 +43,7 @@ create table characters (
   attack_spell bigint not null references spells,
   defence_spell bigint not null references spells,
   luck_spell bigint not null references spells,
-  pet_type bigint references creature_type,
+  pet_type bigint references creatures,
   pet_name varchar,
   book_permissions_amount bigint,
   academic_year bigint,
@@ -56,7 +56,7 @@ create table lessons_attendance (
   attendance bigint
 );;
 
-create table student_messages (
+create table student_letters (
   sender_id bigint not null references characters,
   receiver_id bigint not null references characters,
   club_id bigint not null references student_clubs
@@ -64,7 +64,7 @@ create table student_messages (
 
 create table phrases (
   id bigserial primary key,
-  creature_type_id bigint references creature_type,
+  creature_type_id bigint references creatures,
   student_club_id bigint references student_clubs,
   lesson_id bigint references lessons,
   phrase_type varchar, -- enter the battle, winning the battle etc
@@ -79,7 +79,7 @@ create table diary (
 -- personal creature battle modifier character can learn from a books
 create table creature_bonuses (
   character_id bigint not null references characters,
-  creature_type_id bigint not null references creature_type,
+  creature_type_id bigint not null references creatures,
   modifier bigint
 );;
 
@@ -115,7 +115,7 @@ drop table rooms;
 drop table diary;
 drop table relationships;
 drop table phrases;
-drop table student_messages;
+drop table student_letters;
 drop table student_clubs;
 drop table lessons_attendance;
 drop table lessons;
@@ -123,4 +123,4 @@ drop table owls_characters;
 drop table creature_bonuses;
 drop table characters;
 drop table spells;
-drop table creature_type;
+drop table creatures;
