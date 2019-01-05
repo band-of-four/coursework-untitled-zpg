@@ -10,7 +10,7 @@ class CreatureDao(val db: DbCtx) {
 
   private val schema = quote(querySchema[Creature]("creatures"))
   
-  // Get creature for batte with character before room entering
+  // Get creature for battle with student before room entering
   def getRandomCreatureByLevel(level: Int): Creature =
     Random.shuffle(run(schema.filter(_.level == lift(level)))).head
 

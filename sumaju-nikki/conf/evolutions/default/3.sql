@@ -36,7 +36,7 @@ create table rooms (
   lesson_id bigint references lessons
 );;
 
-create table characters (
+create table students (
   id bigserial primary key,
   name text,
   stage text,
@@ -53,13 +53,13 @@ create table characters (
 
 create table lesson_attendance (
   lesson_id bigint not null references lessons,
-  character_id bigint not null references characters,
+  student_id bigint not null references students,
   classes_atternded integer
 );;
 
 create table student_letters (
-  sender_id bigint not null references characters,
-  receiver_id bigint not null references characters,
+  sender_id bigint not null references students,
+  receiver_id bigint not null references students,
   club_id bigint not null references student_clubs
 );;
 
@@ -73,26 +73,26 @@ create table phrases (
 );;
 
 create table diary (
-  character_id bigint not null references characters,
+  student_id bigint not null references students,
   phrase_id bigint not null references phrases
 );;
 
--- personal creature battle modifier character can learn from a books
+-- personal creature battle modifier a student can learn from a book
 create table creature_bonuses (
-  character_id bigint not null references characters,
+  student_id bigint not null references students,
   creature_type_id bigint not null references creatures,
   modifier bigint
 );;
 
-create table owls_characters (
-  character_id bigint not null references characters,
+create table owls_students (
+  student_id bigint not null references students,
   owl_type text
 );;
 
 create table relationships (
-  first_character bigint not null references characters,
-  second_character bigint not null references characters,
-  relationships bigint
+  student_a bigint not null references students,
+  student_b bigint not null references students,
+  relationship integer
 );;
 
 create or replace function display_owls (username text)
@@ -103,10 +103,10 @@ returns table (
 as $$
 begin
   return query
-  select owls_characters.owl_type, count(owls_characters.owl_type) from characters, owls_characters
-  where characters.id = owls_characters.character_id
-  and characters.name = username
-  group by owls_characters.owl_type;;
+  select owls_students.owl_type, count(owls_students.owl_type) from students, owls_students
+  where students.id = owls_students.student_id
+  and students.name = username
+  group by owls_students.owl_type;;
 end;; $$
 language 'plpgsql';;
 
@@ -120,8 +120,8 @@ drop table student_letters cascade;
 drop table student_clubs cascade;
 drop table lesson_attendance cascade;
 drop table lessons cascade;
-drop table owls_characters cascade;
+drop table owls_students cascade;
 drop table creature_bonuses cascade;
-drop table characters cascade;
+drop table students cascade;
 drop table spells cascade;
 drop table creatures cascade;

@@ -1,25 +1,27 @@
 package services
 
 import gamelogic.Travel
-import models.{Character, CharacterDao, LessonDao, RoomDao}
-import models.Character.{StageClub, StageFight, StageTravel}
+import models.{Student, StudentDao, LessonDao, RoomDao}
+import models.Student.{StageClub, StageFight, StageTravel}
 
-class GameProgressionService(val characterDao: CharacterDao,
+class GameProgressionService(val studentDao: StudentDao,
                              val roomDao: RoomDao,
                              val lessonDao: LessonDao) {
-  def pendingUpdates(count: Int): Seq[Character] =
-    characterDao.findPendingTurnUpdates(count)
+  def pendingUpdates(count: Int): Seq[Student] =
+    studentDao.findPendingTurnUpdates(count)
 
-  def performUpdate(character: Character): Unit = {
-    character.stage match {
-      case StageTravel => finishTravelling(character)
+  def performUpdate(student: Student): Unit = {
+    student.stage match {
+      case StageTravel => finishTravelling(student)
       case _ => ???
     }
   }
 
-  def finishTravelling(character: Character): Unit = {
-    val nearbyRooms = roomDao.preloadInRadius(character.currentRoom, Travel.TravelRadius)
-    val attendance = lessonDao.buildAttendanceMap(character.id, nearbyRooms.flatMap(_.lesson.map(_.id)))
-    val nextRoom = Travel.pickNextRoom(character, nearbyRooms, attendance)
+  def finishTravelling(student: Student): Unit = {
+    val nearbyRooms = roomDao.preloadInRadius(student.currentRoom, Travel.TravelRadius)
+    val attendance = lessonDao.buildAttendanceMap(student.id, nearbyRooms.flatMap(_.lesson.map(_.id)))
+    val nextRoom = Travel.pickNextRoom(student, nearbyRooms, attendance)
+
+
   }
 }

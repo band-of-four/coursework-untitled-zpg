@@ -4,21 +4,21 @@ import java.time.LocalDateTime
 
 import db.DbCtx
 
-case class Character(stage: String, nextStageTime: LocalDateTime,
-                     academicYear: Int, currentRoom: Long, id: Long = -1)
+case class Student(stage: String, nextStageTime: LocalDateTime,
+                   academicYear: Int, currentRoom: Long, id: Long = -1)
 
-object Character {
+object Student {
   val StageTravel = "travel"
   val StageFight = "fight"
   val StageClub = "club"
 }
 
-class CharacterDao(val db: DbCtx) {
+class StudentDao(val db: DbCtx) {
   import db._
 
-  private val schema = quote(querySchema[Character]("characters"))
+  private val schema = quote(querySchema[Student]("students"))
 
-  def findPendingTurnUpdates(count: Int): Seq[Character] =
+  def findPendingTurnUpdates(count: Int): Seq[Student] =
     run(
       schema
         .filter(_.nextStageTime <= lift(LocalDateTime.now()))
