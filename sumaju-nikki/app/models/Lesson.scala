@@ -3,7 +3,7 @@ package models
 import db.DbCtx
 import scala.util.Random
 
-case class Lesson(name: String, academic_year: Int)
+case class Lesson(name: String, academic_year: Int, id: Long = -1)
 
 class LessonDao(val db: DbCtx) {
   import db._
