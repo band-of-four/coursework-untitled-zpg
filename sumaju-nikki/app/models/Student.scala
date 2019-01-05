@@ -1,6 +1,6 @@
 package models
 
-import java.time.LocalDateTime
+import java.time.{Duration, LocalDateTime}
 
 import db.DbCtx
 
@@ -25,5 +25,14 @@ class StudentDao(val db: DbCtx) {
         .sortBy(_.nextStageTime)(Ord.asc)
         .take(lift(count))
         .forUpdate
+    )
+
+  def updateStage(studentId: Long, newRoom: Long, stage: String, stageDuration: Duration): Unit =
+    run(
+      schema
+        .filter(_.id == lift(studentId))
+        .update(_.stage -> lift(stage),
+          _.currentRoom -> lift(newRoom),
+          _.nextStageTime -> lift(LocalDateTime.now().plus(stageDuration)))
     )
 }

@@ -54,7 +54,7 @@ create table students (
 create table lesson_attendance (
   lesson_id bigint not null references lessons,
   student_id bigint not null references students,
-  classes_atternded integer
+  classes_attended integer
 );;
 
 create table student_letters (
