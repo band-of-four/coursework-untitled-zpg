@@ -3,28 +3,29 @@
 # --- !Ups
 create table spells (
   id bigserial primary key,
-  name varchar,
-  power int,
-  type varchar
+  name text,
+  power integer,
+  type text
 );;
 
 create table creatures (
   id bigserial primary key,
-  name varchar,
-  power int,
-  hp int,
-  level int -- for gating
+  name text,
+  power integer,
+  hp integer,
+  level integer -- for gating
 );;
 
 create table student_clubs (
   id bigserial primary key,
-  name varchar
+  name text
 );;
 
 create table lessons (
   id bigserial primary key,
-  name varchar,
-  academic_year bigint
+  name text,
+  academic_year bigint,
+  required_attendance integer
 );;
 
 -- room number == id, in the room can be a club or a lesson,
@@ -37,20 +38,20 @@ create table rooms (
 
 create table characters (
   id bigserial primary key,
-  name varchar,
-  stage varchar,
+  name text,
+  stage text,
   next_stage_time timestamp,
   attack_spell bigint not null references spells,
   defence_spell bigint not null references spells,
   luck_spell bigint not null references spells,
   pet_type bigint references creatures,
-  pet_name varchar,
+  pet_name text,
   book_permissions_amount bigint,
   academic_year bigint,
   current_room bigint not null references rooms
 );;
 
-create table lessons_attendance (
+create table lesson_attendance (
   lesson_id bigint not null references lessons,
   character_id bigint not null references characters,
   attendance bigint
@@ -67,8 +68,8 @@ create table phrases (
   creature_type_id bigint references creatures,
   student_club_id bigint references student_clubs,
   lesson_id bigint references lessons,
-  phrase_type varchar, -- enter the battle, winning the battle etc
-  phrase varchar
+  phrase_type text, -- enter the battle, winning the battle etc
+  phrase text
 );;
 
 create table diary (
@@ -85,7 +86,7 @@ create table creature_bonuses (
 
 create table owls_characters (
   character_id bigint not null references characters,
-  owl_type varchar
+  owl_type text
 );;
 
 create table relationships (
@@ -94,9 +95,9 @@ create table relationships (
   relationships bigint
 );;
 
-create or replace function display_owls (username varchar)
+create or replace function display_owls (username text)
 returns table (
-  owl_type varchar,
+  owl_type text,
   amount bigint
 )
 as $$
@@ -110,17 +111,17 @@ end;; $$
 language 'plpgsql';;
 
 # --- !Downs
-drop function display_owls(username varchar);
-drop table rooms;
-drop table diary;
-drop table relationships;
-drop table phrases;
-drop table student_letters;
-drop table student_clubs;
-drop table lessons_attendance;
-drop table lessons;
-drop table owls_characters;
-drop table creature_bonuses;
-drop table characters;
-drop table spells;
-drop table creatures;
+drop function display_owls(username text);
+drop table rooms cascade;
+drop table diary cascade;
+drop table relationships cascade;
+drop table phrases cascade;
+drop table student_letters cascade;
+drop table student_clubs cascade;
+drop table lesson_attendance cascade;
+drop table lessons cascade;
+drop table owls_characters cascade;
+drop table creature_bonuses cascade;
+drop table characters cascade;
+drop table spells cascade;
+drop table creatures cascade;
