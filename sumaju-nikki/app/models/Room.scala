@@ -14,11 +14,9 @@ object RoomPreloaded {
 class RoomDao(val db: DbCtx) {
   import db._
 
-  private val schema = quote(querySchema[Room]("rooms"))
-
   def preloadInRadius(aroundRoom: Long, radius: Long): Seq[RoomPreloaded] = {
     run(
-      schema
+      query[Room]
         .filter(r => r.number < lift(aroundRoom + radius) && r.number > lift(aroundRoom - radius))
         .leftJoin(query[StudentClub]).on((r, c) => r.clubId.exists(_ == c.id))
         .leftJoin(query[Lesson]).on((rc, l) => rc._1.lessonId.exists(_ == l.id))

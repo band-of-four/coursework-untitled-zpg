@@ -52,7 +52,7 @@ create table students (
   current_room bigint not null references rooms
 );;
 
-create table lesson_attendance (
+create table lesson_attendances (
   lesson_id bigint not null references lessons,
   student_id bigint not null references students,
   classes_attended integer
@@ -119,7 +119,7 @@ drop table relationships cascade;
 drop table phrases cascade;
 drop table student_letters cascade;
 drop table student_clubs cascade;
-drop table lesson_attendance cascade;
+drop table lesson_attendances cascade;
 drop table lessons cascade;
 drop table owls_students cascade;
 drop table creature_bonuses cascade;

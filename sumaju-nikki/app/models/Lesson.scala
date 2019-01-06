@@ -14,15 +14,12 @@ object LessonDao {
 class LessonDao(val db: DbCtx) {
   import db._
 
-  private val schema = quote(querySchema[Lesson]("lessons"))
-  private val attendanceSchema = quote(querySchema[LessonAttendance]("lesson_attendance"))
-
   def getLessons(s: Student): Seq[Lesson] =
-    run(schema.filter(_.academicYear == lift(s.academicYear)))
+    run(query[Lesson].filter(_.academicYear == lift(s.academicYear)))
 
   def buildAttendanceMap(studentId: Long, lessonIds: Seq[Long]): LessonAttendanceMap =
     run(
-      attendanceSchema
+      query[LessonAttendance]
         .filter(a => a.studentId == lift(studentId) && lift(lessonIds).contains(a.lessonId))
         .map(a => (a.lessonId, a.classesAttended))
     ).toMap

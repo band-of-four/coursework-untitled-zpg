@@ -27,7 +27,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
                                   with _root_.controllers.AssetsComponents {
   applicationEvolutions
 
-  lazy val db = new _root_.db.DbCtx(SnakeCase,
+  lazy val db = new _root_.db.DbCtx(CompositeNamingStrategy2(SnakeCase, PluralizedTableNames),
     dbApi.database("default").dataSource.asInstanceOf[DataSource with Closeable])
 
   lazy val dbExecCtx = new _root_.db.DbExecutionContext(actorSystem, "db.default.executor")

@@ -4,16 +4,15 @@ import db.DbCtx
 import scala.util.Random
 
 case class Creature(name: String, power: Int, hp: Int, level: Int, id: Long = -1)
+//case class creatureHandlingSkill(creatureId: Long, studentId: Long, modifier: Int)
 
 class CreatureDao(val db: DbCtx) {
   import db._
 
-  private val schema = quote(querySchema[Creature]("creatures"))
-
   def findNearRoom(roomNumber: Long): Creature =
     run(
-      schema
-        .join(querySchema[Room]("rooms"))
+      query[Creature]
+        .join(query[Room])
         .on((c, r) => c.level == r.level && r.number == lift(roomNumber))
         .map(_._1)
         .randomSort

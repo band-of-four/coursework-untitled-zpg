@@ -1,13 +1,13 @@
 import java.io.Closeable
 import java.time.LocalDateTime
-import javax.sql.DataSource
 
+import javax.sql.DataSource
 import akka.actor.ActorSystem
-import io.getquill.{NamingStrategy, PostgresJdbcContext, SnakeCase}
+import io.getquill._
 import play.api.libs.concurrent.CustomExecutionContext
 
 package object db {
-  type DbCtx = ExtendedPostgresJdbcContext[SnakeCase]
+  type DbCtx = ExtendedPostgresJdbcContext[CompositeNamingStrategy2[SnakeCase, PluralizedTableNames]]
 
   class ExtendedPostgresJdbcContext[N <: NamingStrategy](naming: N, dataSource: DataSource with Closeable)
     extends PostgresJdbcContext(naming, dataSource) {
