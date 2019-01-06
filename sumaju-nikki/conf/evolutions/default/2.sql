@@ -13,7 +13,7 @@ create table creatures (
   id bigserial primary key,
   name text,
   power integer,
-  hp integer,
+  total_hp integer,
   level integer -- for gating
 );;
 

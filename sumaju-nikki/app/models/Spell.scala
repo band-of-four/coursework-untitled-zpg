@@ -6,6 +6,11 @@ case class Spell(name: String, kind: String, power: Int, academicYear: Int, id: 
 
 case class SpellsStudent(spellId: Long, studentId: Long)
 
+object Spell {
+  val AttackSpell = "attack"
+  val LuckSpell = "luck"
+}
+
 class SpellDao(val db: DbCtx) {
   import db._
 
