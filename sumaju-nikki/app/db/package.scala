@@ -22,6 +22,10 @@ package object db {
     implicit class ForUpdate[T](q: Query[T]) {
       def forUpdate = quote(infix"$q FOR UPDATE".as[Query[T]])
     }
+
+    implicit class RandomSort[T](q: Query[T]) {
+      def randomSort = quote(infix"$q ORDER BY random()".as[Query[T]])
+    }
   }
 
   class DbExecutionContext(system: ActorSystem, name: String)
