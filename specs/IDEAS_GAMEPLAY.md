@@ -144,6 +144,43 @@ Club activities award artefacts.
 
 Some of the books now teach students to domesticate creatures.
 
+# Death.
+Lets talk about death.
+
+If student lose the fight opponent monster naturally kills him (or no, discuss it later).
+In this section will be mentioned ideas about handling this sad situation
+
+## Strategy 1: Just do it like dudes done in Godville
+Student dies -> "Holy owl" appears in inventory -> Player must use it to revive his character
+
+Before this student disabled and nothing happens with him.
+
+## Strategy 2: Groundhog Day
+After death student lose all (or some) his stats and start the game from the beginning.
+"Holy owls" spawns as any other owls and need to disable losing stats.
+
+Cruel way.
+
+## Strategy 3: They said we had too little of characters interaction
+After defeating students body lies near the room he was defeated.
+However, he is still breathing. But he need some help to get back to
+educational process. So, he revive as another student enter this room.
+
+Friendship is Magic!
+
+## Strategy 4: Strange way
+New creature - Death Itself! Yay!
+
+After defeating student meet this charming creature and to revive
+he need to defeat it or trade some of his stuff.
+
+Or all dead students joins special quest for Death Itself. This
+sidequest can bring more fun to game
+
+## Notes about hp restoration
+We can add one more type of room - infirmary, when student get there his hp restores.
+And he can spawn there after revive
+
 # Examples
 
 ## Some examples of owls that student can use during the fight stage
