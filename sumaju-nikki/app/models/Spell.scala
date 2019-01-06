@@ -1,17 +1,27 @@
 package models
 
 import db.DbCtx
-import scala.util.Random
 
-case class Spell(name: String, power: Int, spell_type: String)
+case class Spell(name: String, kind: String, power: Int, academicYear: Int, id: Long = -1)
+
+case class SpellsStudent(spellId: Long, studentId: Long)
 
 class SpellDao(val db: DbCtx) {
   import db._
 
-  private val schema = quote(querySchema[Spell]("spells"))
-  
-  // Learn random spell from the library
-  def getRandomSpell(): Spell = 
-    Random.shuffle(run(schema)).head
+  def findLearned(student: Student): Seq[Spell] =
+    run(
+      query[Spell]
+        .join(query[SpellsStudent])
+        .on((sp, spst) => sp.id == spst.spellId && spst.studentId == lift(student.id))
+        .map(_._1)
+    )
 
+  def findRandom(minLevel: Int, maxLevel: Int): Spell =
+    run(
+      query[Spell]
+        .filter(s => s.academicYear <= lift(maxLevel) && s.academicYear >= lift(minLevel))
+        .randomSort
+        .take(1)
+    ).head
 }

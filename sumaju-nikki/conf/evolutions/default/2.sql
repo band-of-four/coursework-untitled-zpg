@@ -3,9 +3,10 @@
 # --- !Ups
 create table spells (
   id bigserial primary key,
-  name text,
-  power integer,
-  type text
+  kind text not null,
+  name text not null,
+  power integer not null,
+  academic_year integer not null
 );;
 
 create table creatures (
@@ -66,6 +67,13 @@ create table creature_handling_skills (
   modifier integer,
 
   primary key (creature_id, student_id)
+);;
+
+create table spells_students (
+  spell_id bigint references spells,
+  student_id bigint references students,
+
+  primary key (spell_id, student_id)
 );;
 
 create table lesson_attendances (
@@ -133,6 +141,7 @@ drop table lessons cascade;
 drop table owls_students cascade;
 drop table creature_fights cascade;
 drop table creature_handling_skills cascade;
+drop table spells_students cascade;
 drop table students cascade;
 drop table spells cascade;
 drop table creatures cascade;
