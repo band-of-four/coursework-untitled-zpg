@@ -143,3 +143,26 @@ Club activities award artefacts.
 ## 3rd Level
 
 Some of the books now teach students to domesticate creatures.
+
+# Examples
+
+## Some examples of owls that student can use during the fight stage
+
+-- Healing owl: restores a certain number of students hp's
+-- Power owl: increase the power of student attack spell during this fight stage
+-- Feather shield: increase the power of student defence spell during this fight stage
+-- Bronze owl: slightly increase power of student luck spell during this stage (not only fight)
+-- Silver owl: moderately increase power of student luck spell during this stage (rare)
+-- Golden owl: significantly increase power of student luck spell during this stage (very rare)
+-- Platinum owl: maximum possible power of student luck spell during this stage (super-mega rare)
+-- Pet-keeper: increase the power of student pet (if he have one) during this fight stage
+-- Killer owl: immidiately kills the opponent creature (sets it's hp to 0) (very rare)
+-- Bad omen: makes student immidiately quit current stage and move to the next room (not sure about the fight stage) (rare)
+-- Shibari owl: binds opponent creature so it can't attack student during this fight stage (named after Japanese binding art)
+-- Bloody owl: student pays half of his hp's but wins the fight immidiately (rare)
+-- Chaotic evil owl: damages opponent or student (not sure about this one)
+-- Time-freezing owl: makes current stage proceed slowly (can we do this?)
+-- Time-speeding owl: makes current stage proceed faster
+-- Master of creatures: opponent creature becomes student pet (very rare) (not sure about this one)
+
+Maybe some owls can be a fuse of other owls, for example: Bloody owl + Shibary owl + Bad omen = Killer owl
