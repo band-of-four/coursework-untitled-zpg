@@ -52,6 +52,22 @@ create table students (
   current_room bigint not null references rooms
 );;
 
+create table creature_fights (
+  creature_id bigint references creatures,
+  student_id bigint references students,
+  creature_hp integer,
+
+  primary key (creature_id, student_id)
+);;
+
+create table creature_handling_skills (
+  creature_id bigint references creatures,
+  student_id bigint references students,
+  modifier integer,
+
+  primary key (creature_id, student_id)
+);;
+
 create table lesson_attendances (
   lesson_id bigint not null references lessons,
   student_id bigint not null references students,
@@ -76,14 +92,6 @@ create table phrases (
 create table diary (
   student_id bigint not null references students,
   phrase_id bigint not null references phrases
-);;
-
-create table creature_handling_skills (
-  creature_id bigint references creatures,
-  student_id bigint references students,
-  modifier integer,
-
-  primary key (creature_id, student_id)
 );;
 
 create table owls_students (
@@ -123,6 +131,7 @@ drop table student_clubs cascade;
 drop table lesson_attendances cascade;
 drop table lessons cascade;
 drop table owls_students cascade;
+drop table creature_fights cascade;
 drop table creature_handling_skills cascade;
 drop table students cascade;
 drop table spells cascade;

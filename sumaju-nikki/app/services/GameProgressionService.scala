@@ -29,7 +29,7 @@ class GameProgressionService(val studentDao: StudentDao,
 
   def startFighting(student: Student): Unit = {
     val creature = creatureDao.findNearRoom(student.currentRoom)
-    fightDao.create(Fight(student.id, creature.id, creature.hp))
+    fightDao.create(CreatureFight(student.id, creature.id, creature.hp))
     studentDao.updateStage(student.id, student.currentRoom, StageFight, FightTurnDuration)
   }
 
