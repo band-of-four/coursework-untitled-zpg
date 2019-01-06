@@ -2,8 +2,6 @@ package models
 
 import db.DbCtx
 
-case class CreatureFight(studentId: Long, creatureId: Long, creatureHp: Int)
-
 class FightDao(val db: DbCtx) {
   import db._
 
