@@ -1,16 +1,18 @@
 package services
 
 import game.Travel
-import models.{LessonDao, RoomDao, Student, StudentDao}
+import models.{LessonDao, RoomDao, Student, StudentDao, CreatureDao, FightDao}
 import models.Student.{StageFight, StageStudy, StageTravel}
-import game.Fight.FightChance
+import game.Fight.{FightChance, RoomsPerMonsterLevel, StudentAttackWeights, LuckyRange}   
 import game.Travel.{TravelDuration, TravelRadius, AttendClass, ContinueTravelling, VisitClub}
 import game.Study.StudyDuration
 import utils.RandomEvent
 
 class GameProgressionService(val studentDao: StudentDao,
                              val roomDao: RoomDao,
-                             val lessonDao: LessonDao) {
+                             val lessonDao: LessonDao,
+                             val creatureDao: CreatureDao,
+                             val fightDao: FightDao) {
   def pendingUpdates(count: Int): Seq[Student] =
     studentDao.findPendingTurnUpdates(count)
 
@@ -25,9 +27,30 @@ class GameProgressionService(val studentDao: StudentDao,
 
   def finishStudying(student: Student): Unit = ???
 
-  def startFighting(student: Student): Unit = ???
+  def startFighting(student: Student): Unit = {
+    val monster = creatureDao.getRandomCreatureByLevel((student.currentRoom / RoomsPerMonsterLevel).toInt)
+    fightDao.insert(new Fight(student, monster, monster.hp))
+    student.stage = StageFight
+  }
 
-  def continueFighting(student: Student): Unit = ???
+  def continueFighting(s: Student): Unit = {
+    val r = scala.util.Random
+    val fight = fightDao.findFightByStudent(s)
+    val student_bonus = modifiersDao.getModifier(s, fight.creature) // Not implemented yet
+    val studentAttackModifiers = List(s.academicYear, s.attackSpell.power,
+      studentBonus, s.pet.power) // Spells not implemented yet
+    // Student attack calculates as weighted sum of some parameters multyplied by
+    // random float, that depends on power of students luck spell
+    val studentAttack = (studentAttackModifiers, StudentAttackWeights)
+      .zipped.map(_*_).toList.foldLeft(0)(_+_) * (r.nextFloat(LuckyRange) + s.luckSpell.power)
+    fight.creature_hp -= studentAttack
+    if (fight.creature_hp <= 0)
+      ???
+    val creatureAttack = (1 - (r.nextFloat(LuckyRange) + s.luckSpell.power) *
+      (fight.creature.power - s.defenceSpell.power)
+    s.hp -= creatureAttack
+    if (s.hp <= 0)
+      ???
 
   def enterNextRoom(student: Student): Unit = {
     val nearbyRooms = roomDao.preloadInRadius(student.currentRoom, TravelRadius)

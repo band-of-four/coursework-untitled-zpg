@@ -38,11 +38,13 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val studentDao = new _root_.models.StudentDao(db)
   lazy val roomDao = new _root_.models.RoomDao(db)
   lazy val lessonDao = new _root_.models.LessonDao(db)
+  lazy val creatureDao = new _root_.models.CreatureDao(db)
+  lazy val fightDao = new _root_.models.FightDao(db)
   /* Services */
   lazy val userService = new _root_.services.UserService(
     userDao, userLoginInfoDao, db, dbExecCtx, configuration)
   lazy val gameProgressionService = new _root_.services.GameProgressionService(
-    studentDao, roomDao, lessonDao)
+    studentDao, roomDao, lessonDao, creatureDao, fightDao)
   /* Auth */
   lazy val silhouette = new SilhouetteLoader(configuration, userService, wsClient)
   /* Controllers */

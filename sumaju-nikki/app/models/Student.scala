@@ -5,7 +5,9 @@ import java.time.{Duration, LocalDateTime}
 import db.DbCtx
 
 case class Student(stage: String, nextStageTime: LocalDateTime,
-                   academicYear: Int, currentRoom: Long, id: Long = -1)
+                   academicYear: Int, currentRoom: Long, id: Long = -1,
+                   hp: Int, attackSpell: Spell, defenceSpell: Spell,
+                   luckSpell: Spell)
 
 object Student {
   val StageTravel = "travel"
