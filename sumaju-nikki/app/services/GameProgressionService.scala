@@ -1,9 +1,9 @@
 package services
 
-import game.Travel
+import game.{Fight, Travel}
 import models._
 import models.Student.{StageFight, StageStudy, StageTravel}
-import game.Fight.{FightChance, FightTurnDuration, LuckyRange, StudentAttackWeights}
+import game.Fight.{FightChance, FightTurnDuration}
 import game.Travel._
 import game.Study.StudyDuration
 import utils.RandomEvent
@@ -34,15 +34,11 @@ class GameProgressionService(val studentDao: StudentDao,
   }
 
   def continueFighting(student: Student): Unit = {
-    val r = scala.util.Random
     val fight = fightDao.find(student)
-    val studentMod = creatureDao.findCreatureHandlingModifier(fight.creatureId, fight.studentId)
-    val studentAttackModifiers = List(s.academicYear, s.attackSpell.power,
-      studentBonus, s.pet.power) // Spells not implemented yet
-    // Student attack calculates as weighted sum of some parameters multyplied by
-    // random float, that depends on power of students luck spell
-    val studentAttack = (studentAttackModifiers, StudentAttackWeights)
-      .zipped.map(_*_).toList.foldLeft(0)(_+_) * (r.nextFloat(LuckyRange) + s.luckSpell.power)
+    val studentAttack = Fight.studentAttack(
+      student,
+      creatureHandlingMod = creatureDao.findCreatureHandlingModifier(fight.creatureId, fight.studentId)
+    )
     fight.creature_hp -= studentAttack
     if (fight.creature_hp <= 0)
       ???

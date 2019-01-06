@@ -6,6 +6,10 @@ object RandomEvent {
   def apply(odd: Double) = ThreadLocalRandom.current().nextDouble() < odd
 }
 
+object RandomDouble {
+  def apply(bound: Double) = ThreadLocalRandom.current().nextDouble(bound)
+}
+
 object WeightedSample {
   def apply[A](elements: Seq[A])(weightMap: A => Double): Option[A] = {
     val weights = elements.map(weightMap)
