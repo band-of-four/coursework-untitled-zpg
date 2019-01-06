@@ -3,7 +3,7 @@ package game
 import java.time.Duration
 
 import models.{OpponentCreature, Spell, Student}
-import models.Spell.{AttackSpell, LuckSpell}
+import models.Spell.{AttackSpell, LuckSpell, DefenceSpell}
 import utils.RandomDouble
 
 object Fight {
@@ -15,6 +15,7 @@ object Fight {
   val StudentAttackSkillWeight = 2.0
   val CreatureAttackLevelWeight = 8.0
   val CreatureAttackSkillWeight = -2.0
+  val StudentPetWeight = 1.0
 
   sealed trait TurnResult
   case class FightContinues(newStudentHp: Int, newCreatureHp: Int) extends TurnResult
@@ -24,14 +25,18 @@ object Fight {
   def computeTurn(student: Student, creature: OpponentCreature, spells: Seq[Spell]): TurnResult = {
     val attackSpell: Int = spells.find(_.kind == AttackSpell).get.power
     val luckSpell: Int = spells.find(_.kind == LuckSpell).get.power
+    val defenceSpell: Int = spells.find(_.kind == DefenceSpell).get.power
+    val pet: Creature = ??? // TODO find the way to store and get pets
 
     val studentAttack = (attackSpell +
       (student.academicYear * StudentAttackLevelWeight) +
       (creature.studentsSkill * StudentAttackSkillWeight) +
-      (if (luckSpell > 0) luckSpell * RandomDouble(LuckSpellRange) else 0)).toInt
+      (if (luckSpell > 0) luckSpell * RandomDouble(LuckSpellRange) else 0)).toInt +
+      (pet.power * StudentPetWeight)
 
     val creatureAttack = ((creature.level * CreatureAttackLevelWeight) +
-      (creature.studentsSkill * CreatureAttackSkillWeight)).toInt
+      (creature.studentsSkill * CreatureAttackSkillWeight)).toInt -
+      defenceSpell
 
     val newCreatureHp = creature.hp - studentAttack
     val newStudentHp = student.hp - creatureAttack

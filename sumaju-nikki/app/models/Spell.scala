@@ -9,6 +9,7 @@ case class SpellsStudent(spellId: Long, studentId: Long)
 object Spell {
   val AttackSpell = "attack"
   val LuckSpell = "luck"
+  val DefenceSpell = "defence"
 }
 
 class SpellDao(val db: DbCtx) {
