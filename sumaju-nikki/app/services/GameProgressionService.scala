@@ -3,7 +3,7 @@ package services
 import game.{Fight, Travel}
 import models._
 import models.Student.{StageFight, StageStudy, StageTravel}
-import game.Fight.{FightChance, FightTurnDuration}
+import game.Fight._
 import game.Travel._
 import game.Study.StudyDuration
 import utils.RandomEvent
@@ -34,19 +34,17 @@ class GameProgressionService(val studentDao: StudentDao,
   }
 
   def continueFighting(student: Student): Unit = {
-    val fight = fightDao.find(student)
-    val studentAttack = Fight.studentAttack(
-      student,
-      creatureHandlingMod = creatureDao.findCreatureHandlingModifier(fight.creatureId, fight.studentId)
-    )
-    fight.creature_hp -= studentAttack
-    if (fight.creature_hp <= 0)
-      ???
-    val creatureAttack = (1 - (r.nextFloat(LuckyRange) + s.luckSpell.power) *
-      (fight.creature.power - s.defenceSpell.power)
-    s.hp -= creatureAttack
-    if (s.hp <= 0)
-      ???
+    val opponent = creatureDao.findInFight(student)
+    val turnOutcome = Fight.computeTurn(student, opponent, spells = spellDao.findLearned(student))
+
+    turnOutcome match {
+      case StudentWon =>
+        ???
+      case StudentLost =>
+        ???
+      case FightContinues(studentHp, creatureHp) =>
+        ???
+    }
   }
 
   def enterNextRoom(student: Student): Unit = {
