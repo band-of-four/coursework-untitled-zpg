@@ -1,10 +1,10 @@
 package services
 
 import game.Travel
-import models.{LessonDao, RoomDao, Student, StudentDao, CreatureDao, FightDao}
+import models._
 import models.Student.{StageFight, StageStudy, StageTravel}
-import game.Fight.{FightChance, RoomsPerMonsterLevel, StudentAttackWeights, LuckyRange}   
-import game.Travel.{TravelDuration, TravelRadius, AttendClass, ContinueTravelling, VisitClub}
+import game.Fight.{FightChance, FightTurnDuration, LuckyRange, StudentAttackWeights}
+import game.Travel._
 import game.Study.StudyDuration
 import utils.RandomEvent
 
@@ -28,15 +28,15 @@ class GameProgressionService(val studentDao: StudentDao,
   def finishStudying(student: Student): Unit = ???
 
   def startFighting(student: Student): Unit = {
-    val monster = creatureDao.getRandomCreatureByLevel((student.currentRoom / RoomsPerMonsterLevel).toInt)
-    fightDao.insert(new Fight(student, monster, monster.hp))
-    student.stage = StageFight
+    val creature = creatureDao.findNearRoom(student.currentRoom)
+    fightDao.create(Fight(student.id, creature.id, creature.hp))
+    studentDao.updateStage(student.id, student.currentRoom, StageFight, FightTurnDuration)
   }
 
-  def continueFighting(s: Student): Unit = {
+  def continueFighting(student: Student): Unit = {
     val r = scala.util.Random
-    val fight = fightDao.findFightByStudent(s)
-    val student_bonus = modifiersDao.getModifier(s, fight.creature) // Not implemented yet
+    val fight = fightDao.find(student)
+    val studentMod = creatureDao.findCreatureHandlingModifier(fight.creatureId, fight.studentId)
     val studentAttackModifiers = List(s.academicYear, s.attackSpell.power,
       studentBonus, s.pet.power) // Spells not implemented yet
     // Student attack calculates as weighted sum of some parameters multyplied by
@@ -51,6 +51,7 @@ class GameProgressionService(val studentDao: StudentDao,
     s.hp -= creatureAttack
     if (s.hp <= 0)
       ???
+  }
 
   def enterNextRoom(student: Student): Unit = {
     val nearbyRooms = roomDao.preloadInRadius(student.currentRoom, TravelRadius)

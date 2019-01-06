@@ -1,10 +1,10 @@
 package models
 
 import db.DbCtx
-import scala.util.Random
 
 case class Creature(name: String, power: Int, hp: Int, level: Int, id: Long = -1)
-//case class creatureHandlingSkill(creatureId: Long, studentId: Long, modifier: Int)
+
+case class CreatureHandlingSkill(creatureId: Long, studentId: Long, modifier: Int)
 
 class CreatureDao(val db: DbCtx) {
   import db._
@@ -17,5 +17,12 @@ class CreatureDao(val db: DbCtx) {
         .map(_._1)
         .randomSort
         .take(1)
+    ).head
+
+  def findCreatureHandlingModifier(creatureId: Long, studentId: Long): Int =
+    run(
+      query[CreatureHandlingSkill]
+        .filter(s => s.creatureId == lift(creatureId) && s.studentId == lift(studentId))
+        .map(_.modifier)
     ).head
 }
