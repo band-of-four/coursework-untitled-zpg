@@ -27,7 +27,13 @@ class CreatureDao(val db: DbCtx) {
         .take(1)
     ).head
 
-  def findOpponent(student: Student): OpponentCreature =
+  def createFight(student: Student, creature: Creature): Unit =
+    run(
+      query[CreatureFight]
+        .insert(lift(CreatureFight(student.id, creature.id, creature.totalHp)))
+    )
+
+  def findInFight(student: Student): OpponentCreature =
     run(
       query[Creature]
         .join(query[CreatureFight]).on {

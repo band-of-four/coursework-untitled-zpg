@@ -12,7 +12,7 @@ class GameProgressionService(val studentDao: StudentDao,
                              val roomDao: RoomDao,
                              val lessonDao: LessonDao,
                              val creatureDao: CreatureDao,
-                             val fightDao: FightDao) {
+                             val spellDao: SpellDao) {
   def pendingUpdates(count: Int): Seq[Student] =
     studentDao.findPendingTurnUpdates(count)
 
@@ -28,8 +28,8 @@ class GameProgressionService(val studentDao: StudentDao,
   def finishStudying(student: Student): Unit = ???
 
   def startFighting(student: Student): Unit = {
-    val creature = creatureDao.findNearRoom(student.currentRoom)
-    fightDao.create(CreatureFight(student.id, creature.id, creature.hp))
+    val opponent = creatureDao.findNearRoom(student.currentRoom)
+    creatureDao.createFight(student, opponent)
     studentDao.updateStage(student.id, student.currentRoom, StageFight, FightTurnDuration)
   }
 
