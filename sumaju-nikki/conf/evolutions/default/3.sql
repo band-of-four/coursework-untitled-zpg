@@ -32,6 +32,7 @@ create table lessons (
 -- if both are null - then its a library
 create table rooms (
   number bigserial primary key,
+  level integer not null,
   club_id bigint references student_clubs,
   lesson_id bigint references lessons
 );;
