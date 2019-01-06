@@ -14,11 +14,9 @@ class UserPasswordInfoDao(val db: DbCtx,
                          (implicit val ec: ExecutionContext) extends DelegableAuthInfoDAO[PasswordInfo] {
   import db._
 
-  private val schema = quote(querySchema[UserPasswordInfo]("user_password_info"))
-
   override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = Future {
     run(
-      schema
+      query[UserPasswordInfo]
         .join(query[UserLoginInfo])
         .on((pi, li) => pi.infoId == li.id &&
           li.providerId == lift(loginInfo.providerID) &&
@@ -31,14 +29,14 @@ class UserPasswordInfoDao(val db: DbCtx,
 
   override def add(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] = Future {
     val liId = loginInfoDao.findIdByLoginInfo(li).get
-    run(schema.insert(lift(UserPasswordInfo(liId, pi.hasher, pi.password, pi.salt))))
+    run(query[UserPasswordInfo].insert(lift(UserPasswordInfo(liId, pi.hasher, pi.password, pi.salt))))
     pi
   }
 
   override def update(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] = Future {
     val liId = loginInfoDao.findIdByLoginInfo(li).get
     run(
-      schema
+      query[UserPasswordInfo]
         .filter(_.infoId == lift(liId))
         .update(_.hasher -> lift(pi.hasher),
           _.password -> lift(pi.password),
@@ -50,7 +48,7 @@ class UserPasswordInfoDao(val db: DbCtx,
   override def save(li: LoginInfo, pi: PasswordInfo): Future[PasswordInfo] = Future {
     val liId = loginInfoDao.findIdByLoginInfo(li).get
     run(
-      schema
+      query[UserPasswordInfo]
         .insert(lift(UserPasswordInfo(liId, pi.hasher, pi.password, pi.salt)))
         .onConflictUpdate(_.infoId)(
           (r, _) => r.hasher -> lift(pi.hasher),
@@ -62,6 +60,6 @@ class UserPasswordInfoDao(val db: DbCtx,
 
   override def remove(li: LoginInfo): Future[Unit] = Future {
     val liId = loginInfoDao.findIdByLoginInfo(li).get
-    run(schema.filter(_.infoId == lift(liId)).delete)
+    run(query[UserPasswordInfo].filter(_.infoId == lift(liId)).delete)
   }
 }

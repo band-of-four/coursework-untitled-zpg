@@ -39,7 +39,7 @@ package object test {
     override protected def beforeAll(): Unit = {
       val conn = components.dbApi.database("default").getConnection()
       conn.createStatement().executeUpdate("""
-        DELETE FROM user_oauth2_info; DELETE FROM user_password_info; DELETE FROM user_login_info; DELETE FROM users;
+        DELETE FROM user_oauth2_infos; DELETE FROM user_password_infos; DELETE FROM user_login_infos; DELETE FROM users;
       """)
     }
   }

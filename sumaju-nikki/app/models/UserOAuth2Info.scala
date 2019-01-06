@@ -18,7 +18,7 @@ class UserOAuth2InfoDao(val db: DbCtx,
                        (implicit val ec: ExecutionContext) extends DelegableAuthInfoDAO[OAuth2Info] {
   import db._
 
-  private val schema = quote(querySchema[UserOAuth2Info]("user_oauth2_info"))
+  private val schema = quote(querySchema[UserOAuth2Info]("user_oauth2_infos"))
 
   override def find(loginInfo: LoginInfo): Future[Option[OAuth2Info]] = Future {
     run(
