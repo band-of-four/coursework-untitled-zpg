@@ -1,8 +1,9 @@
 package services
 
-import game.{Fight, Travel}
+import game.{Fight, Heal, Travel}
 import models._
 import models.Student.{StageFight, StageStudy, StageTravel}
+import models.Room.Kind._
 import game.Fight._
 import game.Travel._
 import game.Study.StudyDuration
@@ -39,11 +40,14 @@ class GameProgressionService(val studentDao: StudentDao,
 
     turnOutcome match {
       case StudentWon =>
-        ???
+        creatureDao.removeFight(student)
       case StudentLost =>
-        ???
+        val infirmary = roomDao.findClosest(Infirmary, student.currentRoom)
+        studentDao.updateAfterLostFight(student, Heal.duration(student), infirmary)
+        creatureDao.removeFight(student)
       case FightContinues(studentHp, creatureHp) =>
-        ???
+        creatureDao.updateInFight(student, creatureHp)
+        studentDao.updateInFight(student, studentHp, FightTurnDuration)
     }
   }
 

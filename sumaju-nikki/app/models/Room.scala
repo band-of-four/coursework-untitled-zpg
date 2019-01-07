@@ -23,6 +23,15 @@ class RoomDao(val db: DbCtx) {
     encoder(java.sql.Types.VARCHAR, (index, value, row) =>
       row.setObject(index, value, java.sql.Types.OTHER))
 
+  def findClosest(kind: Room.Kind.Value, closestToRoom: Long): Long =
+    run(
+      query[Room]
+        .filter(r => r.number < lift(closestToRoom) && r.kind == lift(kind))
+        .sortBy(_.number)(Ord.desc)
+        .map(_.number)
+        .take(1)
+    ).head
+
   def preloadInRadius(aroundRoom: Long, radius: Long): Seq[RoomPreloaded] = {
     run(
       query[Room]
