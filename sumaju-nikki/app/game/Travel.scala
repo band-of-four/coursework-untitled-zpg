@@ -4,6 +4,7 @@ import java.time.Duration
 
 import models.LessonDao.LessonAttendanceMap
 import models.{RoomPreloaded, Student}
+import models.Room.Kind._
 import utils.WeightedSample
 
 object Travel {
@@ -20,14 +21,16 @@ object Travel {
 
   def pickDestination(student: Student, rooms: Seq[RoomPreloaded], attendance: LessonAttendanceMap): Destination = {
     val nextRoom = WeightedSample(rooms) {
-      case RoomPreloaded(_, level, _, _) if level > student.level =>
+      case RoomPreloaded(_, level, _, _, _) if level > student.level =>
         0
-      case RoomPreloaded(_, level, Some(club), _) =>
+      case RoomPreloaded(_, level, Clubroom, Some(club), _) =>
         0.15
-      case RoomPreloaded(_, _, _, Some(lesson)) =>
+      case RoomPreloaded(_, _, Classroom, _, Some(lesson)) =>
         0.5 * (lesson.requiredAttendance - attendance.getOrElse(lesson.id, 0))
-      case RoomPreloaded(_, _, None, None) =>
-        ??? // library?
+      case RoomPreloaded(_, _, Library, _, _) =>
+        ???
+      case RoomPreloaded(_, _, Infirmary, _, _) =>
+        ???
     }
 
     nextRoom match {

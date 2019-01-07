@@ -7,6 +7,9 @@
 create domain student_level as smallint
   constraint student_level_range check (value >= 0 and value <= 7);;
 
+create type room_kind as enum
+  ('classroom', 'clubroom', 'library', 'infirmary');;
+
 create table lessons (
   id bigserial primary key,
   name text not null,
@@ -22,8 +25,24 @@ create table student_clubs (
 create table rooms (
   number bigserial primary key,
   level student_level not null,
+  kind room_kind not null,
   club_id bigint references student_clubs,
-  lesson_id bigint references lessons
+  lesson_id bigint references lessons,
+
+  constraint room_kind_integrity check (
+    (kind = 'classroom'
+      and club_id is null
+      and lesson_id is not null)
+    or (kind = 'clubroom'
+      and club_id is not null
+      and lesson_id is null)
+    or (kind = 'library'
+      and club_id is null
+      and lesson_id is null)
+    or (kind = 'infirmary'
+      and club_id is null
+      and lesson_id is null)
+  )
 );;
 
 create table students (
@@ -42,3 +61,5 @@ drop table students;
 drop table rooms;
 drop table student_clubs;
 drop table lessons;
+drop type room_kind;
+drop domain student_level;
