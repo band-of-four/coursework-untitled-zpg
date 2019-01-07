@@ -3,7 +3,7 @@ package models
 import db.DbCtx
 import models.LessonDao.LessonAttendanceMap
 
-case class Lesson(name: String, academicYear: Int, requiredAttendance: Int, id: Long = -1)
+case class Lesson(name: String, level: Int, requiredAttendance: Int, id: Long = -1)
 
 case class LessonAttendance(lessonId: Long, studentId: Long, classesAttended: Int)
 
@@ -15,7 +15,7 @@ class LessonDao(val db: DbCtx) {
   import db._
 
   def getLessons(s: Student): Seq[Lesson] =
-    run(query[Lesson].filter(_.academicYear == lift(s.academicYear)))
+    run(query[Lesson].filter(_.level == lift(s.level)))
 
   def buildAttendanceMap(studentId: Long, lessonIds: Seq[Long]): LessonAttendanceMap =
     run(

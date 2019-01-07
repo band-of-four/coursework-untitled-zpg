@@ -2,7 +2,7 @@ package models
 
 import db.DbCtx
 
-case class Spell(name: String, kind: String, power: Int, academicYear: Int, id: Long = -1)
+case class Spell(name: String, kind: String, power: Int, level: Int, id: Long = -1)
 
 case class SpellsStudent(spellId: Long, studentId: Long)
 
@@ -26,7 +26,7 @@ class SpellDao(val db: DbCtx) {
   def findRandom(minLevel: Int, maxLevel: Int): Spell =
     run(
       query[Spell]
-        .filter(s => s.academicYear <= lift(maxLevel) && s.academicYear >= lift(minLevel))
+        .filter(s => s.level <= lift(maxLevel) && s.level >= lift(minLevel))
         .randomSort
         .take(1)
     ).head

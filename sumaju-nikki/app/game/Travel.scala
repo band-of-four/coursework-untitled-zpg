@@ -20,7 +20,7 @@ object Travel {
 
   def pickDestination(student: Student, rooms: Seq[RoomPreloaded], attendance: LessonAttendanceMap): Destination = {
     val nextRoom = WeightedSample(rooms) {
-      case RoomPreloaded(_, level, _, _) if level > student.academicYear =>
+      case RoomPreloaded(_, level, _, _) if level > student.level =>
         0
       case RoomPreloaded(_, level, Some(club), _) =>
         0.15
@@ -40,7 +40,7 @@ object Travel {
       case None =>
         val roomsByLevel = rooms.sortBy(c => (c.level, c.number))
         ContinueTravelling(
-          if (roomsByLevel.head.level <= student.academicYear)
+          if (roomsByLevel.head.level <= student.level)
             roomsByLevel.head.number // travel further (higher room numbers => higher academic year)
           else
             roomsByLevel.last.number // travel back (lower room numbers => lower academic year)
