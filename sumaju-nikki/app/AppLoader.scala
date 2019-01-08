@@ -1,6 +1,6 @@
 import java.io.Closeable
 
-import actors.GameProgressionActor
+import actors.{GameProgressionActor, UserSocketMapActor}
 import akka.actor.{ActorRef, Props}
 import play.api._
 import play.api.ApplicationLoader.Context
@@ -45,15 +45,19 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
     userDao, userLoginInfoDao, db, dbExecCtx, configuration)
   lazy val gameProgressionService = new _root_.services.GameProgressionService(
     studentDao, roomDao, lessonDao, creatureDao, spellDao)
+  /* Actors */
+  lazy val gameProgressionActor: ActorRef = actorSystem.actorOf(
+    Props(new GameProgressionActor(gameProgressionService)), "game-progression-actor")
+  lazy val userSocketMapActor: ActorRef = actorSystem.actorOf(
+    Props[UserSocketMapActor], "user-socket-map-actor")
   /* Auth */
   lazy val silhouette = new SilhouetteLoader(configuration, userService, wsClient)
   /* Controllers */
   lazy val homeController = new _root_.controllers.HomeController(controllerComponents)
   lazy val authController = new _root_.controllers.AuthController(
     controllerComponents, silhouette.env, silhouette.credentialsProvider, silhouette.socialProviderRegistry, userService)
+  lazy val socketController = new _root_.controllers.SocketController(
+    controllerComponents, silhouette.env, userSocketMapActor)(materializer, executionContext, actorSystem)
   /* Routes */
-  lazy val router: Router = new _root_.router.Routes(httpErrorHandler, homeController, assets, authController)
-  /* Actors */
-  lazy val gameProgressionActor: ActorRef = actorSystem.actorOf(
-    Props(new GameProgressionActor(gameProgressionService)), "game-progression-actor")
+  lazy val router: Router = new _root_.router.Routes(httpErrorHandler, homeController, assets, authController, socketController)
 }
