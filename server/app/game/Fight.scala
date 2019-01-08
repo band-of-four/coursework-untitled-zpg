@@ -2,8 +2,8 @@ package game
 
 import java.time.Duration
 
-import models.{OpponentCreature, Spell, Student}
-import models.Spell.{AttackSpell, LuckSpell, DefenceSpell}
+import models.{Creature, OpponentCreature, Spell, Student}
+import models.Spell.{AttackSpell, DefenceSpell, LuckSpell}
 import utils.RandomDouble
 
 object Fight {
@@ -29,14 +29,14 @@ object Fight {
     val pet: Creature = ??? // TODO find the way to store and get pets
 
     val studentAttack = (attackSpell +
-      (student.academicYear * StudentAttackLevelWeight) +
+      (student.level * StudentAttackLevelWeight) +
       (creature.studentsSkill * StudentAttackSkillWeight) +
-      (if (luckSpell > 0) luckSpell * RandomDouble(LuckSpellRange) else 0)).toInt +
-      (pet.power * StudentPetWeight)
+      (luckSpell * RandomDouble(LuckSpellRange)) +
+      (pet.power * StudentPetWeight)).toInt
 
     val creatureAttack = ((creature.level * CreatureAttackLevelWeight) +
-      (creature.studentsSkill * CreatureAttackSkillWeight)).toInt -
-      defenceSpell
+      (creature.studentsSkill * CreatureAttackSkillWeight) -
+      defenceSpell).toInt
 
     val newCreatureHp = creature.hp - studentAttack
     val newStudentHp = student.hp - creatureAttack

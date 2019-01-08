@@ -14,7 +14,7 @@ object GameProgressionActor {
   private val DelayWhenNoUpdatesPending = 1 second
 }
 
-class GameProgressionActor(val gameProgressionService: GameProgressionService) extends Actor {
+class GameProgressionActor(gameProgressionService: GameProgressionService) extends Actor {
   implicit val executionContext: ExecutionContext = context.dispatcher
 
   override def receive = {
