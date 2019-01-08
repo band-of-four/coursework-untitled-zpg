@@ -1,0 +1,34 @@
+{
+  "name": "sumaju-nikki",
+  "version": "1.0.0",
+  "description": "Sumaju Nikki assets",
+  "main": "src/app.js",
+  "scripts": {
+    "rollup": "rollup -c",
+    "postcss": "postcss css/app.css -c --verbose -o dist/app.css",
+    "postcss-prod": "postcss css/app.css -c --verbose -o dist/app.prod.css",
+    "watch": "concurrently --kill-others \"npm run rollup -- -w\" \"npm run postcss -- -w --poll\""
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.2.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
+    "@babel/plugin-transform-classes": "^7.2.2",
+    "concurrently": "^4.1.0",
+    "cssnano": "^4.1.8",
+    "postcss-cli": "^6.1.1",
+    "postcss-import": "^12.0.1",
+    "postcss-preset-env": "^6.5.0",
+    "rollup": "^1.0.2",
+    "rollup-plugin-babel": "^4.2.0",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-replace": "^2.1.0",
+    "rollup-plugin-vue": "^4.3.2",
+    "vue-template-compiler": "^2.5.21"
+  },
+  "dependencies": {
+    "vue": "^2.5.21",
+    "vuex": "^3.0.1"
+  }
+}
