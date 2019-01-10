@@ -8,8 +8,8 @@ export default {
   components: {},
   methods: {
     login() {
-      this.$store.commit('login');
-      this.$router.replace('/');
+      this.$store.dispatch('user/login', { username: 'h', password: 'h' }).then((res) =>
+        res && this.$router.replace('/'));
     }
   }
 }

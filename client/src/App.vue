@@ -9,12 +9,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
 
 export default {
   name: 'App',
-  computed: mapState([
-    'isLoggedIn'
-  ])
+  computed: mapState({
+    isLoggedIn: ({ user }) => user.isLoggedIn
+  })
 }
 </script>

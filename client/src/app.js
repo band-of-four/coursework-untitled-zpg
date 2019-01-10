@@ -5,9 +5,9 @@ import router from './router.js';
 import App from './App.vue';
 
 new Vue({
-  store,
-  router,
   el: '#app',
   components: { App },
-  render: (h) => h(App)
+  render: (h) => h(App),
+  router: router(store),
+  store
 });
