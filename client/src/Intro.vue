@@ -8,17 +8,14 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
   name: 'Auth',
   components: {},
   methods: {
-    create() {
-      this.createStudent({}).then(() =>
-        this.$router.replace('/'));
-    },
-    ...mapActions('user', ['createStudent'])
+    async create() {
+      await this.$store.dispatch('user/createStudent', {});
+      this.$router.replace('/');
+    }
   }
 }
 </script>
