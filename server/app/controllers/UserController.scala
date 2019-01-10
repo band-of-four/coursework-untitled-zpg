@@ -10,14 +10,19 @@ import utils.auth.CookieAuthEnv
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SocketController(cc: ControllerComponents,
-                       silhouette: Silhouette[CookieAuthEnv],
-                       userSocketMap: ActorRef)
-                      (implicit mat: Materializer,
-                       ec: ExecutionContext,
-                       actorSystem: ActorSystem) extends AbstractController(cc) {
-  def connect = WebSocket.acceptOrResult[String, String] { request =>
+class UserController(cc: ControllerComponents,
+                     silhouette: Silhouette[CookieAuthEnv],
+                     userSocketMap: ActorRef)
+                    (implicit mat: Materializer,
+                     ec: ExecutionContext,
+                     actorSystem: ActorSystem) extends AbstractController (cc) {
+  def getState() = silhouette.SecuredAction async { implicit request =>
+    Future.successful(Ok("{}"))
+  }
+
+  def getSocket() = WebSocket acceptOrResult[String, String] { request =>
     implicit val req = Request(request, AnyContentAsEmpty)
+
     silhouette.SecuredRequestHandler { s =>
       Future.successful(HandlerResult(Ok, Some(s.identity)))
     } map {

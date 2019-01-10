@@ -8,8 +8,11 @@ GET     /                           controllers.HomeController.index
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
++nocsrf
 POST    /auth/signin                controllers.AuthController.signIn
++nocsrf
 POST    /auth/signup                controllers.AuthController.signUp
 GET     /auth/social/:provider      controllers.AuthController.social(provider: String)
 
-GET     /socket/connect             controllers.SocketController.connect
+GET     /user/state                 controllers.UserController.getState
+GET     /user/socket                controllers.UserController.getSocket
