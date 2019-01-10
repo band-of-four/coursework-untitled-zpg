@@ -1,32 +1,42 @@
-import { postSignIn } from '../api/user.js';
+import { getState, postSignIn, USER_STATE_MISSING, USER_AUTH_REQUIRED } from '../api/user.js';
 
 export default {
   namespaced: true,
   state: {
     isSignedIn: false,
-    hasStudent: false
+    hasProfile: false
   },
   actions: {
-    async init({ state, commit }) {
-      if (state.isSignedIn)
-        commit('studentMissing');
+    async initState({ commit }) {
+      const state = await getState();
+      if (state === USER_AUTH_REQUIRED)
+        commit('signedOut');
+      else if (state === USER_STATE_MISSING) {
+        commit('signedIn');
+        commit('profileMissing');
+      }
+      else
+        commit('initialized');
     },
     async signIn({ commit, dispatch }, credentials) {
       const success = await postSignIn(credentials);
       if (!success) return false;
 
-      commit('signedIn');
-      await dispatch('init');
+      await dispatch('initState');
 
       return true;
     },
     async createStudent({ commit, dispatch }, student) {
-      commit('studentCreated');
+      await dispatch('initState');
     }
   },
   mutations: {
+    signedOut(state) { state.isSignedIn = false; },
     signedIn(state) { state.isSignedIn = true; },
-    studentMissing(state) { state.hasStudent = false; },
-    studentCreated(state) { state.hasStudent = true; }
+    profileMissing(state) { state.hasProfile = false; },
+    initialized(state) {
+      state.isSignedIn = true;
+      state.hasProfile = true;
+    }
   }
 };

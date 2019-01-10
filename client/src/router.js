@@ -15,11 +15,11 @@ export default function (store) {
   });
 
   router.beforeEach((to, from, next) => {
-    if (!store.state.user.isLoggedIn) {
+    if (!store.state.user.isSignedIn) {
       if (to.path === '/auth') next();
       else next('/auth');
     }
-    else if (!store.state.user.hasStudent) {
+    else if (!store.state.user.hasProfile) {
       if (to.path === '/intro') next();
       else next('/intro');
     }
