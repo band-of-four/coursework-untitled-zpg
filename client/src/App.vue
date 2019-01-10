@@ -1,11 +1,17 @@
 <template>
-<span>vue says h</span>
+<Auth v-if="!isLoggedIn" />
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
+import Auth from './Auth.vue';
+
 export default {
   name: 'App',
-  components: {},
-  methods: {}
+  components: { Auth },
+  computed: mapState([
+    'isLoggedIn'
+  ])
 }
 </script>
