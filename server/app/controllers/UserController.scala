@@ -6,18 +6,28 @@ import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 import actors.SocketActor
 import akka.stream.Materializer
+import models.StudentDao
+import play.api.libs.json.Json
+import services.UserStateService
 import utils.auth.CookieAuthEnv
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class UserController(cc: ControllerComponents,
                      silhouette: Silhouette[CookieAuthEnv],
-                     userSocketMap: ActorRef)
+                     userSocketMap: ActorRef,
+                     userStateService: UserStateService)
                     (implicit mat: Materializer,
                      ec: ExecutionContext,
                      actorSystem: ActorSystem) extends AbstractController (cc) {
+
   def getState() = silhouette.SecuredAction async { implicit request =>
-    Future.successful(Ok("{}"))
+    import userStateService.userStateWrites
+
+    userStateService.getForUser(request.identity.id).map {
+      case Some(state) => Ok(Json.toJson(state))
+      case None => NotFound
+    }
   }
 
   def getSocket() = WebSocket acceptOrResult[String, String] { request =>

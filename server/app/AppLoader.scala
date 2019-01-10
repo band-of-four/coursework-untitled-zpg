@@ -43,6 +43,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   /* Services */
   lazy val userService = new _root_.services.UserService(
     userDao, userLoginInfoDao, db, dbExecCtx, configuration)
+  lazy val userStateService = new _root_.services.UserStateService(studentDao)
   lazy val gameProgressionService = new _root_.services.GameProgressionService(
     studentDao, roomDao, lessonDao, creatureDao, spellDao)
   /* Actors */
@@ -57,7 +58,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val authController = new _root_.controllers.AuthController(
     controllerComponents, silhouette.env, silhouette.credentialsProvider, silhouette.socialProviderRegistry, userService)
   lazy val userController = new _root_.controllers.UserController(
-    controllerComponents, silhouette.env, userSocketMapActor)(materializer, executionContext, actorSystem)
+    controllerComponents, silhouette.env, userSocketMapActor, userStateService)(materializer, executionContext, actorSystem)
   /* Routes */
   lazy val router: Router = new _root_.router.Routes(
     httpErrorHandler, homeController, assets, authController, userController)

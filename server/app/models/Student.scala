@@ -18,6 +18,9 @@ object Student {
 class StudentDao(val db: DbCtx) {
   import db._
 
+  def findForUser(userId: Long): Option[Student] =
+    run(query[Student].filter(_.id == lift(userId))).headOption
+
   def findPendingTurnUpdates(count: Int): Seq[Student] =
     run(
       query[Student]
