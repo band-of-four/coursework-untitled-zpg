@@ -48,6 +48,7 @@ create table rooms (
 create table students (
   id bigserial primary key,
   name text not null,
+  hp integer not null,
   level student_level not null,
   current_room bigint not null references rooms,
   stage text not null,
