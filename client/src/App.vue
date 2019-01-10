@@ -1,15 +1,18 @@
 <template>
-<Auth v-if="!isLoggedIn" />
+  <router-view v-if="$route.matched.length"></router-view>
+  <section v-else-if="!isLoggedIn">
+    <router-link to="/auth">Log in</router-link>
+  </section>
+  <section v-else>
+    <span>Logged in!</span>
+  </section>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 
-import Auth from './Auth.vue';
-
 export default {
   name: 'App',
-  components: { Auth },
   computed: mapState([
     'isLoggedIn'
   ])

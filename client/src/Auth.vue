@@ -9,6 +9,7 @@ export default {
   methods: {
     login() {
       this.$store.commit('login');
+      this.$router.replace('/');
     }
   }
 }
