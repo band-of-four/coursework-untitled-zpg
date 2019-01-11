@@ -54,12 +54,13 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   /* Auth */
   lazy val silhouette = new SilhouetteLoader(configuration, userService, wsClient)
   /* Controllers */
-  lazy val homeController = new _root_.controllers.HomeController(controllerComponents)
   lazy val authController = new _root_.controllers.AuthController(
     controllerComponents, silhouette.env, silhouette.credentialsProvider, silhouette.socialProviderRegistry, userService)
   lazy val userController = new _root_.controllers.UserController(
     controllerComponents, silhouette.env, userSocketMapActor, userStateService)(materializer, executionContext, actorSystem)
+  lazy val applicationController = new _root_.controllers.ApplicationController(
+    controllerComponents, silhouette.env, userSocketMapActor)(materializer, executionContext, actorSystem)
   /* Routes */
   lazy val router: Router = new _root_.router.Routes(
-    httpErrorHandler, homeController, assets, authController, userController)
+    httpErrorHandler, applicationController, assets, authController, userController)
 }
