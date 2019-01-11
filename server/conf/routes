@@ -15,5 +15,5 @@ POST    /auth/signin                controllers.AuthController.signIn
 POST    /auth/signup                controllers.AuthController.signUp
 GET     /auth/social/:provider      controllers.AuthController.social(provider: String)
 
-GET     /user/state                 controllers.UserController.getState
-GET     /user/socket                controllers.UserController.getSocket
+GET     /student                    controllers.StudentController.get
+POST    /student                    controllers.StudentController.create
