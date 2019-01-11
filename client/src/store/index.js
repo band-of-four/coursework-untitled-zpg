@@ -2,8 +2,10 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import { API_UNAUTHENTICATED } from '../api';
-import { getStudent, STUDENT_NOT_CREATED } from '../api/student.js';
+import { getStudent, postStudent, STUDENT_NOT_CREATED } from '../api/student.js';
 import { postSignIn } from '../api/auth.js';
+
+import studentModule from './student.js';
 
 Vue.use(Vuex);
 
@@ -11,21 +13,19 @@ export default new Vuex.Store({
   state: {
     error: false,
     loading: true,
-    signedIn: false,
+    signedIn: true,
     student: null
   },
   actions: {
-    async load({ commit }) {
+    async load({ commit, dispatch }) {
       try {
-        const student = await getStudent();
+        return await dispatch('initState', await getStudent());
       }
       catch (e) {
         if (e === API_UNAUTHENTICATED)
           commit('signedOut');
-        else if (e === STUDENT_NOT_CREATED) {
-          commit('signedIn');
+        else if (e === STUDENT_NOT_CREATED)
           commit('studentNotCreated');
-        }
         else
           commit('apiError');
       }
@@ -38,6 +38,13 @@ export default new Vuex.Store({
 
       return true;
     },
+    async createStudent({ commit, dispatch }, student) {
+      return await dispatch('initState', await postStudent(student));
+    },
+    async initState({ commit }, student) {
+      this.registerModule('student', studentModule(student));
+      commit('loaded');
+    }
   },
   mutations: {
     apiError(state) {

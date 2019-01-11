@@ -8,3 +8,8 @@ export async function getStudent() {
     throw STUDENT_NOT_CREATED;
   return await response.json();
 }
+
+export async function postStudent(data) {
+  const response = await post('/student', data);
+  return await response.json();
+}

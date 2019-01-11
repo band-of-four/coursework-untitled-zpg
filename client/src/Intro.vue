@@ -13,7 +13,7 @@ export default {
   components: {},
   methods: {
     async create() {
-      await this.$store.dispatch('user/createStudent', {});
+      await this.$store.dispatch('createStudent', { name: 'Lain', gender: 'Female' });
       this.$router.replace('/');
     }
   }
