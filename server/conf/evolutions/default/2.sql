@@ -7,6 +7,9 @@
 create domain student_level as smallint
   constraint student_level_range check (value >= 0 and value <= 7);;
 
+create type student_gender as enum
+  ('female', 'male');;
+
 create type room_kind as enum
   ('classroom', 'clubroom', 'library', 'infirmary');;
 
@@ -46,10 +49,11 @@ create table rooms (
 );;
 
 create table students (
-  id bigserial primary key,
+  id bigserial primary key references users,
   name text not null,
-  hp integer not null,
+  gender student_gender not null,
   level student_level not null,
+  hp integer not null,
   current_room bigint not null references rooms,
   stage text not null,
   next_stage_time timestamp not null

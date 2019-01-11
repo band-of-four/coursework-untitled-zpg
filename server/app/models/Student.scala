@@ -3,20 +3,36 @@ package models
 import java.time.{Duration, LocalDateTime}
 
 import db.DbCtx
-import models.Student.StageHeal
-
-case class Student(stage: String, nextStageTime: LocalDateTime,
-                   level: Int, currentRoom: Long, hp: Int, id: Long = -1)
+import models.Student.{Gender, StageHeal}
 
 object Student {
+  object Gender extends Enumeration {
+    type Gender = Value
+    val Female, Male = Value
+  }
+
   val StageTravel = "travel"
   val StageFight = "fight"
   val StageStudy = "study"
   val StageHeal = "heal"
 }
 
+case class Student(name: String, gender: Gender.Value, level: Int, hp: Int, currentRoom: Long,
+                   stage: String, nextStageTime: LocalDateTime, id: Long = -1)
+
 class StudentDao(val db: DbCtx) {
   import db._
+
+  implicit val decoderGender: Decoder[Gender.Value] = decoder((index, row) =>
+    Gender.withName(row.getObject(index).toString split "_" map (p => p.head.toUpper + p.tail) mkString))
+
+  implicit val encoderGender: Encoder[Gender.Value] = encoder(java.sql.Types.VARCHAR, (index, value, row) =>
+      row.setObject(index, value, java.sql.Types.OTHER))
+
+  def create(student: Student): Student = {
+    run(query[Student].insert(lift(student)))
+    student
+  }
 
   def findForUser(userId: Long): Option[Student] =
     run(query[Student].filter(_.id == lift(userId))).headOption
