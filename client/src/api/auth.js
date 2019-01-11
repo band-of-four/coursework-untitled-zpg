@@ -5,3 +5,9 @@ export async function postSignIn(credentials) {
   if (response.status === 200) return true;
   else return false;
 }
+
+export async function postSignUp(credentials) {
+  const response = await post('/auth/signup', credentials);
+  if (response.status === 200) return true;
+  else return false;
+}

@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 
 import { API_UNAUTHENTICATED } from '../api';
 import { getStudent, postStudent, STUDENT_NOT_CREATED } from '../api/student.js';
-import { postSignIn } from '../api/auth.js';
+import { postSignIn, postSignUp } from '../api/auth.js';
 
 import studentModule from './student.js';
 
@@ -28,6 +28,14 @@ export default new Vuex.Store({
           commit('studentNotCreated');
         else
           commit('apiError');
+      }
+    },
+    async signUp({ commit, dispatch }, credentials) {
+      try {
+        return await postSignUp(credentials);
+      }
+      catch (e) {
+        commit('apiError');
       }
     },
     async signIn({ commit, dispatch }, credentials) {

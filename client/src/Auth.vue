@@ -2,7 +2,14 @@
 <form @submit.prevent="submit">
   <input type="email" v-model="email" placeholder="Адрес e-mail" />
   <input type="password" v-model="password" placeholder="Пароль" />
-  <button type="submit">Войти</button>
+  <template v-if="mode === 'signin'">
+    <button type="submit">Войти</button>
+    <button @click.prevent="mode = 'signup'">Впервые с нами?</button>
+  </template>
+  <template v-else>
+    <button type="submit">Познакомиться</button>
+    <button @click.prevent="mode = 'signin'">Мы уже знакомы</button>
+  </template>
   <p v-if="status">{{ status }}</p>
 </form>
 </template>
@@ -13,13 +20,22 @@ export default {
   data: () => ({
     email: '',
     password: '',
-    status: null
+    status: null,
+    mode: 'signin'
   }),
   components: {},
   methods: {
     async submit() {
       this.status = 'Загрузка...';
-
+      if (this.mode === 'signup') {
+        const succUp = await this.$store.dispatch('signUp',
+          {email: this.email, password: this.password });
+        if (!succUp) {
+          this.status = 'Email занят';
+          return;
+        }
+      }
+ 
       const success = await this.$store.dispatch('signIn',
         { email: this.email, password: this.password });
 
