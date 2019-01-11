@@ -28,7 +28,7 @@ class StudentService(val studentDao: StudentDao)(implicit ec: ExecutionContext) 
       entry.gender,
       level = 0,
       hp = 100,
-      currentRoom = 0,
+      currentRoom = 1,
       stage = StageTravel,
       nextStageTime = LocalDateTime.now().plus(TravelDuration),
       id = userId

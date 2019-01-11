@@ -9,9 +9,7 @@ GET     /connect                    controllers.ApplicationController.connect
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-+nocsrf
 POST    /auth/signin                controllers.AuthController.signIn
-+nocsrf
 POST    /auth/signup                controllers.AuthController.signUp
 GET     /auth/social/:provider      controllers.AuthController.social(provider: String)
 

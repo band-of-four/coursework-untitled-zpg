@@ -24,10 +24,10 @@ class StudentDao(val db: DbCtx) {
   import db._
 
   implicit val decoderGender: Decoder[Gender.Value] = decoder((index, row) =>
-    Gender.withName(row.getObject(index).toString split "_" map (p => p.head.toUpper + p.tail) mkString))
+    Gender.withName(row.getObject(index).toString.capitalize))
 
   implicit val encoderGender: Encoder[Gender.Value] = encoder(java.sql.Types.VARCHAR, (index, value, row) =>
-      row.setObject(index, value, java.sql.Types.OTHER))
+      row.setObject(index, value.toString.toLowerCase, java.sql.Types.OTHER))
 
   def create(student: Student): Student = {
     run(query[Student].insert(lift(student)))

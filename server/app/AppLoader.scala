@@ -7,6 +7,7 @@ import play.api.ApplicationLoader.Context
 import play.api.routing.Router
 import io.getquill._
 import javax.sql.DataSource
+import play.api.mvc.EssentialFilter
 import utils.auth.SilhouetteLoader
 
 class AppLoader extends ApplicationLoader {
@@ -19,13 +20,15 @@ class AppLoader extends ApplicationLoader {
 }
 
 class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
+                                  with play.filters.headers.SecurityHeadersComponents
                                   with play.api.db.DBComponents
                                   with play.api.db.evolutions.EvolutionsComponents
                                   with play.api.db.HikariCPComponents
-                                  with play.filters.HttpFiltersComponents
                                   with play.api.libs.ws.ahc.AhcWSComponents
                                   with _root_.controllers.AssetsComponents {
   applicationEvolutions
+
+  def httpFilters: Seq[EssentialFilter] = Seq(securityHeadersFilter)
 
   lazy val db = new _root_.db.DbCtx(CompositeNamingStrategy2(SnakeCase, PluralizedTableNames),
     dbApi.database("default").dataSource.asInstanceOf[DataSource with Closeable])
