@@ -5,7 +5,7 @@ import router from './router.js';
 
 import App from './App.vue';
 
-store.dispatch('user/initState').then(() => new Vue({
+store.dispatch('load').then(() => new Vue({
   el: '#app',
   components: { App },
   render: (h) => h(App),

@@ -1,10 +1,11 @@
 <template>
-  <router-view v-if="$route.matched.length"></router-view>
-  <section v-else-if="!isSignedIn">
+  <section v-if="loading">Загрузка...</section>
+  <section v-else-if="!signedIn">
     <router-link to="/auth">Войти</router-link>
   </section>
+  <router-view v-else-if="$route.matched.length"></router-view>
   <section v-else>
-    <span>Logged in!</span>
+    <span>Страница персонажа</span>
   </section>
 </template>
 
@@ -13,8 +14,6 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'App',
-  computed: mapState({
-    isSignedIn: ({ user }) => user.isSignedIn
-  })
+  computed: mapState(['loading', 'signedIn'])
 }
 </script>

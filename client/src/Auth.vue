@@ -20,11 +20,11 @@ export default {
     async submit() {
       this.status = 'Загрузка...';
 
-      const success = await this.$store.dispatch('user/signIn',
+      const success = await this.$store.dispatch('signIn',
         { email: this.email, password: this.password });
 
       if (success) {
-        this.$store.commit('user/signedIn');
+        this.$store.commit('signedIn');
         this.$router.replace('/');
       }
       else
