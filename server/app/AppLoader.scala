@@ -50,6 +50,8 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
     studentDao, spellDao)
   lazy val gameProgressionService = new _root_.services.GameProgressionService(
     studentDao, roomDao, lessonDao, creatureDao, spellDao)
+  lazy val stageService = new _root_.services.StageService(
+    studentDao)
   /* Actors */
   lazy val gameProgressionActor: ActorRef = actorSystem.actorOf(
     Props(new GameProgressionActor(gameProgressionService)), "game-progression-actor")
@@ -61,7 +63,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val authController = new _root_.controllers.AuthController(
     controllerComponents, silhouette.env, silhouette.credentialsProvider, silhouette.socialProviderRegistry, userService)
   lazy val applicationController = new _root_.controllers.ApplicationController(
-    controllerComponents, silhouette.env, userSocketMapActor)(materializer, executionContext, actorSystem)
+    controllerComponents, silhouette.env, userSocketMapActor, stageService)(materializer, executionContext, actorSystem)
   lazy val studentController = new _root_.controllers.StudentController(
     controllerComponents, silhouette.env, studentService)
   /* Routes */

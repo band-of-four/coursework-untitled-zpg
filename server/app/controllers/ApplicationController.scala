@@ -6,13 +6,15 @@ import akka.stream.Materializer
 import com.mohiva.play.silhouette.api.{HandlerResult, Silhouette}
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
+import services.StageService
 import utils.auth.CookieAuthEnv
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class ApplicationController(cc: ControllerComponents,
                             silhouette: Silhouette[CookieAuthEnv],
-                            userSocketMap: ActorRef)
+                            userSocketMap: ActorRef,
+                            stageService: StageService)
                            (implicit mat: Materializer,
                             ec: ExecutionContext,
                             actorSystem: ActorSystem) extends AbstractController(cc) {
@@ -27,7 +29,7 @@ class ApplicationController(cc: ControllerComponents,
       Future.successful(HandlerResult(Ok, Some(s.identity)))
     } map {
       case HandlerResult(r, Some(user)) =>
-        Right(ActorFlow.actorRef(SocketActor.props(user.id, userSocketMap)))
+        Right(ActorFlow.actorRef(SocketActor.props(user.id, userSocketMap, stageService)))
       case HandlerResult(r, None) =>
         Left(r)
     }
