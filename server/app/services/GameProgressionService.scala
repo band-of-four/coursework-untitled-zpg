@@ -36,7 +36,7 @@ class GameProgressionService(val studentDao: StudentDao,
 
   def continueFighting(student: Student): Unit = {
     val opponent = creatureDao.findInFight(student)
-    val turnOutcome = Fight.computeTurn(student, opponent, spells = spellDao.findLearned(student))
+    val turnOutcome = Fight.computeTurn(student, opponent, spells = spellDao.findLearned(student.id))
 
     turnOutcome match {
       case StudentWon =>

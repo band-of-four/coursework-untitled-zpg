@@ -10,6 +10,7 @@
     <button type="submit">Познакомиться</button>
     <button @click.prevent="mode = 'signin'">Мы уже знакомы</button>
   </template>
+  <a href="/auth/social/vk">Войти с помощью Вконтакте</a>
   <p v-if="status">{{ status }}</p>
 </form>
 </template>

@@ -15,11 +15,11 @@ object Spell {
 class SpellDao(val db: DbCtx) {
   import db._
 
-  def findLearned(student: Student): Seq[Spell] =
+  def findLearned(studentId: Long): Seq[Spell] =
     run(
       query[Spell]
         .join(query[SpellsStudent])
-        .on((sp, spst) => sp.id == spst.spellId && spst.studentId == lift(student.id))
+        .on((sp, spst) => sp.id == spst.spellId && spst.studentId == lift(studentId))
         .map(_._1)
     )
 

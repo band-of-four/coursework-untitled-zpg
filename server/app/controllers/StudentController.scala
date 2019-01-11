@@ -20,6 +20,7 @@ class StudentController(cc: ControllerComponents,
                        (implicit ec: ExecutionContext) extends AbstractController(cc) {
   implicit val studentGenderReads = Reads.enumNameReads(Student.Gender)
   implicit val studentWrites = Json.writes[Student]
+  implicit val spellWrites = Json.writes[StudentService.StudentSpell]
   implicit val entryReads = Json.reads[StudentService.NewStudent]
 
   def get() = silhouette.SecuredAction async { implicit request =>
@@ -37,4 +38,9 @@ class StudentController(cc: ControllerComponents,
       case _: StudentAlreadyExistsException => UnprocessableEntity(StudentController.AlreadyExists)
     }
   }
+  
+  def getSpells() = silhouette.SecuredAction async { implicit request =>
+    studentService getSpells request.identity.id map { s => Ok(Json.toJson(s)) }
+  }
+  
 }
