@@ -31,6 +31,7 @@ class StudentService(studentDao: StudentDao, spellDao: SpellDao)(implicit ec: Ex
       hp = 100,
       currentRoom = 1,
       stage = StageTravel,
+      stageStartTime = LocalDateTime.now(),
       nextStageTime = LocalDateTime.now().plus(TravelDuration),
       id = userId
     ))

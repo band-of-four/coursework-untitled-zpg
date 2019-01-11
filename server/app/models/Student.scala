@@ -18,7 +18,8 @@ object Student {
 }
 
 case class Student(name: String, gender: Gender.Value, level: Int, hp: Int, currentRoom: Long,
-                   stage: String, nextStageTime: LocalDateTime, id: Long = -1)
+                   stage: String, stageStartTime: LocalDateTime, nextStageTime: LocalDateTime,
+                   id: Long = -1)
 
 class StudentDao(val db: DbCtx) {
   import db._
@@ -51,6 +52,7 @@ class StudentDao(val db: DbCtx) {
       query[Student]
         .filter(_.id == lift(student.id))
         .update(_.hp -> lift(newHp),
+          _.stageStartTime -> lift(LocalDateTime.now()),  
           _.nextStageTime -> lift(LocalDateTime.now().plus(turnDuration)))
     )
 
@@ -58,6 +60,7 @@ class StudentDao(val db: DbCtx) {
     run(
       query[Student]
         .update(_.stage -> lift(StageHeal),
+          _.stageStartTime -> lift(LocalDateTime.now()),
           _.nextStageTime -> lift(LocalDateTime.now().plus(healDuration)),
           _.currentRoom -> lift(infirmaryRoom))
     )
@@ -68,6 +71,7 @@ class StudentDao(val db: DbCtx) {
         .filter(_.id == lift(studentId))
         .update(_.stage -> lift(stage),
           _.currentRoom -> lift(newRoom),
+          _.stageStartTime -> lift(LocalDateTime.now()),
           _.nextStageTime -> lift(LocalDateTime.now().plus(stageDuration)))
     )
 }

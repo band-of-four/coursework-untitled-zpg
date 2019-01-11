@@ -56,7 +56,8 @@ create table students (
   hp integer not null,
   current_room bigint not null references rooms,
   stage text not null,
-  next_stage_time timestamp not null
+  next_stage_time timestamp not null,
+  stage_start_time timestamp not null
 );;
 
 

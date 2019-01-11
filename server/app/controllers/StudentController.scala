@@ -4,7 +4,7 @@ import com.mohiva.play.silhouette.api.Silhouette
 import models.{Student, StudentDao}
 import play.api.libs.json.{Json, Reads}
 import play.api.mvc.{AbstractController, ControllerComponents}
-import services.StudentService
+import services.{StudentService, StageService}
 import services.StudentService.StudentAlreadyExistsException
 import utils.auth.CookieAuthEnv
 
@@ -16,7 +16,8 @@ object StudentController {
 
 class StudentController(cc: ControllerComponents,
                         silhouette: Silhouette[CookieAuthEnv],
-                        studentService: StudentService)
+                        studentService: StudentService,
+                        stageService: StageService)
                        (implicit ec: ExecutionContext) extends AbstractController(cc) {
   implicit val studentGenderReads = Reads.enumNameReads(Student.Gender)
   implicit val studentWrites = Json.writes[Student]
@@ -42,5 +43,4 @@ class StudentController(cc: ControllerComponents,
   def getSpells() = silhouette.SecuredAction async { implicit request =>
     studentService getSpells request.identity.id map { s => Ok(Json.toJson(s)) }
   }
-  
 }
