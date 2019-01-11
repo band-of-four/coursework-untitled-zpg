@@ -1,6 +1,5 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
 import com.mohiva.play.silhouette.api._
 import play.api.mvc._
 import play.api.libs.json._
@@ -15,18 +14,17 @@ import models.User
 import scala.concurrent.{ExecutionContext, Future}
 
 object AuthController {
-  val SUCCESS = "success"
-  val INVALID_CREDS = "invalid_creds"
-  val EMAIL_TAKEN = "email_taken"
+  val Success = "success"
+  val InvalidCreds = "invalid_creds"
+  val EmailTaken = "email_taken"
 }
 
-@Singleton
-class AuthController @Inject()(cc: ControllerComponents,
-                               silhouette: Silhouette[CookieAuthEnv],
-                               credentialsProvider: CredentialsProvider,
-                               socialProviderRegistry: SocialProviderRegistry,
-                               userService: UserService)
-                              (implicit ec: ExecutionContext) extends AbstractController(cc) {
+class AuthController (cc: ControllerComponents,
+                      silhouette: Silhouette[CookieAuthEnv],
+                      credentialsProvider: CredentialsProvider,
+                      socialProviderRegistry: SocialProviderRegistry,
+                      userService: UserService)
+                     (implicit ec: ExecutionContext) extends AbstractController(cc) {
   case class AuthRequest(email: String, password: String)
   implicit val authReads = Json.reads[AuthRequest]
 
@@ -39,7 +37,7 @@ class AuthController @Inject()(cc: ControllerComponents,
         response <- authenticate(loginInfo, LoginEvent(user, request))
       } yield response
     ).recover {
-      case _: ProviderException => UnprocessableEntity(AuthController.INVALID_CREDS)
+      case _: ProviderException => UnprocessableEntity(AuthController.InvalidCreds)
     }
   }
 
@@ -48,9 +46,9 @@ class AuthController @Inject()(cc: ControllerComponents,
       err => Future.successful(BadRequest(JsError.toJson(err))),
       auth => userService
         .saveEmail(auth.email, auth.password)
-        .map(_ => Ok(AuthController.SUCCESS))
+        .map(_ => Ok(AuthController.Success))
         .recover {
-          case _: EmailAlreadyTakenException => UnprocessableEntity(AuthController.EMAIL_TAKEN)
+          case _: EmailAlreadyTakenException => UnprocessableEntity(AuthController.EmailTaken)
         }
     )
   }
@@ -68,14 +66,14 @@ class AuthController @Inject()(cc: ControllerComponents,
         }
       case _ => Future.failed(new ProviderException(s"Unexpected provider $provider"))
     }).recover {
-      case _: ProviderException => UnprocessableEntity(AuthController.INVALID_CREDS)
+      case _: ProviderException => UnprocessableEntity(AuthController.InvalidCreds)
     }
   }
 
   private def authenticate[T](loginInfo: LoginInfo, loginEvent: LoginEvent[User])(implicit request: Request[T]) = for {
     authenticator <- silhouette.env.authenticatorService.create(loginInfo)
     serializedAuth <- silhouette.env.authenticatorService.init(authenticator)
-    response <- silhouette.env.authenticatorService.embed(serializedAuth, Ok(AuthController.SUCCESS))
+    response <- silhouette.env.authenticatorService.embed(serializedAuth, Ok(AuthController.Success))
   } yield {
     silhouette.env.eventBus.publish(loginEvent)
     response
