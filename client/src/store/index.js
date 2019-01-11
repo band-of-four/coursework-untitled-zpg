@@ -14,7 +14,8 @@ export default new Vuex.Store({
     error: false,
     loading: true,
     signedIn: true,
-    student: null
+    student: null,
+    ws: null
   },
   actions: {
     async load({ commit, dispatch }) {
@@ -51,7 +52,9 @@ export default new Vuex.Store({
     },
     async initState({ commit }, student) {
       this.registerModule('student', studentModule(student));
-      commit('loaded');
+
+      const ws = new WebSocket('ws://localhost:9000/connect');
+      commit('wsAcquired', ws);
     }
   },
   mutations: {
@@ -68,6 +71,9 @@ export default new Vuex.Store({
       state.student = null;
     },
     signedIn(state) { state.signedIn = true; },
-    loaded(state) { state.loading = false; }
+    wsAcquired(state, ws) {
+      state.loading = false;
+      state.ws = ws;
+    }
   }
 });
