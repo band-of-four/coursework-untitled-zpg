@@ -25,7 +25,7 @@ class StudentService(studentDao: StudentDao,
   }
 
   def create(userId: Long, entry: NewStudent): Future[Student] = Future {
-    studentDao.create(Student(
+    studentDao.create(??? /*Student(
       entry.name,
       entry.gender,
       level = 0,
@@ -35,7 +35,7 @@ class StudentService(studentDao: StudentDao,
       stageStartTime = LocalDateTime.now(),
       nextStageTime = LocalDateTime.now().plus(TravelDuration),
       id = userId
-    ))
+    )*/)
   } recoverWith {
     case e: PSQLException =>
       if (e.getMessage.startsWith("ERROR: duplicate key value"))

@@ -22,7 +22,7 @@ class StageService(studentDao: StudentDao)(implicit ec: ExecutionContext) {
     val duration = endTime - startTime
 
     CurrentStage(
-      student.stage,
+      ???,
       durationMs = endTime - startTime,
       elapsedMs = System.currentTimeMillis() - startTime
     )

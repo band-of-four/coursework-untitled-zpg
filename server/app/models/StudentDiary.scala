@@ -7,7 +7,7 @@ import db.DbCtx
 
 case class StudentDiaryEntry(studentId: Long, noteId: Long, date: LocalDateTime)
 
-case class StudentDiaryNote(text: String, date: LocalDateTime, kind: Note.Kind,
+case class StudentDiaryNote(text: String, date: LocalDateTime, stage: Student.Stage,
                             lesson: Option[String], club: Option[String], creature: Option[String])
 
 object StudentDiaryNote { implicit val jsonWrites = Json.format[StudentDiaryNote] }
@@ -35,7 +35,8 @@ class StudentDiaryDao(db: DbCtx) {
           case ((((sde, n), l), cl), cr) => n.creatureId.exists(_ == cr.id)
         }
         .map {
-          case ((((sde, n), l), cl), cr) => StudentDiaryNote(n.text, sde.date, n.kind, l.map(_.name), cl.map(_.name), cr.map(_.name))
+          case ((((sde, n), l), cl), cr) =>
+            StudentDiaryNote(n.text, sde.date, n.stage, l.map(_.name), cl.map(_.name), cr.map(_.name))
         }
         .take(lift(count))
     )

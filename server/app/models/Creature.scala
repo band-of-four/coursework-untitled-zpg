@@ -27,10 +27,10 @@ class CreatureDao(val db: DbCtx) {
         .take(1)
     ).head
 
-  def createFight(student: Student, creature: Creature): Unit =
+  def createFight(studentId: Long, creature: Creature): Unit =
     run(
       query[CreatureFight]
-        .insert(lift(CreatureFight(student.id, creature.id, creature.totalHp)))
+        .insert(lift(CreatureFight(studentId, creature.id, creature.totalHp)))
     )
 
   def removeFight(student: Student): Unit =
