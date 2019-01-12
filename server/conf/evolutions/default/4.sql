@@ -2,63 +2,52 @@
 
 # --- !Ups
 
-create table lesson_attendances (
-  lesson_id bigint not null references lessons,
-  student_id bigint not null references students,
-  classes_attended integer
-);;
+create type note_kind as enum
+  ('lesson', 'club', 'fight', 'infirmary');;
 
-create table student_letters (
-  sender_id bigint not null references students,
-  receiver_id bigint not null references students,
-  club_id bigint not null references student_clubs
-);;
-
-create table phrases (
+create table notes (
   id bigserial primary key,
-  creature_type_id bigint references creatures,
-  student_club_id bigint references student_clubs,
+  kind note_kind not null,
+  text text not null,
+  text_gender student_gender not null,
+  creator_id bigserial not null references users,
+
   lesson_id bigint references lessons,
-  phrase_type text, -- enter the battle, winning the battle etc
-  phrase text
+  club_id bigint references student_clubs,
+  creature_id bigint references creatures,
+
+  constraint note_kind_integrity check (
+    (kind = 'lesson'
+      and lesson_id is not null
+      and club_id is null
+      and creature_id is null)
+    or (kind = 'club'
+      and lesson_id is null
+      and club_id is not null
+      and creature_id is null)
+    or (kind = 'fight'
+      and lesson_id is null
+      and club_id is null
+      and creature_id is not null)
+    or (kind = 'infirmary'
+      and lesson_id is null
+      and club_id is null
+      and creature_id is null)
+  )
 );;
 
-create table diary (
+create table student_diary_entries (
   student_id bigint not null references students,
-  phrase_id bigint not null references phrases
+  note_id bigint not null references notes,
+  date timestamp not null
 );;
 
-create table owls_students (
-  student_id bigint not null references students,
-  owl_type text
-);;
-
-create table relationships (
-  student_a bigint not null references students,
-  student_b bigint not null references students,
-  relationship integer
-);;
-
-create or replace function display_owls (username text)
-returns table (
-  owl_type text,
-  amount bigint
-)
-as $$
-begin
-  return query
-  select owls_students.owl_type, count(owls_students.owl_type) from students, owls_students
-  where students.id = owls_students.student_id
-  and students.name = username
-  group by owls_students.owl_type;;
-end;; $$
-language 'plpgsql';;
+create unique index student_diary_entries_pkey
+  on student_diary_entries (student_id, date desc);
 
 # --- !Downs
-drop function display_owls(username text);
-drop table diary cascade;
-drop table relationships cascade;
-drop table phrases cascade;
-drop table student_letters cascade;
-drop table lesson_attendances cascade;
-drop table owls_students cascade;
+
+drop index student_diary_entries_pkey;
+drop table student_diary_entries;
+drop table notes;
+drop type note_kind;
