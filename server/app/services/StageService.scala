@@ -8,15 +8,23 @@ import java.time.ZoneId
 import scala.concurrent.ExecutionContext
 
 object StageService {
-  case class CurrentStage(name: String, startTime: Long, endTime: Long, currTime:Long)
+  case class CurrentStage(name: String, durationMs: Long, elapsedMs: Long)
+
+  implicit val stageWrites = Json.writes[CurrentStage]
 }
 
 class StageService(studentDao: StudentDao)(implicit ec: ExecutionContext) {
   def getCurrentStage(userId: Long): CurrentStage = {
     val student = studentDao.findForUser(userId).get
-    CurrentStage(student.stage,
-      student.stageStartTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(), 
-      student.nextStageTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-      System.currentTimeMillis())
+
+    val startTime = student.stageStartTime.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli
+    val endTime = student.nextStageTime.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli
+    val duration = endTime - startTime
+
+    CurrentStage(
+      student.stage,
+      durationMs = endTime - startTime,
+      elapsedMs = System.currentTimeMillis() - startTime
+    )
   }
 }

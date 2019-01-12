@@ -68,4 +68,5 @@ drop table rooms;
 drop table student_clubs;
 drop table lessons;
 drop type room_kind;
+drop type student_gender;
 drop domain student_level;
