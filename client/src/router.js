@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 import Auth from './Auth.vue';
 import Intro from './Intro.vue';
 import Overview from './Overview.vue';
+import Diary from './Diary.vue';
 
 Vue.use(VueRouter);
 
@@ -12,7 +13,8 @@ export default function (store) {
     routes: [
       { path: '/auth', component: Auth },
       { path: '/intro', component: Intro },
-      { path: '/', component: Overview }
+      { path: '/', component: Overview },
+      { path: '/diary', component: Diary },
     ]
   });
 

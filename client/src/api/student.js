@@ -18,3 +18,8 @@ export async function getSpells() {
   const response = await get('/student/spells');
   return await response.json();
 }
+
+export async function getDiaryEntries() {
+  const response = await get('/student/diary');
+  return await response.json();
+}
