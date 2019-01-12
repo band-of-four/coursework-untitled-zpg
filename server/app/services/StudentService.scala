@@ -3,16 +3,14 @@ package services
 import java.time.LocalDateTime
 
 import game.Travel.TravelDuration
-import models.Student.Gender._
-import models.Student.StageTravel
-import models.{Student, StudentDao, Spell, SpellDao}
+import models.{Student, StudentDao, SpellDao}
 import org.postgresql.util.PSQLException
 import services.StudentService.{NewStudent, StudentAlreadyExistsException, StudentSpell}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 object StudentService {
-  case class NewStudent(name: String, gender: Gender)
+  case class NewStudent(name: String, gender: Student.Gender)
   case class StudentSpell(name: String, kind: String, power: Int)
 
   class StudentAlreadyExistsException extends RuntimeException
@@ -30,7 +28,7 @@ class StudentService(studentDao: StudentDao, spellDao: SpellDao)(implicit ec: Ex
       level = 0,
       hp = 100,
       currentRoom = 1,
-      stage = StageTravel,
+      stage = Student.Stage.Travel,
       stageStartTime = LocalDateTime.now(),
       nextStageTime = LocalDateTime.now().plus(TravelDuration),
       id = userId

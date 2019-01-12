@@ -3,7 +3,7 @@
 # --- !Ups
 
 create type note_kind as enum
-  ('lesson', 'club', 'fight', 'infirmary');;
+  ('Lesson', 'Club', 'Fight', 'Infirmary');;
 
 create table notes (
   id bigserial primary key,
@@ -17,19 +17,19 @@ create table notes (
   creature_id bigint references creatures,
 
   constraint note_kind_integrity check (
-    (kind = 'lesson'
+    (kind = 'Lesson'
       and lesson_id is not null
       and club_id is null
       and creature_id is null)
-    or (kind = 'club'
+    or (kind = 'Club'
       and lesson_id is null
       and club_id is not null
       and creature_id is null)
-    or (kind = 'fight'
+    or (kind = 'Fight'
       and lesson_id is null
       and club_id is null
       and creature_id is not null)
-    or (kind = 'infirmary'
+    or (kind = 'Infirmary'
       and lesson_id is null
       and club_id is null
       and creature_id is null)

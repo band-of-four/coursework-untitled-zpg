@@ -1,6 +1,6 @@
 package services
 
-import models.StudentDao
+import models.{Student, StudentDao}
 import play.api.libs.json.Json
 import services.StageService.CurrentStage
 import java.time.ZoneId
@@ -8,7 +8,7 @@ import java.time.ZoneId
 import scala.concurrent.ExecutionContext
 
 object StageService {
-  case class CurrentStage(name: String, durationMs: Long, elapsedMs: Long)
+  case class CurrentStage(kind: Student.Stage, durationMs: Long, elapsedMs: Long)
 
   implicit val stageWrites = Json.writes[CurrentStage]
 }

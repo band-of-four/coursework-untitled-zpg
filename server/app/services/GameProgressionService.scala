@@ -2,8 +2,6 @@ package services
 
 import game.{Fight, Heal, Travel}
 import models._
-import models.Student.{StageFight, StageStudy, StageTravel}
-import models.Room.Kind._
 import game.Fight._
 import game.Travel._
 import game.Study.StudyDuration
@@ -19,11 +17,11 @@ class GameProgressionService(val studentDao: StudentDao,
 
   def performUpdate(student: Student): Unit =
     student.stage match {
-      case StageTravel =>
+      case Student.Stage.Travel =>
         if (RandomEvent(FightChance)) startFighting(student)
         else enterNextRoom(student)
-      case StageFight => continueFighting(student)
-      case StageStudy => finishStudying(student)
+      case Student.Stage.Fight => continueFighting(student)
+      case Student.Stage.Study => finishStudying(student)
     }
 
   def finishStudying(student: Student): Unit = ???
@@ -31,7 +29,7 @@ class GameProgressionService(val studentDao: StudentDao,
   def startFighting(student: Student): Unit = {
     val opponent = creatureDao.findNearRoom(student.currentRoom)
     creatureDao.createFight(student, opponent)
-    studentDao.updateStage(student.id, student.currentRoom, StageFight, FightTurnDuration)
+    studentDao.updateStage(student.id, student.currentRoom, Student.Stage.Fight, FightTurnDuration)
   }
 
   def continueFighting(student: Student): Unit = {
@@ -42,7 +40,7 @@ class GameProgressionService(val studentDao: StudentDao,
       case StudentWon =>
         creatureDao.removeFight(student)
       case StudentLost =>
-        val infirmary = roomDao.findClosest(Infirmary, student.currentRoom)
+        val infirmary = roomDao.findClosest(Room.Kind.Infirmary, student.currentRoom)
         studentDao.updateAfterLostFight(student, Heal.duration(student), infirmary)
         creatureDao.removeFight(student)
       case FightContinues(studentHp, creatureHp) =>
@@ -56,11 +54,11 @@ class GameProgressionService(val studentDao: StudentDao,
     val attendance = lessonDao.buildAttendanceMap(student.id, nearbyRooms.flatMap(_.lesson.map(_.id)))
     Travel.pickDestination(student, nearbyRooms, attendance) match {
       case AttendClass(newRoom) =>
-        studentDao.updateStage(student.id, newRoom, StageStudy, StudyDuration)
+        studentDao.updateStage(student.id, newRoom, Student.Stage.Study, StudyDuration)
       case VisitClub(newRoom) =>
         ???
       case ContinueTravelling(newRoom) =>
-        studentDao.updateStage(student.id, newRoom, StageTravel, TravelDuration)
+        studentDao.updateStage(student.id, newRoom, Student.Stage.Travel, TravelDuration)
     }
   }
 }

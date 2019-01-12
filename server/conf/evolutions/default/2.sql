@@ -8,10 +8,13 @@ create domain student_level as smallint
   constraint student_level_range check (value >= 0 and value <= 7);;
 
 create type student_gender as enum
-  ('female', 'male');;
+  ('Female', 'Male');;
+
+create type student_stage as enum
+  ('Travel', 'Fight', 'Study', 'Heal');;
 
 create type room_kind as enum
-  ('classroom', 'clubroom', 'library', 'infirmary');;
+  ('Classroom', 'Clubroom', 'Library', 'Infirmary');;
 
 create table lessons (
   id bigserial primary key,
@@ -33,16 +36,16 @@ create table rooms (
   lesson_id bigint references lessons,
 
   constraint room_kind_integrity check (
-    (kind = 'classroom'
+    (kind = 'Classroom'
       and club_id is null
       and lesson_id is not null)
-    or (kind = 'clubroom'
+    or (kind = 'Clubroom'
       and club_id is not null
       and lesson_id is null)
-    or (kind = 'library'
+    or (kind = 'Library'
       and club_id is null
       and lesson_id is null)
-    or (kind = 'infirmary'
+    or (kind = 'Infirmary'
       and club_id is null
       and lesson_id is null)
   )
@@ -55,11 +58,10 @@ create table students (
   level student_level not null,
   hp integer not null,
   current_room bigint not null references rooms,
-  stage text not null,
+  stage student_stage not null,
   next_stage_time timestamp not null,
   stage_start_time timestamp not null
 );;
-
 
 # --- !Downs
 
@@ -68,5 +70,6 @@ drop table rooms;
 drop table student_clubs;
 drop table lessons;
 drop type room_kind;
+drop type student_stage;
 drop type student_gender;
 drop domain student_level;

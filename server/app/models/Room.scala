@@ -1,29 +1,28 @@
 package models
 
-import db.DbCtx
+import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import db.{DbCtx, PgEnum}
 
 object Room {
-  object Kind extends Enumeration {
-    type Kind = Value
-    val Classroom, Clubroom, Library, Infirmary = Value
+  sealed trait Kind extends EnumEntry
+  case object Kind extends Enum[Kind] with PgEnum[Kind] with PlayJsonEnum[Kind] {
+    case object Classroom extends Kind
+    case object Clubroom extends Kind
+    case object Library extends Kind
+    case object Infirmary extends Kind
+
+    val values = findValues
   }
 }
 
-case class Room(number: Long, level: Int, kind: Room.Kind.Value, clubId: Option[Long], lessonId: Option[Long])
+case class Room(number: Long, level: Int, kind: Room.Kind, clubId: Option[Long], lessonId: Option[Long])
 
-case class RoomPreloaded(number: Long, level: Int, kind: Room.Kind.Value, club: Option[StudentClub], lesson: Option[Lesson])
+case class RoomPreloaded(number: Long, level: Int, kind: Room.Kind, club: Option[StudentClub], lesson: Option[Lesson])
 
 class RoomDao(val db: DbCtx) {
   import db._
 
-  implicit val decoderRoomKind: Decoder[Room.Kind.Value] = decoder((index, row) =>
-    Room.Kind.withName(row.getObject(index).toString split "_" map (p => p.head.toUpper + p.tail) mkString))
-
-  implicit val encoderRoomKind: Encoder[Room.Kind.Value] =
-    encoder(java.sql.Types.VARCHAR, (index, value, row) =>
-      row.setObject(index, value, java.sql.Types.OTHER))
-
-  def findClosest(kind: Room.Kind.Value, closestToRoom: Long): Long =
+  def findClosest(kind: Room.Kind, closestToRoom: Long): Long =
     run(
       query[Room]
         .filter(r => r.number < lift(closestToRoom) && r.kind == lift(kind))

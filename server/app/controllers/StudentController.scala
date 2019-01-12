@@ -19,7 +19,6 @@ class StudentController(cc: ControllerComponents,
                         studentService: StudentService,
                         stageService: StageService)
                        (implicit ec: ExecutionContext) extends AbstractController(cc) {
-  implicit val studentGenderReads = Reads.enumNameReads(Student.Gender)
   implicit val studentWrites = Json.writes[Student]
   implicit val spellWrites = Json.writes[StudentService.StudentSpell]
   implicit val entryReads = Json.reads[StudentService.NewStudent]

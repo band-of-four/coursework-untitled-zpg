@@ -26,6 +26,13 @@ libraryDependencies ++= Seq(
   "com.mohiva" %% "play-silhouette-crypto-jca" % silhouetteVersion
 )
 
+/* Enums */
+val enumeratumVersion = "1.5.13"
+libraryDependencies ++= Seq(
+  "com.beachape" %% "enumeratum" % enumeratumVersion,
+  "com.beachape" %% "enumeratum-play-json" % enumeratumVersion
+)
+
 /* Configuration */
 libraryDependencies += "com.iheart" %% "ficus" % "1.4.3"
 
