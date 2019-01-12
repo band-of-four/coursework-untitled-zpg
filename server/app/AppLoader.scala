@@ -43,11 +43,12 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val lessonDao = new _root_.models.LessonDao(db)
   lazy val creatureDao = new _root_.models.CreatureDao(db)
   lazy val spellDao = new _root_.models.SpellDao(db)
+  lazy val studentDiaryDao = new _root_.models.StudentDiaryDao(db)
   /* Services */
   lazy val userService = new _root_.services.UserService(
     userDao, userLoginInfoDao, db, dbExecCtx, configuration)
   lazy val studentService = new _root_.services.StudentService(
-    studentDao, spellDao)
+    studentDao, spellDao, studentDiaryDao)
   lazy val gameProgressionService = new _root_.services.GameProgressionService(
     studentDao, roomDao, lessonDao, creatureDao, spellDao)
   lazy val stageService = new _root_.services.StageService(

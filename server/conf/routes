@@ -15,5 +15,5 @@ GET     /auth/social/:provider      controllers.AuthController.social(provider: 
 
 GET     /student                    controllers.StudentController.get
 POST    /student                    controllers.StudentController.create
-
 GET     /student/spells             controllers.StudentController.getSpells
+GET     /student/diary              controllers.StudentController.getDiary

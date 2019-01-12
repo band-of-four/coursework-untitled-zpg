@@ -3,7 +3,7 @@ package services
 import java.time.LocalDateTime
 
 import game.Travel.TravelDuration
-import models.{Student, StudentDao, SpellDao}
+import models._
 import org.postgresql.util.PSQLException
 import services.StudentService.{NewStudent, StudentAlreadyExistsException, StudentSpell}
 
@@ -16,7 +16,10 @@ object StudentService {
   class StudentAlreadyExistsException extends RuntimeException
 }
 
-class StudentService(studentDao: StudentDao, spellDao: SpellDao)(implicit ec: ExecutionContext) {
+class StudentService(studentDao: StudentDao,
+                     spellDao: SpellDao,
+                     studentDiaryDao: StudentDiaryDao)
+                    (implicit ec: ExecutionContext) {
   def get(userId: Long): Future[Option[Student]] = Future {
     studentDao.findForUser(userId)
   }
@@ -44,5 +47,9 @@ class StudentService(studentDao: StudentDao, spellDao: SpellDao)(implicit ec: Ex
   def getSpells(userId: Long): Future[Seq[StudentSpell]] = Future {
     spellDao.findLearned(userId).map(spell =>
       StudentSpell(spell.name, spell.kind, spell.power))
+  }
+
+  def getDiaryNotes(userId: Long): Future[Seq[StudentDiaryNote]] = Future {
+    studentDiaryDao.load(userId, 10)
   }
 }

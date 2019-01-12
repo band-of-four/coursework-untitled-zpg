@@ -1,8 +1,8 @@
 package controllers
 
 import com.mohiva.play.silhouette.api.Silhouette
-import models.{Student, StudentDao}
-import play.api.libs.json.{Json, Reads}
+import models.Student
+import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import services.{StudentService, StageService}
 import services.StudentService.StudentAlreadyExistsException
@@ -41,5 +41,9 @@ class StudentController(cc: ControllerComponents,
   
   def getSpells() = silhouette.SecuredAction async { implicit request =>
     studentService getSpells request.identity.id map { s => Ok(Json.toJson(s)) }
+  }
+
+  def getDiary() = silhouette.SecuredAction async { implicit request =>
+    studentService getDiaryNotes request.identity.id map { s => Ok(Json.toJson(s)) }
   }
 }
