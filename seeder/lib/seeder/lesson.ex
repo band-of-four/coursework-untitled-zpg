@@ -41,6 +41,6 @@ defmodule Seeder.Lesson do
         %Lesson{name: name, level: year, required_attendance: attendance}
       end)}
     end)
-    |> Map.new
+    |> Map.new()
   end
 end
