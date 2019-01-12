@@ -1,17 +1,9 @@
 -- vim: syntax=pgsql
 
--- Entities that implement the _travel_ game mechanic (`students` travelling between `rooms`)
-
 # --- !Ups
 
 create domain student_level as smallint
-  constraint student_level_range check (value >= 0 and value <= 7);;
-
-create type student_gender as enum
-  ('Female', 'Male');;
-
-create type student_stage as enum
-  ('Travel', 'Fight', 'Study', 'Heal');;
+  constraint student_level_range check (value >= 0 and value <= 3);;
 
 create type room_kind as enum
   ('Classroom', 'Clubroom', 'Library', 'Infirmary');;
@@ -26,6 +18,14 @@ create table lessons (
 create table student_clubs (
   id bigserial primary key,
   name text not null
+);;
+
+create table creatures (
+  id bigserial primary key,
+  name text not null,
+  power integer not null,
+  total_hp integer not null,
+  level student_level not null
 );;
 
 create table rooms (
@@ -51,25 +51,11 @@ create table rooms (
   )
 );;
 
-create table students (
-  id bigserial primary key references users,
-  name text not null,
-  gender student_gender not null,
-  level student_level not null,
-  hp integer not null,
-  current_room bigint not null references rooms,
-  stage student_stage not null,
-  next_stage_time timestamp not null,
-  stage_start_time timestamp not null
-);;
-
 # --- !Downs
 
-drop table students;
 drop table rooms;
+drop table creatures;
 drop table student_clubs;
 drop table lessons;
 drop type room_kind;
-drop type student_stage;
-drop type student_gender;
 drop domain student_level;
