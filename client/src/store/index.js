@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import { API_UNAUTHENTICATED } from '../api';
-import { getStudent, postStudent, STUDENT_NOT_CREATED } from '../api/student.js';
+import { getStudent, postStudent, getSpells, STUDENT_NOT_CREATED } from '../api/student.js';
 import { postSignIn, postSignUp } from '../api/auth.js';
 
 import studentModule from './student.js';
@@ -53,11 +53,11 @@ export default new Vuex.Store({
       return await dispatch('initState', await postStudent(student));
     },
     async initState({ commit, dispatch }, student) {
-      this.registerModule('student', studentModule(student));
+      const spells = await getSpells();
+      this.registerModule('student', studentModule(student, spells));
 
       const ws = new WebSocket('ws://localhost:9000/connect');
       this.registerModule('stage', stageModule);
-
       await dispatch('stage/init', ws);
 
       ws.onmessage = ({ data }) => commit('stage/processMessage', data);

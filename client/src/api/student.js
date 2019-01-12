@@ -13,3 +13,8 @@ export async function postStudent(data) {
   const response = await post('/student', data);
   return await response.json();
 }
+
+export async function getSpells() {
+  const response = await get('/student/spells');
+  return await response.json();
+}

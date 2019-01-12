@@ -10,7 +10,7 @@
     <label for="female">Женщина</label>
     <br>
     <input type="radio" id="male" value="Male" v-model="gender">
-    <label for="male">Мужщина</label>
+    <label for="male">Мужчина</label>
     <br>
   </form>
   <button @click="create">Продолжить</button>

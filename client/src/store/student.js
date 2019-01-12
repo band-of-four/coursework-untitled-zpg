@@ -1,6 +1,6 @@
-export default ({ name, level, hp }) => ({
+export default ({ name, level, hp }, spells) => ({
   namespaced: true,
   state: {
-    name, level, hp
+    name, level, hp, spells
   }
 });

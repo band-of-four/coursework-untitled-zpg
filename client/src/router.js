@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 
 import Auth from './Auth.vue';
 import Intro from './Intro.vue';
+import Overview from './Overview.vue';
 
 Vue.use(VueRouter);
 
@@ -10,7 +11,8 @@ export default function (store) {
   const router = new VueRouter({
     routes: [
       { path: '/auth', component: Auth },
-      { path: '/intro', component: Intro }
+      { path: '/intro', component: Intro },
+      { path: '/', component: Overview }
     ]
   });
 
