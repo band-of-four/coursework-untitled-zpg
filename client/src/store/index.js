@@ -6,6 +6,7 @@ import { getStudent, postStudent, STUDENT_NOT_CREATED } from '../api/student.js'
 import { postSignIn, postSignUp } from '../api/auth.js';
 
 import studentModule from './student.js';
+import stageModule from './stage.js';
 
 Vue.use(Vuex);
 
@@ -15,7 +16,8 @@ export default new Vuex.Store({
     loading: true,
     signedIn: true,
     student: null,
-    ws: null
+    ws: null,
+    stage: null
   },
   actions: {
     async load({ commit, dispatch }) {
@@ -50,10 +52,15 @@ export default new Vuex.Store({
     async createStudent({ commit, dispatch }, student) {
       return await dispatch('initState', await postStudent(student));
     },
-    async initState({ commit }, student) {
+    async initState({ commit, dispatch }, student) {
       this.registerModule('student', studentModule(student));
 
       const ws = new WebSocket('ws://localhost:9000/connect');
+      this.registerModule('stage', stageModule);
+
+      await dispatch('stage/init', ws);
+
+      ws.onmessage = ({ data }) => commit('stage/processMessage', data);
       commit('wsAcquired', ws);
     }
   },
