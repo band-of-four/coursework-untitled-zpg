@@ -3,7 +3,6 @@ package game
 import java.time.Duration
 
 import models._
-import models.Spell.{AttackSpell, DefenceSpell, LuckSpell}
 import utils.RandomDouble
 
 object Fight {
@@ -23,9 +22,9 @@ object Fight {
   case class StudentLost(student: StudentForUpdate, opponent: OpponentCreature) extends TurnOutcome
 
   def computeTurn(student: StudentForUpdate, creature: OpponentCreature, spells: Seq[Spell]): TurnOutcome = {
-    val attackSpell: Int = spells.find(_.kind == AttackSpell).get.power
-    val luckSpell: Int = spells.find(_.kind == LuckSpell).get.power
-    val defenceSpell: Int = spells.find(_.kind == DefenceSpell).get.power
+    val attackSpell = spells.find(_.kind == Spell.Kind.Attack).get.power
+    val defenceSpell = spells.find(_.kind == Spell.Kind.Defence).get.power
+    val luckSpell = spells.find(_.kind == Spell.Kind.Luck).get.power
 
     val studentAttack = (attackSpell +
       (student.level * StudentAttackLevelWeight) +

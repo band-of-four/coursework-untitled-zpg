@@ -11,7 +11,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object StudentService {
   case class NewStudent(name: String, gender: Student.Gender)
-  case class StudentSpell(name: String, kind: String, power: Int)
+  case class StudentSpell(name: String, kind: Spell.Kind, power: Int)
 
   class StudentAlreadyExistsException extends RuntimeException
 }
@@ -26,7 +26,7 @@ class StudentService(studentDao: StudentDao,
   }
 
   def create(userId: Long, entry: NewStudent): Future[Student] = Future {
-    studentDao.create(Student(
+    val newStudent = Student(
       userId,
       entry.name,
       entry.gender,
@@ -36,7 +36,10 @@ class StudentService(studentDao: StudentDao,
       stageNoteId = noteDao.initialNoteId(entry.gender),
       stageStartTime = LocalDateTime.now(),
       nextStageTime = LocalDateTime.now().plus(TravelDuration)
-    ))
+    )
+    studentDao.create(newStudent) { student =>
+      spellDao.createBaseSpells(student.id)
+    }
   } recoverWith {
     case e: PSQLException =>
       if (e.getMessage.startsWith("ERROR: duplicate key value"))

@@ -37,8 +37,12 @@ case class StudentForUpdate(id: Long, gender: Student.Gender,
 class StudentDao(val db: DbCtx) {
   import db._
 
-  def create(student: Student): Student =
-    student.copy(id = run(query[Student].insert(lift(student))))
+  def create(student: Student)(depsTransaction: Student => Unit): Student =
+    transaction {
+      run(query[Student].insert(lift(student)))
+      depsTransaction(student)
+      student
+    }
 
   def findForUser(userId: Long): Option[Student] =
     run(query[Student].filter(_.id == lift(userId))).headOption
