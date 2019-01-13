@@ -13,7 +13,7 @@ create table notes (
   stage student_stage not null,
   text text not null,
   text_gender student_gender not null,
-  creator_id bigserial not null references users,
+  creator_id bigint references users,
 
   lesson_id bigint references lessons,
   club_id bigint references student_clubs,
@@ -32,7 +32,7 @@ create table notes (
       and lesson_id is null
       and club_id is null
       and creature_id is not null)
-    or (stage = 'Infirmary'
+    or ((stage = 'Travel' or stage = 'Infirmary')
       and lesson_id is null
       and club_id is null
       and creature_id is null)

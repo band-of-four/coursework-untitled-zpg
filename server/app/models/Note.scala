@@ -11,6 +11,11 @@ case class NotePreloaded(text: String, stage: Student.Stage,
 class NoteDao(db: DbCtx) {
   import db._
 
+  def initialNoteId(gender: Student.Gender): Long = gender match {
+    case Student.Gender.Female => 1
+    case Student.Gender.Male => 2
+  }
+
   def load(noteId: Long): NotePreloaded =
     run(
       query[Note]
