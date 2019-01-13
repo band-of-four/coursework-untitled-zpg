@@ -12,7 +12,7 @@ case class CreatureHandlingSkill(creatureId: Long, studentId: Long, modifier: In
 
 /* DTOs */
 
-case class OpponentCreature(power: Int, level: Int, hp: Int, studentsSkill: Int)
+case class OpponentCreature(id: Long, power: Int, level: Int, hp: Int, studentsSkill: Int)
 
 class CreatureDao(val db: DbCtx) {
   import db._
@@ -27,35 +27,33 @@ class CreatureDao(val db: DbCtx) {
         .take(1)
     ).head
 
-  def createFight(studentId: Long, creature: Creature): Unit =
+  def createFightWith(studentId: Long, creature: Creature): Unit =
     run(
       query[CreatureFight]
         .insert(lift(CreatureFight(studentId, creature.id, creature.totalHp)))
     )
 
-  def removeFight(student: Student): Unit =
-    run(
-      query[CreatureFight].filter(_.studentId == lift(student.id)).delete
-    )
+  def removeInFightWith(studentId: Long): Unit =
+    run(query[CreatureFight].filter(_.studentId == lift(studentId)).delete)
 
-  def updateInFight(student: Student, newOpponentHp: Int): Unit =
+  def updateInFightWith(studentId: Long, newOpponentHp: Int): Unit =
     run(
       query[CreatureFight]
-        .filter(_.studentId == lift(student.id))
+        .filter(_.studentId == lift(studentId))
         .update(_.creatureHp -> lift(newOpponentHp))
     )
 
-  def findInFight(student: Student): OpponentCreature =
+  def findInFightWith(studentId: Long): OpponentCreature =
     run(
       query[Creature]
         .join(query[CreatureFight]).on {
-          case (c, fights) => c.id == fights.creatureId && fights.studentId == lift(student.id)
+          case (c, fights) => c.id == fights.creatureId && fights.studentId == lift(studentId)
         }
         .join(query[CreatureHandlingSkill]).on {
-          case ((c, _), skills) => c.id == skills.creatureId && skills.studentId == lift(student.id)
+          case ((c, _), skills) => c.id == skills.creatureId && skills.studentId == lift(studentId)
         }
         .map {
-          case ((c, fight), skill) => OpponentCreature(c.power, c.level, fight.creatureHp, skill.modifier)
+          case ((c, fight), skill) => OpponentCreature(c.id, c.power, c.level, fight.creatureHp, skill.modifier)
         }
     ).head
 }

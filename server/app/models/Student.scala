@@ -32,7 +32,8 @@ case class Student(name: String, gender: Student.Gender, level: Int, hp: Int, cu
                    stageNoteId: Long, stageStartTime: LocalDateTime, nextStageTime: LocalDateTime,
                    id: Long = -1)
 
-case class StudentForUpdate(id: Long, level: Int, hp: Int, currentRoom: Long, stage: Student.Stage)
+case class StudentForUpdate(id: Long, gender: Student.Gender,
+                            level: Int, hp: Int, currentRoom: Long, stage: Student.Stage)
 
 class StudentDao(val db: DbCtx) {
   import db._
@@ -45,7 +46,7 @@ class StudentDao(val db: DbCtx) {
   def findForUser(userId: Long): Option[Student] =
     run(query[Student].filter(_.id == lift(userId))).headOption
 
-  def findPendingTurnUpdates(count: Int): Seq[StudentForUpdate] =
+  def findPendingStageUpdate(count: Int): Seq[StudentForUpdate] =
     run(
       query[Student]
         .filter(_.nextStageTime <= lift(LocalDateTime.now()))
@@ -54,18 +55,19 @@ class StudentDao(val db: DbCtx) {
           case (s, n) => s.stageNoteId == n.id
         }
         .map {
-          case (s, n) => StudentForUpdate(s.id, s.level, s.hp, s.currentRoom, n.stage)
+          case (s, n) => StudentForUpdate(s.id, s.gender, s.level, s.hp, s.currentRoom, n.stage)
         }
         .take(lift(count))
         .forUpdate
     )
 
-  def setStage(studentId: Long, stageNoteId: Long, newRoom: Long, stageDuration: Duration): Unit =
+  def updateStage(student: StudentForUpdate, stageNoteId: Long, stageDuration: Duration): Unit =
     run(
       query[Student]
-        .filter(_.id == lift(studentId))
-        .update(_.stageNoteId -> lift(stageNoteId),
-          _.currentRoom -> lift(newRoom),
+        .filter(_.id == lift(student.id))
+        .update(_.hp -> lift(student.hp),
+          _.currentRoom -> lift(student.currentRoom),
+          _.stageNoteId -> lift(stageNoteId),
           _.stageStartTime -> lift(LocalDateTime.now()),
           _.nextStageTime -> lift(LocalDateTime.now().plus(stageDuration)))
     )
