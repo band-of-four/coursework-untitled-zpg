@@ -1,5 +1,5 @@
 defmodule Seeder do
-  alias Seeder.{Repo, Lesson, Room, Creature}
+  alias Seeder.{Repo, Lesson, Room, Creature, Spell}
 
   def run do
     Lesson.records()
@@ -7,6 +7,10 @@ defmodule Seeder do
     |> List.flatten()
     |> Enum.each(&Repo.insert!/1)
     Creature.records()
+    |> Map.values()
+    |> List.flatten()
+    |> Enum.each(&Repo.insert!/1)
+    Spell.records()
     |> Map.values()
     |> List.flatten()
     |> Enum.each(&Repo.insert!/1)
