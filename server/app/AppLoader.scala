@@ -51,9 +51,9 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val studentService = new _root_.services.StudentService(
     studentDao, spellDao, studentDiaryDao)
   lazy val stageService = new _root_.services.StageService(
-    studentDao, roomDao, noteDao, studentDiaryDao)
+    studentDao, noteDao, studentDiaryDao)
   lazy val gameProgressionService = new _root_.services.GameProgressionService(
-    stageService, studentDao, roomDao, lessonDao, creatureDao, spellDao)
+    stageService, roomDao, lessonDao, creatureDao, spellDao)
   /* Actors */
   lazy val gameProgressionActor: ActorRef = actorSystem.actorOf(
     Props(new GameProgressionActor(gameProgressionService)), "game-progression-actor")

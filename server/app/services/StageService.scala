@@ -3,12 +3,9 @@ package services
 import models._
 import play.api.libs.json.Json
 import services.StageService.CurrentStage
-import java.time.{LocalDateTime, ZoneId}
+import java.time.{Duration, LocalDateTime, ZoneId}
 
-import game.Fight._
-import game.Heal
-import game.Study.StudyDuration
-import game.Travel.TravelDuration
+import game.Fight.{TurnOutcome, StudentWon, StudentLost, FightContinues}
 
 object StageService {
   case class CurrentStage(kind: Student.Stage, durationMs: Long, elapsedMs: Long)
@@ -16,7 +13,7 @@ object StageService {
   implicit val stageWrites = Json.writes[CurrentStage]
 }
 
-class StageService(studentDao: StudentDao, roomDao: RoomDao, noteDao: NoteDao, diaryDao: StudentDiaryDao) {
+class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDiaryDao) {
   def getCurrentStage(userId: Long): CurrentStage = {
     val student = studentDao.findForUser(userId).get
 
@@ -31,47 +28,41 @@ class StageService(studentDao: StudentDao, roomDao: RoomDao, noteDao: NoteDao, d
     )
   }
 
-  def commitFightStage(fightTurnOutcome: TurnOutcome): Unit = fightTurnOutcome match {
+  def findPendingUpdates(count: Int): Seq[StudentForUpdate] =
+    studentDao.findPendingStageUpdate(count)
+
+  def commitFightStage(fightTurnOutcome: TurnOutcome, turnDuration: Duration): Unit = fightTurnOutcome match {
     case FightContinues(student, opponent) =>
-      commitFight(student, opponent.id)
+      commitFight(student, opponent.id, turnDuration)
     case StudentWon(student, opponent) =>
       val randomFightNote = noteDao.findIdForFight(student.copy(stage = Student.Stage.Fight), opponent.id)
       val fightEndNote = noteDao.findIdForFight(student.copy(stage = Student.Stage.FightWon), opponent.id)
-      diaryDao.createEntry(StudentDiaryEntry(student.id, randomFightNote, LocalDateTime.now().minus(FightTurnDuration)))
+      diaryDao.createEntry(StudentDiaryEntry(student.id, randomFightNote, LocalDateTime.now().minus(turnDuration)))
       diaryDao.createEntry(StudentDiaryEntry(student.id, fightEndNote, LocalDateTime.now()))
-      commitTravelStage(student)
     case StudentLost(student, opponent) =>
       val randomFightNote = noteDao.findIdForFight(student.copy(stage = Student.Stage.Fight), opponent.id)
       val fightEndNote = noteDao.findIdForFight(student.copy(stage = Student.Stage.FightLost), opponent.id)
-      diaryDao.createEntry(StudentDiaryEntry(student.id, randomFightNote, LocalDateTime.now().minus(FightTurnDuration)))
+      diaryDao.createEntry(StudentDiaryEntry(student.id, randomFightNote, LocalDateTime.now().minus(turnDuration)))
       diaryDao.createEntry(StudentDiaryEntry(student.id, fightEndNote, LocalDateTime.now()))
-      commitInfirmaryStage(student)
   }
 
-  def commitFight(student: StudentForUpdate, opponentId: Long): Unit = {
+  def commitFight(student: StudentForUpdate, opponentId: Long, duration: Duration): Unit = {
     val fightNote = noteDao.findIdForFight(student, opponentId)
-    studentDao.updateStage(student, fightNote, FightTurnDuration)
+    studentDao.updateStage(student, fightNote, duration)
   }
 
-  def commitTravelStage(student: StudentForUpdate): Unit = {
+  def commitTravelStage(student: StudentForUpdate, duration: Duration): Unit = {
     val travelNote = noteDao.findIdForCurrentStage(student.copy(stage = Student.Stage.Travel))
-    studentDao.updateStage(student, travelNote, TravelDuration)
+    studentDao.updateStage(student, travelNote, duration)
   }
 
-  def commitRoomEntry(student: StudentForUpdate): Unit = {
-    val room = roomDao.findByNumber(student.currentRoom)
-    room.kind match {
-      case Room.Kind.Classroom =>
-        val lessonNote = noteDao.findIdForCurrentStage(student.copy(stage = Student.Stage.Lesson))
-        studentDao.updateStage(student, lessonNote, StudyDuration)
-      case _ =>
-        ???
-    }
+  def commitLessonStage(student: StudentForUpdate, lessonId: Long, duration: Duration): Unit = {
+    val lessonNote = noteDao.findIdForLesson(student.gender, lessonId)
+    studentDao.updateStage(student, lessonNote, duration)
   }
 
-  def commitInfirmaryStage(student: StudentForUpdate): Unit = {
-    val infirmary = roomDao.findClosest(Room.Kind.Infirmary, student.currentRoom)
+  def commitInfirmaryStage(student: StudentForUpdate, duration: Duration): Unit = {
     val infirmaryNote = noteDao.findIdForCurrentStage(student.copy(stage = Student.Stage.Infirmary))
-    studentDao.updateStage(student, infirmaryNote, Heal.duration(student))
+    studentDao.updateStage(student, infirmaryNote, duration)
   }
 }

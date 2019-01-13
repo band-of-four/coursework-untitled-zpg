@@ -8,23 +8,21 @@ case class Note(text: String, textGender: Student.Gender, stage: Student.Stage,
 class NoteDao(db: DbCtx) {
   import db._
 
+  def findIdForLesson(gender: Student.Gender, lessonId: Long): Long =
+    run(findRandom.filter(n => n.textGender == lift(gender) && n.lessonId.exists(_ == lift(lessonId))).map(_.id)).head
+
   def findIdForCurrentStage(student: StudentForUpdate): Long =
-    run(
-      query[Note]
-        .filter(n => n.stage == lift(student.stage) && n.textGender == lift(student.gender))
-        .map(_.id)
-        .randomSort
-        .take(1)
-    ).head
+    run(findRandom.filter(n => n.stage == lift(student.stage) && n.textGender == lift(student.gender)).map(_.id)).head
 
   def findIdForFight(student: StudentForUpdate, creatureId: Long): Long =
     run(
-      query[Note]
-        .filter(_.stage == lift(student.stage))
-        .filter(_.textGender == lift(student.gender))
-        .filter(_.creatureId.exists(_ == lift(creatureId)))
+      findRandom
+        .filter(n => n.stage == lift(student.stage) &&
+          n.textGender == lift(student.gender) &&
+          n.creatureId.exists(_ == lift(creatureId)))
         .map(_.id)
-        .randomSort
-        .take(1)
     ).head
+
+  @inline private def findRandom =
+    quote(query[Note].randomSort.take(1))
 }

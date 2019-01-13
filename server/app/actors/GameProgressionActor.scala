@@ -23,7 +23,7 @@ class GameProgressionActor(gameProgressionService: GameProgressionService) exten
         case Nil =>
           context.system.scheduler.scheduleOnce(DelayWhenNoUpdatesPending, self, Poll)
         case updates =>
-          Await.ready(Future.traverse(updates)(u => Future(gameProgressionService.performUpdate(u))), Duration.Inf)
+          Await.ready(Future.traverse(updates)(u => Future(gameProgressionService.moveToNextStage(u))), Duration.Inf)
           self ! Poll
       }
   }
