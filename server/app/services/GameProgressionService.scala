@@ -1,20 +1,18 @@
 package services
 
-import game.{Fight, Heal, Travel}
 import models._
+import game.Fight
 import game.Fight._
-import game.Travel._
-import game.Study.StudyDuration
 import utils.RandomEvent
 
-class GameProgressionService(studentDao: StudentDao,
+class GameProgressionService(stageService: StageService,
+                             studentDao: StudentDao,
                              roomDao: RoomDao,
                              lessonDao: LessonDao,
                              creatureDao: CreatureDao,
-                             spellDao: SpellDao,
-                             noteDao: NoteDao) {
+                             spellDao: SpellDao) {
   def pendingUpdates(count: Int): Seq[StudentForUpdate] =
-    studentDao.findPendingTurnUpdates(count)
+    studentDao.findPendingStageUpdate(count)
 
   def performUpdate(student: StudentForUpdate): Unit =
     student.stage match {
@@ -27,27 +25,16 @@ class GameProgressionService(studentDao: StudentDao,
 
   def startFighting(student: StudentForUpdate): Unit = {
     val opponent = creatureDao.findNearRoom(student.currentRoom)
-    creatureDao.createFight(student.id, opponent)
-    val stageNoteId = noteDao.findIdForFightWith(opponent.id)
-
-    studentDao.setStage(student.id, student.currentRoom, stageNoteId, FightTurnDuration)
+    creatureDao.createFightWith(student.id, opponent)
+    stageService.commitFight(student, opponent.id)
   }
 
-  def continueFighting(student: StudentForUpdate): Unit = ???
-//    val opponent = creatureDao.findInFight(student)
-//    val turnOutcome = Fight.computeTurn(student, opponent, spells = spellDao.findLearned(student.id))
-//
-//    turnOutcome match {
-//      case StudentWon =>
-//        creatureDao.removeFight(student)
-//      case StudentLost =>
-//        val infirmary = roomDao.findClosest(Room.Kind.Infirmary, student.currentRoom)
-//        studentDao.updateAfterLostFight(student, Heal.duration(student), infirmary)
-//        creatureDao.removeFight(student)
-//      case FightContinues(studentHp, creatureHp) =>
-//        creatureDao.updateInFight(student, creatureHp)
-//        studentDao.updateInFight(student, studentHp, FightTurnDuration)
-//    }
+  def continueFighting(student: StudentForUpdate): Unit = {
+    val opponent = creatureDao.findInFightWith(student.id)
+    val spells = spellDao.findLearned(student.id)
+    val turnOutcome = Fight.computeTurn(student, opponent, spells)
+    stageService.commitFightStage(turnOutcome)
+  }
 
   def finishStudying(student: StudentForUpdate): Unit = ???
 

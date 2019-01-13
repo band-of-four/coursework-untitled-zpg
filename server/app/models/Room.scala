@@ -22,6 +22,9 @@ case class RoomPreloaded(number: Long, level: Int, kind: Room.Kind, club: Option
 class RoomDao(val db: DbCtx) {
   import db._
 
+  def findByNumber(number: Long): Room =
+    run(query[Room].filter(_.number == lift(number))).head
+
   def findClosest(kind: Room.Kind, closestToRoom: Long): Long =
     run(
       query[Room]

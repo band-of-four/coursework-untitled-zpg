@@ -40,4 +40,7 @@ class StudentDiaryDao(db: DbCtx) {
         }
         .take(lift(count))
     )
+
+  def createEntry(entry: StudentDiaryEntry): Unit =
+    run(schema.insert(entry))
 }

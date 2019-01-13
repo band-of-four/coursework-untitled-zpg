@@ -8,6 +8,15 @@ case class Note(text: String, textGender: Student.Gender, stage: Student.Stage,
 class NoteDao(db: DbCtx) {
   import db._
 
+  def findIdForCurrentStage(student: StudentForUpdate): Long =
+    run(
+      query[Note]
+        .filter(n => n.stage == lift(student.stage) && n.textGender == lift(student.gender))
+        .map(_.id)
+        .randomSort
+        .take(1)
+    ).head
+
   def findIdForFight(student: StudentForUpdate, creatureId: Long): Long =
     run(
       query[Note]
