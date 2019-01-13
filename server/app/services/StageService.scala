@@ -8,8 +8,7 @@ import java.time.{Duration, LocalDateTime, ZoneId}
 import game.Fight.{FightContinues, StudentLost, StudentWon, TurnOutcome}
 
 object StageService {
-  case class StageUpdate(level: Int, hp: Int, currentRoom: Long, note: NotePreloaded,
-                         stageDuration: Long, stageElapsed: Long)
+  case class StageUpdate(level: Int, hp: Int, note: NotePreloaded, stageDuration: Long, stageElapsed: Long)
 
   implicit val noteWrites = Json.writes[NotePreloaded]
   implicit val updateWrites = Json.writes[StageUpdate]
@@ -25,7 +24,7 @@ class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDi
     val duration = endTime - startTime
     val elapsed = System.currentTimeMillis() - startTime
 
-    StageUpdate(student.level, student.hp, student.currentRoom, stageNote, duration, elapsed)
+    StageUpdate(student.level, student.hp, stageNote, duration, elapsed)
   }
 
   def findPendingUpdates(count: Int): Seq[StudentForUpdate] =

@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 import { API_UNAUTHENTICATED } from '../api';
 import { getStudent, postStudent, getSpells, STUDENT_NOT_CREATED } from '../api/student.js';
 import { postSignIn, postSignUp } from '../api/auth.js';
+import { WS_URI, WS_OUT_GET_STAGE } from '../api/ws.js';
 
 import studentModule from './student.js';
 import stageModule from './stage.js';
@@ -56,12 +57,24 @@ export default new Vuex.Store({
       const spells = await getSpells();
       this.registerModule('student', studentModule(student, spells));
 
-      const ws = new WebSocket('ws://localhost:9000/connect');
       this.registerModule('stage', stageModule);
-      await dispatch('stage/init', ws);
+      dispatch('stage/init');
 
-      ws.onmessage = ({ data }) => commit('stage/processMessage', data);
+      const ws = new WebSocket(WS_URI);
+      await new Promise((resolve) => {
+        ws.onopen = () => ws.send(WS_OUT_GET_STAGE);
+        ws.onmessage = ({ data }) => {
+          ws.onmessage = ({ data }) => dispatch('handleWsMessage', data);
+          dispatch('handleWsMessage', data);
+          resolve();
+        };
+      });
       commit('wsAcquired', ws);
+    },
+    handleWsMessage({ commit }, data) {
+      const message = JSON.parse(data);
+      commit('stage/processMessage', message);
+      commit('student/processMessage', message);
     }
   },
   mutations: {

@@ -1,9 +1,11 @@
+import { WS_IN_STAGE_UPDATE } from '../api/ws.js';
+
 const PROGRESS_TICK_MS = 10000;
 
 export default {
   namespaced: true,
   state: {
-    kind: '',
+    note: null,
     durationMs: 0,
     elapsedMs: 0
   },
@@ -13,27 +15,16 @@ export default {
     }
   },
   actions: {
-    init({ commit, dispatch }, ws) {
-      return new Promise((resolve) => {
-        ws.onopen = () => ws.send('GetStage');
-        ws.onmessage = ({ data }) => {
-          commit('processMessage', data);
-          dispatch('tickProgress');
-          resolve();
-        };
-      });
-    },
-    tickProgress({ commit, state }) {
+    init({ commit }) {
       setInterval(() => commit('tickElapsed'), PROGRESS_TICK_MS);
     }
   },
   mutations: {
-    processMessage(state, msg) {
-      const { type, payload } = JSON.parse(msg);
-      if (type === 'StageUpdate') {
-        state.kind = payload.name;
-        state.durationMs = payload.durationMs;
-        state.elapsedMs = payload.elapsedMs;
+    processMessage(state, { type, payload }) {
+      if (type === WS_IN_STAGE_UPDATE) {
+        state.note = payload.note;
+        state.durationMs = payload.stageDuration;
+        state.elapsedMs = payload.stageElapsed;
       }
     },
     tickElapsed(state) { state.elapsedMs += PROGRESS_TICK_MS; }
