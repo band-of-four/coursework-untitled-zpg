@@ -27,6 +27,7 @@ class StudentService(studentDao: StudentDao,
 
   def create(userId: Long, entry: NewStudent): Future[Student] = Future {
     studentDao.create(Student(
+      userId,
       entry.name,
       entry.gender,
       level = 0,
@@ -34,8 +35,7 @@ class StudentService(studentDao: StudentDao,
       currentRoom = 1,
       stageNoteId = noteDao.initialNoteId(entry.gender),
       stageStartTime = LocalDateTime.now(),
-      nextStageTime = LocalDateTime.now().plus(TravelDuration),
-      id = userId
+      nextStageTime = LocalDateTime.now().plus(TravelDuration)
     ))
   } recoverWith {
     case e: PSQLException =>

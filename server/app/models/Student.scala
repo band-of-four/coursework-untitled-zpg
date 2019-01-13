@@ -28,9 +28,8 @@ object Student {
   }
 }
 
-case class Student(name: String, gender: Student.Gender, level: Int, hp: Int, currentRoom: Long,
-                   stageNoteId: Long, stageStartTime: LocalDateTime, nextStageTime: LocalDateTime,
-                   id: Long = -1)
+case class Student(id: Long, name: String, gender: Student.Gender, level: Int, hp: Int, currentRoom: Long,
+                   stageNoteId: Long, stageStartTime: LocalDateTime, nextStageTime: LocalDateTime)
 
 case class StudentForUpdate(id: Long, gender: Student.Gender,
                             level: Int, hp: Int, currentRoom: Long, stage: Student.Stage)

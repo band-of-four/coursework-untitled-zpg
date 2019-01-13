@@ -13,7 +13,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ApplicationController(cc: ControllerComponents,
                             silhouette: Silhouette[CookieAuthEnv],
-                            userSocketMap: ActorRef,
+                            socketMessenger: ActorRef,
                             stageService: StageService)
                            (implicit mat: Materializer,
                             ec: ExecutionContext,
@@ -29,7 +29,7 @@ class ApplicationController(cc: ControllerComponents,
       Future.successful(HandlerResult(Ok, Some(s.identity)))
     } map {
       case HandlerResult(r, Some(user)) =>
-        Right(ActorFlow.actorRef(SocketActor.props(user.id, userSocketMap, stageService)))
+        Right(ActorFlow.actorRef(SocketActor.props(user.id, socketMessenger, stageService)))
       case HandlerResult(r, None) =>
         Left(r)
     }

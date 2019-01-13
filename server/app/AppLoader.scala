@@ -1,6 +1,6 @@
 import java.io.Closeable
 
-import actors.{GameProgressionActor, UserSocketMapActor}
+import actors.{GameProgressionActor, SocketMessengerActor}
 import akka.actor.{ActorRef, Props}
 import play.api._
 import play.api.ApplicationLoader.Context
@@ -15,6 +15,10 @@ class AppLoader extends ApplicationLoader {
 
   override def load(ctx: Context): Application = {
     components = new AppComponents(ctx)
+
+    if (components.configuration.get[Boolean]("game-progression"))
+      components.gameProgressionActor ! GameProgressionActor.Poll
+
     components.application
   }
 }
@@ -55,17 +59,17 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val gameProgressionService = new _root_.services.GameProgressionService(
     stageService, roomDao, lessonDao, creatureDao, spellDao)
   /* Actors */
+  lazy val socketMessengerActor: ActorRef = actorSystem.actorOf(
+    Props[SocketMessengerActor], "socket-messenger-actor")
   lazy val gameProgressionActor: ActorRef = actorSystem.actorOf(
-    Props(new GameProgressionActor(gameProgressionService)), "game-progression-actor")
-  lazy val userSocketMapActor: ActorRef = actorSystem.actorOf(
-    Props[UserSocketMapActor], "user-socket-map-actor")
+    Props(new GameProgressionActor(gameProgressionService, socketMessengerActor)), "game-progression-actor")
   /* Auth */
   lazy val silhouette = new SilhouetteLoader(configuration, userService, wsClient)
   /* Controllers */
   lazy val authController = new _root_.controllers.AuthController(
     controllerComponents, silhouette.env, silhouette.credentialsProvider, silhouette.socialProviderRegistry, userService)
   lazy val applicationController = new _root_.controllers.ApplicationController(
-    controllerComponents, silhouette.env, userSocketMapActor, stageService)(materializer, executionContext, actorSystem)
+    controllerComponents, silhouette.env, socketMessengerActor, stageService)(materializer, executionContext, actorSystem)
   lazy val studentController = new _root_.controllers.StudentController(
     controllerComponents, silhouette.env, studentService, stageService)
   /* Routes */

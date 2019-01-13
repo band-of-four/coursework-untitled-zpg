@@ -5,6 +5,7 @@ import game.{Fight, Heal, Travel}
 import game.Fight._
 import game.Travel._
 import game.Study._
+import services.StageService.StageUpdate
 import utils.RandomEvent
 
 class GameProgressionService(stageService: StageService,
@@ -15,7 +16,7 @@ class GameProgressionService(stageService: StageService,
   def pendingUpdates(count: Int): Seq[StudentForUpdate] =
     stageService.findPendingUpdates(count)
 
-  def moveToNextStage(student: StudentForUpdate): Unit =
+  def updateStage(student: StudentForUpdate): StageUpdate = {
     student.stage match {
       case Student.Stage.Lesson =>
         finishLesson(student)
@@ -26,6 +27,8 @@ class GameProgressionService(stageService: StageService,
       case Student.Stage.Fight =>
         continueFight(student)
     }
+    stageService.getStage(student.id)
+  }
 
   def finishLesson(student: StudentForUpdate): Unit = ???
 

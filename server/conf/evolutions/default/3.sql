@@ -40,7 +40,7 @@ create table notes (
 );;
 
 create table students (
-  id bigserial primary key references users,
+  id bigint primary key references users,
   name text not null,
   gender student_gender not null,
   level student_level not null,

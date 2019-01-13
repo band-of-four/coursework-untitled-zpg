@@ -1,14 +1,15 @@
 package actors
 
-import actors.UserSocketMapActor.{RegisterConnection, UnregisterConnection}
+import actors.SocketMessengerActor.{MessageUserActors, RegisterConnection, UnregisterConnection}
 import akka.actor.{Actor, ActorRef}
 
-object UserSocketMapActor {
+object SocketMessengerActor {
   case class RegisterConnection(userId: Long, actor: ActorRef)
   case class UnregisterConnection(userId: Long, actor: ActorRef)
+  case class MessageUserActors(userId: Long, message: Any)
 }
 
-class UserSocketMapActor extends Actor {
+class SocketMessengerActor extends Actor {
   type UserSocketMap = Map[Long, List[ActorRef]]
 
   override def receive = tracking(Map())
@@ -32,5 +33,11 @@ class UserSocketMapActor extends Actor {
           socketMap
       }
       context.become(tracking(updatedMap))
+    case MessageUserActors(userId, message) =>
+      socketMap.get(userId) match {
+        case Some(actors) =>
+          actors.foreach(_ ! message)
+        case _ =>
+      }
   }
 }

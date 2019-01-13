@@ -1,35 +1,39 @@
 package actors
 
-import actors.UserSocketMapActor.{RegisterConnection, UnregisterConnection}
-import actors.SocketActor.{InboundGetStage, OutboundStageUpdate}
+import actors.SocketMessengerActor.{RegisterConnection, UnregisterConnection}
+import actors.SocketActor.{InboundGetStage, OutboundStageUpdate, PushStageUpdate}
 import akka.actor.{Actor, ActorRef, Props}
 import play.api.libs.json.Json
 import services.StageService
 import services.StageService._
 
 object SocketActor {
-  def props(userId: Long, userSocketMap: ActorRef, stageService: StageService)(out: ActorRef) =
-    Props(new SocketActor(userId, out, userSocketMap, stageService))
+  def props(userId: Long, socketMessenger: ActorRef, stageService: StageService)(out: ActorRef) =
+    Props(new SocketActor(userId, out, socketMessenger, stageService))
 
   val InboundGetStage = "GetStage"
   val OutboundStageUpdate = "StageUpdate"
+
+  case class PushStageUpdate(update: StageUpdate)
 }
 
 class SocketActor(userId: Long,
                   out: ActorRef,
-                  userSocketMap: ActorRef,
+                  socketMessenger: ActorRef,
                   stageService: StageService) extends Actor {
   override def preStart(): Unit =
-    userSocketMap ! RegisterConnection(userId, self)
+    socketMessenger ! RegisterConnection(userId, self)
 
   override def postStop(): Unit =
-    userSocketMap ! UnregisterConnection(userId, self)
+    socketMessenger ! UnregisterConnection(userId, self)
 
   def receive = {
+    case PushStageUpdate(update) =>
+      out ! serializeUpdate(update)
     case InboundGetStage =>
-      val response = stageService.getStage(userId)
-      out ! Json.obj("type" -> OutboundStageUpdate, "payload" -> Json.toJson(response)).toString
-    case msg: String =>
-      out ! s"$userId posted a message: $msg"
+      out ! serializeUpdate(stageService.getStage(userId))
   }
+
+  def serializeUpdate(update: StageUpdate) =
+    Json.obj("type" -> OutboundStageUpdate, "payload" -> Json.toJson(update)).toString
 }
