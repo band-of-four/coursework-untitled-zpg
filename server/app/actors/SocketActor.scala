@@ -27,7 +27,7 @@ class SocketActor(userId: Long,
 
   def receive = {
     case InboundGetStage =>
-      val response = stageService.getCurrentStage(userId)
+      val response = stageService.getStage(userId)
       out ! Json.obj("type" -> OutboundStageUpdate, "payload" -> Json.toJson(response)).toString
     case msg: String =>
       out ! s"$userId posted a message: $msg"

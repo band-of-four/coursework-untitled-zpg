@@ -2,30 +2,30 @@ package services
 
 import models._
 import play.api.libs.json.Json
-import services.StageService.CurrentStage
+import services.StageService.StageUpdate
 import java.time.{Duration, LocalDateTime, ZoneId}
 
-import game.Fight.{TurnOutcome, StudentWon, StudentLost, FightContinues}
+import game.Fight.{FightContinues, StudentLost, StudentWon, TurnOutcome}
 
 object StageService {
-  case class CurrentStage(kind: Student.Stage, durationMs: Long, elapsedMs: Long)
+  case class StageUpdate(level: Int, hp: Int, currentRoom: Long, note: NotePreloaded,
+                         stageDuration: Long, stageElapsed: Long)
 
-  implicit val stageWrites = Json.writes[CurrentStage]
+  implicit val noteWrites = Json.writes[NotePreloaded]
+  implicit val updateWrites = Json.writes[StageUpdate]
 }
 
 class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDiaryDao) {
-  def getCurrentStage(userId: Long): CurrentStage = {
+  def getStage(userId: Long): StageUpdate = {
     val student = studentDao.findForUser(userId).get
+    val stageNote = noteDao.load(student.stageNoteId)
 
     val startTime = student.stageStartTime.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli
     val endTime = student.nextStageTime.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli
     val duration = endTime - startTime
+    val elapsed = System.currentTimeMillis() - startTime
 
-    CurrentStage(
-      ???,
-      durationMs = endTime - startTime,
-      elapsedMs = System.currentTimeMillis() - startTime
-    )
+    StageUpdate(student.level, student.hp, student.currentRoom, stageNote, duration, elapsed)
   }
 
   def findPendingUpdates(count: Int): Seq[StudentForUpdate] =

@@ -38,10 +38,8 @@ case class StudentForUpdate(id: Long, gender: Student.Gender,
 class StudentDao(val db: DbCtx) {
   import db._
 
-  def create(student: Student): Student = {
-    run(query[Student].insert(lift(student)))
-    student
-  }
+  def create(student: Student): Student =
+    student.copy(id = run(query[Student].insert(lift(student))))
 
   def findForUser(userId: Long): Option[Student] =
     run(query[Student].filter(_.id == lift(userId))).headOption
@@ -71,22 +69,4 @@ class StudentDao(val db: DbCtx) {
           _.stageStartTime -> lift(LocalDateTime.now()),
           _.nextStageTime -> lift(LocalDateTime.now().plus(stageDuration)))
     )
-
-//  def updateInFight(student: Student, newHp: Int, turnDuration: Duration): Unit =
-//    run(
-//      query[Student]
-//        .filter(_.id == lift(student.id))
-//        .update(_.hp -> lift(newHp),
-//          _.stageStartTime -> lift(LocalDateTime.now()),
-//          _.nextStageTime -> lift(LocalDateTime.now().plus(turnDuration)))
-//    )
-//
-//  def updateAfterLostFight(student: Student, healDuration: Duration, infirmaryRoom: Long): Unit =
-//    run(
-//      query[Student]
-//        .update(_.stage -> lift(Student.Stage.Infirmary: Student.Stage),
-//          _.stageStartTime -> lift(LocalDateTime.now()),
-//          _.nextStageTime -> lift(LocalDateTime.now().plus(healDuration)),
-//          _.currentRoom -> lift(infirmaryRoom))
-//    )
 }
