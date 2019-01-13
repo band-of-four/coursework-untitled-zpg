@@ -2,9 +2,9 @@ package game
 
 import java.time.Duration
 
-import models.Student
+import models.StudentForUpdate
 
 object Heal {
-  def duration(student: Student): Duration =
+  def duration(student: StudentForUpdate): Duration =
     Duration.ofMinutes(student.level * 5)
 }

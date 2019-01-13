@@ -2,7 +2,7 @@ package game
 
 import java.time.Duration
 
-import models.{Creature, OpponentCreature, Spell, Student}
+import models._
 import models.Spell.{AttackSpell, DefenceSpell, LuckSpell}
 import utils.RandomDouble
 
@@ -17,22 +17,20 @@ object Fight {
   val CreatureAttackSkillWeight = -2.0
   val StudentPetWeight = 1.0
 
-  sealed trait TurnResult
-  case class FightContinues(newStudentHp: Int, newCreatureHp: Int) extends TurnResult
-  case object StudentWon extends TurnResult
-  case object StudentLost extends TurnResult
+  sealed trait TurnOutcome
+  case class FightContinues(student: StudentForUpdate, opponent: OpponentCreature) extends TurnOutcome
+  case class StudentWon(student: StudentForUpdate, opponent: OpponentCreature) extends TurnOutcome
+  case class StudentLost(student: StudentForUpdate, opponent: OpponentCreature) extends TurnOutcome
 
-  def computeTurn(student: Student, creature: OpponentCreature, spells: Seq[Spell]): TurnResult = {
+  def computeTurn(student: StudentForUpdate, creature: OpponentCreature, spells: Seq[Spell]): TurnOutcome = {
     val attackSpell: Int = spells.find(_.kind == AttackSpell).get.power
     val luckSpell: Int = spells.find(_.kind == LuckSpell).get.power
     val defenceSpell: Int = spells.find(_.kind == DefenceSpell).get.power
-    val pet: Creature = ??? // TODO find the way to store and get pets
 
     val studentAttack = (attackSpell +
       (student.level * StudentAttackLevelWeight) +
       (creature.studentsSkill * StudentAttackSkillWeight) +
-      (luckSpell * RandomDouble(LuckSpellRange)) +
-      (pet.power * StudentPetWeight)).toInt
+      (luckSpell * RandomDouble(LuckSpellRange))).toInt
 
     val creatureAttack = ((creature.level * CreatureAttackLevelWeight) +
       (creature.studentsSkill * CreatureAttackSkillWeight) -
@@ -42,10 +40,10 @@ object Fight {
     val newStudentHp = student.hp - creatureAttack
 
     if (newCreatureHp <= 0)
-      StudentWon
+      StudentWon(student, creature)
     else if (newStudentHp <= 0)
-      StudentLost
+      StudentLost(student, creature)
     else
-      FightContinues(newStudentHp, newCreatureHp)
+      FightContinues(student.copy(hp = newStudentHp), creature.copy(hp = newCreatureHp))
   }
 }
