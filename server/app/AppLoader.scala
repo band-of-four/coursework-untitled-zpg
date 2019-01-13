@@ -16,7 +16,7 @@ class AppLoader extends ApplicationLoader {
   override def load(ctx: Context): Application = {
     components = new AppComponents(ctx)
 
-    if (components.configuration.get[Boolean]("game-progression"))
+    if (components.configuration.get[Boolean]("game-progression.enabled"))
       components.gameProgressionActor ! GameProgressionActor.Poll
 
     components.application

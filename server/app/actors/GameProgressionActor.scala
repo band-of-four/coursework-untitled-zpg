@@ -5,6 +5,7 @@ import actors.GameProgressionActor.{DelayWhenNoUpdatesPending, MaxConcurrentUpda
 import actors.SocketActor.PushStageUpdate
 import actors.SocketMessengerActor.MessageUserActors
 import models.StudentForUpdate
+import play.api.Logger
 import services.GameProgressionService
 
 import scala.concurrent.{Await, ExecutionContext, Future}
@@ -27,13 +28,18 @@ class GameProgressionActor(gameProgressionService: GameProgressionService,
         case Nil =>
           context.system.scheduler.scheduleOnce(DelayWhenNoUpdatesPending, self, Poll)
         case updates =>
-          Await.ready(Future.traverse(updates)(performUpdate), Duration.Inf)
+          Await.result(Future.traverse(updates)(performUpdate), Duration.Inf)
           self ! Poll
       }
   }
 
-  def performUpdate(student: StudentForUpdate): Future[Unit] = Future {
-    val stageUpdate = gameProgressionService.updateStage(student)
-    socketMessenger ! MessageUserActors(student.id, PushStageUpdate(stageUpdate))
-  }
+  def performUpdate(student: StudentForUpdate): Future[Unit] =
+    Future {
+      val stageUpdate = gameProgressionService.updateStage(student)
+      socketMessenger ! MessageUserActors(student.id, PushStageUpdate(stageUpdate))
+    } recoverWith {
+      case e =>
+        Logger.error(s"Unhandled exception when processing student #${student.id}", e)
+        Future.failed(e)
+    }
 }

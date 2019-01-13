@@ -12,7 +12,7 @@ case class CreatureHandlingSkill(creatureId: Long, studentId: Long, modifier: In
 
 /* DTOs */
 
-case class OpponentCreature(id: Long, power: Int, level: Int, hp: Int, studentsSkill: Int)
+case class OpponentCreature(id: Long, power: Int, level: Int, hp: Int, studentsSkill: Option[Int])
 
 class CreatureDao(val db: DbCtx) {
   import db._
@@ -49,11 +49,11 @@ class CreatureDao(val db: DbCtx) {
         .join(query[CreatureFight]).on {
           case (c, fights) => c.id == fights.creatureId && fights.studentId == lift(studentId)
         }
-        .join(query[CreatureHandlingSkill]).on {
+        .leftJoin(query[CreatureHandlingSkill]).on {
           case ((c, _), skills) => c.id == skills.creatureId && skills.studentId == lift(studentId)
         }
         .map {
-          case ((c, fight), skill) => OpponentCreature(c.id, c.power, c.level, fight.creatureHp, skill.modifier)
+          case ((c, fight), skill) => OpponentCreature(c.id, c.power, c.level, fight.creatureHp, skill.map(_.modifier))
         }
     ).head
 }

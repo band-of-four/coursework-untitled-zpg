@@ -37,9 +37,8 @@ class RoomDao(val db: DbCtx) {
   def preloadInRadius(aroundRoom: Long, radius: Long): Seq[RoomPreloaded] = {
     run(
       query[Room]
-        .filter(r =>
-          r.number < lift(aroundRoom + radius) && r.number > lift(aroundRoom - radius)
-        )
+        .filter(_.number != lift(aroundRoom))
+        .filter(r => r.number < lift(aroundRoom + radius) && r.number > lift(aroundRoom - radius))
         .leftJoin(query[StudentClub]).on {
           case (r, c) => r.clubId.exists(_ == c.id)
         }

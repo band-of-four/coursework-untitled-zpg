@@ -29,11 +29,11 @@ object Fight {
 
     val studentAttack = (attackSpell +
       (student.level * StudentAttackLevelWeight) +
-      (creature.studentsSkill * StudentAttackSkillWeight) +
+      (creature.studentsSkill.getOrElse(0) * StudentAttackSkillWeight) +
       (luckSpell * RandomDouble(LuckSpellRange))).toInt
 
     val creatureAttack = ((creature.level * CreatureAttackLevelWeight) +
-      (creature.studentsSkill * CreatureAttackSkillWeight) -
+      (creature.studentsSkill.getOrElse(0) * CreatureAttackSkillWeight) -
       defenceSpell).toInt
 
     val newCreatureHp = creature.hp - studentAttack

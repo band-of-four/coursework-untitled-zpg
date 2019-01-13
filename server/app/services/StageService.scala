@@ -46,7 +46,7 @@ class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDi
   }
 
   def commitFight(student: StudentForUpdate, opponentId: Long, duration: Duration): Unit = {
-    val fightNote = noteDao.findIdForFight(student, opponentId)
+    val fightNote = noteDao.findIdForFight(student.copy(stage = Student.Stage.Fight), opponentId)
     studentDao.updateStage(student, fightNote, duration)
   }
 
