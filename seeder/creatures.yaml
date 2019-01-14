@@ -1,0 +1,48 @@
+0:
+  - :name: Статист
+    :power: 1
+    :hp: 10
+    :level: 0
+    :notes:
+      - :stage: Fight
+        :gender: Female
+        :text: О, Статист - ты тут, чтобы показать мне механику боя, не так ли?
+      - :stage: Fight
+        :gender: Male
+        :text: О, Статист - ты тут, чтобы показать мне механику боя, не так ли?
+      - :stage: FightWon
+        :gender: Female
+        :text: Еще одним статистом меньше
+      - :stage: FightWon
+        :gender: Male
+        :text: Еще одним статистом меньше
+      - :stage: FightLost
+        :gender: Female
+        :text: Нет, ну ты серьезно?..
+      - :stage: FightLost
+        :gender: Male
+        :text: Нет, ну ты серьезно?..
+1:
+  - :name: Слизень
+    :power: 3
+    :hp: 20
+    :level: 1
+    :notes:
+      - :stage: Fight
+        :gender: Female
+        :text: Фу, какой склизкий!
+      - :stage: Fight
+        :gender: Male
+        :text: Фу, какой склизкий!
+      - :stage: FightWon
+        :gender: Female
+        :text: Боюсь, эта слизь отныне лишена сознания
+      - :stage: FightWon
+        :gender: Male
+        :text: Боюсь, эта слизь отныне лишена сознания
+      - :stage: FightLost
+        :gender: Female
+        :text: Погрязла в слизи, несите мыло...
+      - :stage: FightLost
+        :gender: Male
+        :text: Погряз в слизи, несите мыло...

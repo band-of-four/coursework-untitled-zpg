@@ -24,7 +24,8 @@ defmodule Seeder.MixProject do
     [
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
-      {:ecto_enum, "~> 1.0"}
+      {:ecto_enum, "~> 1.0"},
+      {:yaml_elixir, "~> 2.1"}
     ]
   end
 end
