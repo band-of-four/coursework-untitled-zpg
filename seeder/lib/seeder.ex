@@ -10,9 +10,9 @@ defmodule Seeder do
       "ALTER SEQUENCE notes_id_seq RESTART;"
     ]
 
+    Repo.delete_all(Note)
     Repo.delete_all(Room)
     Repo.delete_all(Lesson)
-    Repo.delete_all(Note)
     Repo.delete_all(Creature)
     Repo.delete_all(Spell)
 
@@ -23,6 +23,9 @@ defmodule Seeder do
   end
 
   def insert do
+    Note.travel_records()
+    |> Enum.each(&Repo.insert!/1)
+
     lessons =
       Lesson.records_with_notes()
       |> Enum.map(fn {level, lessons} ->
