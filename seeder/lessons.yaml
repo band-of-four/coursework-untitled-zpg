@@ -1,0 +1,12 @@
+0:
+  - :name: Введение в курс дел
+    :required_attendance: 1
+    :level: 0
+    :notes:
+      - :stage: Lesson
+        :gender: Female
+        :text: Морским пехотинцам запрещено умирать без разрешения!
+      - :stage: Lesson
+        :gender: Male
+        :text: Морским пехотинцам запрещено умирать без разрешения!
+      

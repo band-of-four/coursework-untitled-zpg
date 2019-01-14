@@ -24,9 +24,15 @@ defmodule Seeder do
 
   def insert do
     lessons =
-      Lesson.records()
+      Lesson.records_with_notes()
       |> Enum.map(fn {level, lessons} ->
-        {level, Enum.map(lessons, &Repo.insert!/1)}
+        {level, Enum.map(lessons, fn {lesson, notes} ->
+          lesson = Repo.insert!(lesson)
+          Enum.each(notes, fn note ->
+            Repo.insert!(Note.build(note, lesson))
+          end)
+          lesson
+        end)}
       end)
 
     Room.records(lessons)

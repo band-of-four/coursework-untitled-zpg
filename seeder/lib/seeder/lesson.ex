@@ -2,6 +2,8 @@ defmodule Seeder.Lesson do
   use Ecto.Schema
   alias Seeder.Lesson
 
+  @data YamlElixir.read_from_file!("lessons.yaml", atoms: true)
+
   @primary_key {:id, :id, autogenerate: true}
   schema "lessons" do
     field :name, :string
@@ -34,11 +36,12 @@ defmodule Seeder.Lesson do
     }
   end
   
-  def records do
-    names()
-    |> Enum.map(fn {year, lessons} ->
-      {year, Enum.map(lessons, fn {name, attendance} -> 
-        %Lesson{name: name, level: year, required_attendance: attendance}
+  def records_with_notes do
+    @data
+    |> Enum.map(fn {level, lessons} ->
+      {level, Enum.map(lessons, fn lesson ->
+        {%Lesson{name: lesson.name, required_attendance: lesson.required_attendance, level: level},
+         lesson.notes}
       end)}
     end)
     |> Map.new()
