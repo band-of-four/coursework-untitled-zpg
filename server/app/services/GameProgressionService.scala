@@ -9,6 +9,7 @@ import services.StageService.StageUpdate
 import utils.RandomEvent
 
 class GameProgressionService(stageService: StageService,
+                             owlService: OwlService,
                              roomDao: RoomDao,
                              lessonDao: LessonDao,
                              creatureDao: CreatureDao,
@@ -18,15 +19,17 @@ class GameProgressionService(stageService: StageService,
 
   def updateStage(student: StudentForUpdate): StageUpdate =
     stageService.transactionalUpdate(student.id) {
-      student.stage match {
-        case Student.Stage.Travel if RandomEvent(FightChance) =>
-          startFight(student)
-        case Student.Stage.Travel =>
-          enterNextRoom(student)
-        case Student.Stage.Fight =>
-          continueFight(student)
-        case Student.Stage.Lesson =>
-          stageService.commitTravelStage(student, TravelDuration)
+      owlService.useActiveOwlsForUpdate(student) { owls =>
+        student.stage match {
+          case Student.Stage.Travel if RandomEvent(FightChance) =>
+            startFight(student)
+          case Student.Stage.Travel =>
+            enterNextRoom(student)
+          case Student.Stage.Fight =>
+            continueFight(student)
+          case Student.Stage.Lesson =>
+            stageService.commitTravelStage(student, TravelDuration)
+        }
       }
     }
 

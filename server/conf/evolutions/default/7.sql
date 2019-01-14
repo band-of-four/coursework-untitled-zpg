@@ -4,7 +4,8 @@
 
 create table owls (
   id bigserial primary key,
-  name text not null,
+  impl text not null,
+  display_name text not null,
   description text not null,
   applicable_stage student_stage,
   stages_active integer not null

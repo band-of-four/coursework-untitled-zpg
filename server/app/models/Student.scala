@@ -49,6 +49,13 @@ class StudentDao(val db: DbCtx) {
   def findForUser(userId: Long): Option[Student] =
     run(query[Student].filter(_.id == lift(userId))).headOption
 
+  def findStageForUser(userId: Long): Student.Stage =
+    run(
+      query[Student]
+        .join(query[Note]).on((s, n) => s.id == lift(userId) && s.stageNoteId == n.id)
+        .map(_._2.stage)
+    ).head
+
   def findPendingStageUpdate(count: Int): Seq[StudentForUpdate] =
     run(
       query[Student]
