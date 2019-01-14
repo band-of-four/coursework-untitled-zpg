@@ -19,14 +19,14 @@ defmodule Seeder.Room do
         [%Room{kind: "Classroom", level: k, lesson: l} | acc]
       end)
     end)
-    |> Enum.map(fn arr -> 
-      List.insert_at(arr, Enum.random(0..length(arr)), %Room{kind: "Library", level: List.first(arr).level})
-    end)
-    |> Enum.map(fn arr -> 
-      List.insert_at(arr, Enum.random(0..length(arr)), %Room{kind: "Infirmary", level: List.first(arr).level})
+    |> Enum.map(fn arr ->
+      [%Room{kind: "Library", level: List.first(arr).level} | arr]
     end)
     |> Enum.map(fn arr ->
-      {List.first(arr).level, arr}
+      [%Room{kind: "Infirmary", level: List.first(arr).level} | arr]
+    end)
+    |> Enum.map(fn arr ->
+      {List.first(arr).level, Enum.shuffle(arr)}
     end)
     |> Map.new
   end
