@@ -13,10 +13,9 @@ defmodule Seeder.Room do
   end
 
   def records do
-    res = %{}
     Seeder.Lesson.records()
     |> Enum.map(fn {k, v} -> 
-      rooms = List.foldl(v, [], fn l, acc ->
+      List.foldl(v, [], fn l, acc ->
         [%Room{kind: "Classroom", level: k, lesson: l} | acc]
       end)
     end)
