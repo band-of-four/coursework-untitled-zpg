@@ -10,6 +10,7 @@ defmodule Seeder.Creature do
     field :power, :integer
     field :total_hp, :integer
     field :level, :integer
+    field :is_approved, :boolean
   end
 
   def names do
@@ -40,7 +41,7 @@ defmodule Seeder.Creature do
     @data
     |> Enum.map(fn {level, creatures} ->
       {level, Enum.map(creatures, fn creature ->
-        {%Creature{name: creature.name, power: creature.power, total_hp: creature.hp, level: creature.level},
+        {%Creature{name: creature.name, power: creature.power, total_hp: creature.hp, level: creature.level, is_approved: true},
          creature.notes}
       end)}
     end)
