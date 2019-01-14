@@ -12,22 +12,16 @@ defmodule Seeder.Room do
     belongs_to :lesson, Seeder.Lesson
   end
 
-  def records do
-    Seeder.Lesson.records()
-    |> Enum.map(fn {k, v} -> 
-      List.foldl(v, [], fn l, acc ->
-        [%Room{kind: "Classroom", level: k, lesson: l} | acc]
+  def records(level_lessons) do
+    level_lessons
+    |> Enum.map(fn {level, lessons} -> 
+      rooms = Enum.map(lessons, fn lesson ->
+        %Room{kind: "Classroom", level: level, lesson: lesson}
       end)
+      rooms = [%Room{kind: "Library", level: level} | rooms]
+      rooms = [%Room{kind: "Infirmary", level: level} | rooms]
+      {level, Enum.shuffle(rooms)}
     end)
-    |> Enum.map(fn arr ->
-      [%Room{kind: "Library", level: List.first(arr).level} | arr]
-    end)
-    |> Enum.map(fn arr ->
-      [%Room{kind: "Infirmary", level: List.first(arr).level} | arr]
-    end)
-    |> Enum.map(fn arr ->
-      {List.first(arr).level, Enum.shuffle(arr)}
-    end)
-    |> Map.new
+    |> Map.new()
   end
 end
