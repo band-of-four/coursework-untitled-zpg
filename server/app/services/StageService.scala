@@ -30,6 +30,11 @@ class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDi
   def findPendingUpdates(count: Int): Seq[StudentForUpdate] =
     studentDao.findPendingStageUpdate(count)
 
+  def transactionalUpdate(userId: Long)(block: => Unit): StageUpdate = {
+    studentDao.doTransaction(block)
+    getStage(userId)
+  }
+
   def commitFightStage(fightTurnOutcome: TurnOutcome, turnDuration: Duration): Unit = fightTurnOutcome match {
     case FightContinues(student, opponent) =>
       commitFight(student, opponent.id, turnDuration)

@@ -16,21 +16,19 @@ class GameProgressionService(stageService: StageService,
   def pendingUpdates(count: Int): Seq[StudentForUpdate] =
     stageService.findPendingUpdates(count)
 
-  def updateStage(student: StudentForUpdate): StageUpdate = {
-    student.stage match {
-      case Student.Stage.Lesson =>
-        finishLesson(student)
-      case Student.Stage.Travel if RandomEvent(FightChance) =>
-        startFight(student)
-      case Student.Stage.Travel =>
-        enterNextRoom(student)
-      case Student.Stage.Fight =>
-        continueFight(student)
+  def updateStage(student: StudentForUpdate): StageUpdate =
+    stageService.transactionalUpdate(student.id) {
+      student.stage match {
+        case Student.Stage.Travel if RandomEvent(FightChance) =>
+          startFight(student)
+        case Student.Stage.Travel =>
+          enterNextRoom(student)
+        case Student.Stage.Fight =>
+          continueFight(student)
+        case Student.Stage.Lesson =>
+          stageService.commitTravelStage(student, TravelDuration)
+      }
     }
-    stageService.getStage(student.id)
-  }
-
-  def finishLesson(student: StudentForUpdate): Unit = ???
 
   def startFight(student: StudentForUpdate): Unit = {
     val opponent = creatureDao.findNearRoom(student.currentRoom)
@@ -44,9 +42,14 @@ class GameProgressionService(stageService: StageService,
     val turnOutcome = Fight.computeTurn(student, opponent, spells)
     stageService.commitFightStage(turnOutcome, FightTurnDuration)
     turnOutcome match {
-      case StudentWon(student, _) => enterNextRoom(student)
-      case StudentLost(student, _) => enterInfirmary(student)
-      case _ =>
+      case FightContinues(_, creature) =>
+        creatureDao.updateInFightWith(student.id, creature)
+      case StudentWon(student, _) =>
+        creatureDao.removeFightWith(student.id)
+        enterNextRoom(student)
+      case StudentLost(student, _) =>
+        creatureDao.removeFightWith(student.id)
+        enterInfirmary(student)
     }
   }
 

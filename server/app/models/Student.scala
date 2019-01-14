@@ -44,6 +44,8 @@ class StudentDao(val db: DbCtx) {
       student
     }
 
+  def doTransaction(block: => Unit): Unit = transaction(block)
+
   def findForUser(userId: Long): Option[Student] =
     run(query[Student].filter(_.id == lift(userId))).headOption
 

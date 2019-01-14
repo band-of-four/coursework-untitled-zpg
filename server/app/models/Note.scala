@@ -42,6 +42,7 @@ class NoteDao(db: DbCtx) {
     run(findRandom.filter(n => n.stage == lift(student.stage) && n.textGender == lift(student.gender)).map(_.id)).head
 
   def findIdForFight(student: StudentForUpdate, creatureId: Long): Long =
+
     run(
       findRandom
         .filter(n => n.stage == lift(student.stage) &&

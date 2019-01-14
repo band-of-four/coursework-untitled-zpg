@@ -27,11 +27,11 @@ object Fight {
     val luckSpell = spells.find(_.kind == Spell.Kind.Luck).get.power
 
     val studentAttack = (attackSpell +
-      (student.level * StudentAttackLevelWeight) +
+      ((student.level + 1) * StudentAttackLevelWeight) +
       (creature.studentsSkill.getOrElse(0) * StudentAttackSkillWeight) +
       (luckSpell * RandomDouble(LuckSpellRange))).toInt
 
-    val creatureAttack = ((creature.level * CreatureAttackLevelWeight) +
+    val creatureAttack = (((creature.level + 1) * CreatureAttackLevelWeight) +
       (creature.studentsSkill.getOrElse(0) * CreatureAttackSkillWeight) -
       defenceSpell).toInt
 

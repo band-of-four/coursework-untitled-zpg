@@ -33,14 +33,14 @@ class CreatureDao(val db: DbCtx) {
         .insert(lift(CreatureFight(studentId, creature.id, creature.totalHp)))
     )
 
-  def removeInFightWith(studentId: Long): Unit =
+  def removeFightWith(studentId: Long): Unit =
     run(query[CreatureFight].filter(_.studentId == lift(studentId)).delete)
 
-  def updateInFightWith(studentId: Long, newOpponentHp: Int): Unit =
+  def updateInFightWith(studentId: Long, creature: OpponentCreature): Unit =
     run(
       query[CreatureFight]
         .filter(_.studentId == lift(studentId))
-        .update(_.creatureHp -> lift(newOpponentHp))
+        .update(_.creatureHp -> lift(creature.hp))
     )
 
   def findInFightWith(studentId: Long): OpponentCreature =
