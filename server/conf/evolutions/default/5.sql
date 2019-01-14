@@ -2,47 +2,81 @@
 
 # --- !Ups
 
-create table lesson_attendances (
-  lesson_id bigint not null references lessons,
-  student_id bigint not null references students,
-  classes_attended integer
+alter table notes add heart_count bigint;;
+
+alter table notes add constraint heart_count_integrity
+  check (
+    (creator_id is null and heart_count is null) or
+    (creator_id is not null and heart_count is not null and heart_count >= 0)
+  );;
+
+create table note_hearts_users (
+  user_id bigint not null references users,
+  note_id bigint not null references notes,
+
+  primary key (user_id, note_id)
 );;
 
-create table student_letters (
-  sender_id bigint not null references students,
-  receiver_id bigint not null references students,
-  club_id bigint not null references student_clubs
-);;
+create function note_hearts_counter_cache_update()
+  returns trigger as $$
+    begin
+      if tg_op = 'INSERT'
+      then update notes set heart_count = heart_count + 1 where id = new.note_id;;
+      end if;;
 
-create table owls_students (
-  student_id bigint not null references students,
-  owl_type text
-);;
+      if tg_op = 'DELETE'
+      then update notes set heart_count = heart_count - 1 where id = old.note_id;;
+      end if;;
 
-create table relationships (
-  student_a bigint not null references students,
-  student_b bigint not null references students,
-  relationship integer
-);;
+      return null;;
+    end;;
+    $$
+  language plpgsql;;
 
-create or replace function display_owls (username text)
-returns table (
-  owl_type text,
-  amount bigint
-)
-as $$
-begin
-  return query
-  select owls_students.owl_type, count(owls_students.owl_type) from students, owls_students
-  where students.id = owls_students.student_id
-  and students.name = username
-  group by owls_students.owl_type;;
-end;; $$
-language 'plpgsql';;
+create trigger note_hearts_counter_cache_trig
+  after insert or delete on note_hearts_users
+  for each row execute procedure note_hearts_counter_cache_update();;
+
+create function note_heart_toggle(in heart_user_id bigint, in heart_note_id bigint,
+                                  out status text, out new_heart_count bigint)
+  as $$
+    declare
+      note_creator_id bigint;;
+      heart_deleted boolean;;
+    begin
+      note_creator_id := (select creator_id from notes where id = heart_note_id);;
+
+      if note_creator_id is null or note_creator_id = heart_user_id
+      then
+        status := 'error';;
+        return;;
+      end if;;
+
+      with try_delete as (
+        delete from note_hearts_users
+        where user_id = heart_user_id and note_id = heart_note_id
+        returning 1
+      )
+      select exists(select from try_delete)
+      into heart_deleted;;
+
+      if heart_deleted then
+        status := 'removed';;
+      else
+        status := 'added';;
+        insert into note_hearts_users values (heart_user_id, heart_note_id);;
+      end if;;
+
+      new_heart_count := (select heart_count from notes where id = heart_note_id);;
+    end;;
+  $$
+  language plpgsql;;
 
 # --- !Downs
-drop function display_owls(username text);
-drop table relationships cascade;
-drop table student_letters cascade;
-drop table lesson_attendances cascade;
-drop table owls_students cascade;
+
+drop function note_heart_toggle(bigint, bigint, out text, out bigint);
+drop trigger note_hearts_counter_cache_trig on note_hearts_users;;
+drop function note_hearts_counter_cache_update;;
+drop table note_hearts_users;;
+alter table notes drop constraint heart_count_integrity;
+alter table notes drop column heart_count;
