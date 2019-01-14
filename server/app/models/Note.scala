@@ -3,7 +3,8 @@ package models
 import db.DbCtx
 
 case class Note(text: String, textGender: Student.Gender, stage: Student.Stage,
-                lessonId: Option[Long], clubId: Option[Long], creatureId: Option[Long], id: Long = -1)
+                lessonId: Option[Long], clubId: Option[Long], creatureId: Option[Long],
+                isApproved: Boolean = false, id: Long = -1)
 
 case class NotePreloaded(text: String, stage: Student.Stage,
                          lesson: Option[String], club: Option[String], creature: Option[String])
@@ -42,7 +43,6 @@ class NoteDao(db: DbCtx) {
     run(findRandom.filter(n => n.stage == lift(student.stage) && n.textGender == lift(student.gender)).map(_.id)).head
 
   def findIdForFight(student: StudentForUpdate, creatureId: Long): Long =
-
     run(
       findRandom
         .filter(n => n.stage == lift(student.stage) &&
@@ -52,5 +52,5 @@ class NoteDao(db: DbCtx) {
     ).head
 
   @inline private def findRandom =
-    quote(query[Note].randomSort.take(1))
+    quote(query[Note].filter(_.isApproved).randomSort.take(1))
 }

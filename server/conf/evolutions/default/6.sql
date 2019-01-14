@@ -2,47 +2,38 @@
 
 # --- !Ups
 
-create table lesson_attendances (
-  lesson_id bigint not null references lessons,
-  student_id bigint not null references students,
-  classes_attended integer
-);;
+alter table notes add is_approved boolean not null default false;;
 
-create table student_letters (
-  sender_id bigint not null references students,
-  receiver_id bigint not null references students,
-  club_id bigint not null references student_clubs
-);;
+alter table creatures add is_approved boolean not null default false;;
 
-create table owls_students (
-  student_id bigint not null references students,
-  owl_type text
-);;
+create function check_creature_notes_all_kinds_present()
+  returns trigger as $$
+    begin
+      if exists(
+          values ('Fight'::student_stage, 'Female'::student_gender),
+                 ('Fight'::student_stage, 'Male'::student_gender),
+                 ('FightWon'::student_stage, 'Female'::student_gender),
+                 ('FightWon'::student_stage, 'Male'::student_gender),
+                 ('FightLost'::student_stage, 'Female'::student_gender),
+                 ('FightLost'::student_stage, 'Male'::student_gender)
+          except
+          select stage, text_gender from notes where creature_id = new.id
+        )
+      then raise exception 'new creature entries must have associated notes for Fight, FightWon, FightLost stages for all genders';;
+      end if;;
+      return null;;
+    end;;
+    $$
+  language plpgsql;;
 
-create table relationships (
-  student_a bigint not null references students,
-  student_b bigint not null references students,
-  relationship integer
-);;
-
-create or replace function display_owls (username text)
-returns table (
-  owl_type text,
-  amount bigint
-)
-as $$
-begin
-  return query
-  select owls_students.owl_type, count(owls_students.owl_type) from students, owls_students
-  where students.id = owls_students.student_id
-  and students.name = username
-  group by owls_students.owl_type;;
-end;; $$
-language 'plpgsql';;
+create constraint trigger notes_creatures_integrity_trig
+  after insert on creatures
+  deferrable initially deferred
+  for each row execute procedure check_creature_notes_all_kinds_present();;
 
 # --- !Downs
-drop function display_owls(username text);
-drop table relationships cascade;
-drop table student_letters cascade;
-drop table lesson_attendances cascade;
-drop table owls_students cascade;
+
+drop trigger notes_creatures_integrity_trig on creatures;
+drop function check_creature_notes_all_kinds_present();
+alter table creatures drop column is_approved;
+alter table notes drop column is_approved;

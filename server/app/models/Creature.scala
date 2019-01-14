@@ -4,7 +4,7 @@ import db.DbCtx
 
 /* Entities */
 
-case class Creature(name: String, power: Int, totalHp: Int, level: Int, id: Long = -1)
+case class Creature(name: String, power: Int, totalHp: Int, level: Int, isApproved: Boolean = false, id: Long = -1)
 
 case class CreatureFight(studentId: Long, creatureId: Long, creatureHp: Int)
 
@@ -20,6 +20,7 @@ class CreatureDao(val db: DbCtx) {
   def findNearRoom(roomNumber: Long): Creature =
     run(
       query[Creature]
+        .filter(_.isApproved)
         .join(query[Room])
         .on((c, r) => c.level == r.level && r.number == lift(roomNumber))
         .map(_._1)
