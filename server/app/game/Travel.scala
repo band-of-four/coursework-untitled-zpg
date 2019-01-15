@@ -2,7 +2,7 @@ package game
 
 import java.time.Duration
 
-import models.LessonDao.LessonAttendanceMap
+import models.LessonDao.PartialAttendanceMap
 import models.{RoomPreloaded, StudentForUpdate}
 import models.Room.Kind._
 import utils.WeightedSample

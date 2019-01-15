@@ -2,6 +2,7 @@ package models
 
 import db.DbCtx
 import models.LessonDao.PartialAttendanceMap
+import play.api.libs.json.Json
 
 case class Lesson(name: String, level: Int, requiredAttendance: Int, id: Long = -1)
 
@@ -11,6 +12,10 @@ case class LessonAttendancePreloaded(name: String, requiredAttendance: Int, atte
 
 object LessonDao {
   type PartialAttendanceMap = Map[Long, Int]
+}
+
+object LessonAttendancePreloaded {
+  implicit val lessonAttendancePreloadedWrites = Json.writes[LessonAttendancePreloaded]
 }
 
 class LessonDao(val db: DbCtx) {

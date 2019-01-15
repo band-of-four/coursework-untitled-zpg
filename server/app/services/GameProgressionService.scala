@@ -27,7 +27,7 @@ class GameProgressionService(stageService: StageService,
     stageService.findPendingUpdates(count)
 
   def updateStage(student: StudentForUpdate): StageUpdate =
-    stageService.transactionalUpdate(student.id) {
+    stageService.transactionalUpdateWithResult(student.id) {
       owlService.useActiveOwlsForUpdate(student) { owls =>
         student.stage match {
           case Student.Stage.Fight =>

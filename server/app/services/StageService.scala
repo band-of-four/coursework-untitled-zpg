@@ -6,10 +6,12 @@ import services.StageService.StageUpdate
 import java.time.{Duration, LocalDateTime, ZoneId}
 
 import game.Fight.{FightContinues, StudentLost, StudentWon, TurnOutcome}
-import services.GameProgressionService.StageCompletion
+import services.GameProgressionService.{CompletedGenericStage, CompletedLesson, CompletedLibrary, StageCompletion}
 
 object StageService {
-  case class StageUpdate(level: Int, hp: Int, note: NotePreloaded, stageDuration: Long, stageElapsed: Long)
+  case class StageUpdate(level: Int, hp: Int, note: NotePreloaded, stageDuration: Long, stageElapsed: Long,
+                         attendance: Option[Seq[LessonAttendancePreloaded]] = None,
+                         spells: Option[Seq[SpellPreloaded]] = None)
 
   implicit val noteWrites = Json.writes[NotePreloaded]
   implicit val updateWrites = Json.writes[StageUpdate]
@@ -31,9 +33,18 @@ class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDi
   def findPendingUpdates(count: Int): Seq[StudentForUpdate] =
     studentDao.findPendingStageUpdate(count)
 
-  def transactionalUpdate(userId: Long)(block: => StageCompletion): StageUpdate = {
-    studentDao.doTransaction(block)
-    getStage(userId)
+  def transactionalUpdateWithResult(userId: Long)(block: => StageCompletion): StageUpdate = {
+    val updateResult = studentDao.doTransaction(block)
+    val genericUpdate = getStage(userId)
+
+    updateResult match {
+      case CompletedLesson(attendance) =>
+        genericUpdate.copy(attendance = Some(attendance))
+      case CompletedLibrary(spells) =>
+        genericUpdate.copy(spells = Some(spells))
+      case CompletedGenericStage =>
+        genericUpdate
+    }
   }
 
   def commitFightStage(fightTurnOutcome: TurnOutcome, turnDuration: Duration): Unit = fightTurnOutcome match {
