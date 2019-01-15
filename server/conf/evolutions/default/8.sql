@@ -40,7 +40,7 @@ create table lesson_attendances (
 );;
 
 create function lesson_attendance_update_at_lesson_end(in in_student_id bigint)
-  as $$
+  returns void as $$
     begin
       insert into lesson_attendances as la (student_id, lesson_id, classes_attended)
         select in_student_id, n.lesson_id, 1
@@ -64,6 +64,24 @@ create table student_relationships (
   relationship integer not null,
   delta integer not null
 );;
+
+create function student_relationships_delta_update()
+  returns trigger as $$
+    begin
+      if tg_op = 'INSERT'
+      then new.delta = new.relationship;;
+      end if;;
+      if tg_op = 'UPDATE'
+      then new.delta = old.delta + (new.relationship - old.relationship);;
+      end if;;
+      return new;;
+    end;;
+  $$
+  language plpgsql;;
+
+create trigger student_relationship_delta_update_trig
+  before insert or update on student_relationships
+  for each row execute procedure student_relationships_delta_update();;
 
 create function student_relationships_update_in_club(in in_student_id bigint)
   returns void as $$
@@ -101,6 +119,8 @@ create function student_relationships_update_in_club(in in_student_id bigint)
 # --- !Downs
 
 drop function student_relationships_update_in_club(bigint);;
+drop trigger student_relationships_delta_update_trig on student_relationships;;
+drop function student_relationships_delta_update();;
 drop table student_relationships;;
 drop table student_letters;;
 drop function lesson_attendance_update_at_lesson_end(bigint);;
