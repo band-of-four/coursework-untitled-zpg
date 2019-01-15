@@ -32,10 +32,25 @@ create function student_library_visit_end(in in_student_id bigint)
   language plpgsql;;
 
 create table lesson_attendances (
-  lesson_id bigint not null references lessons,
   student_id bigint not null references students,
-  classes_attended integer
+  lesson_id bigint not null references lessons,
+  classes_attended integer not null check (classes_attended >= 0),
+
+  primary key (student_id, lesson_id)
 );;
+
+create function lesson_attendance_update_at_lesson_end(in in_student_id bigint)
+  as $$
+    begin
+      insert into lesson_attendances as la (student_id, lesson_id, classes_attended)
+        select in_student_id, n.lesson_id, 1
+        from notes n
+        inner join students s on n.id = s.stage_note_id and s.id = in_student_id
+      on conflict (student_id, lesson_id)
+         do update set classes_attended = la.classes_attended + 1;;
+    end;;
+  $$
+  language plpgsql;;
 
 create table student_letters (
   sender_id bigint not null references students,
@@ -53,6 +68,7 @@ create table relationships (
 
 drop table relationships;;
 drop table student_letters;;
+drop function lesson_attendance_update_at_lesson_end(bigint);;
 drop table lesson_attendances;;
 drop function student_library_visit_end(bigint);;
 drop table student_library_visits;;

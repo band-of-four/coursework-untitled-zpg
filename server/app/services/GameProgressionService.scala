@@ -29,6 +29,7 @@ class GameProgressionService(stageService: StageService,
           case Student.Stage.Travel =>
             enterNextRoom(student)
           case Student.Stage.Lesson =>
+            lessonDao.updateAttendance(student.id)
             stageService.commitTravelStage(student, TravelDuration)
           case Student.Stage.Library =>
             libraryService.commitVisitEnd(student)

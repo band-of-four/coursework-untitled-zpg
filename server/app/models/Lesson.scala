@@ -23,4 +23,7 @@ class LessonDao(val db: DbCtx) {
         .filter(a => a.studentId == lift(studentId) && lift(lessonIds).contains(a.lessonId))
         .map(a => (a.lessonId, a.classesAttended))
     ).toMap
+
+  def updateAttendance(studentId: Long): Unit =
+    run(infix"""SELECT lesson_attendance_update_at_lesson_end(${lift(studentId)})""".as[Insert[Unit]])
 }
