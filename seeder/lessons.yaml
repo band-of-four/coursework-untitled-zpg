@@ -9,4 +9,24 @@
       - :stage: Lesson
         :gender: Male
         :text: Морским пехотинцам запрещено умирать без разрешения!
-      
+1:
+  - :name: Дискретная трансфигурация
+    :requred_attendance: 5
+    :level: 1
+    :notes:
+      - :stage: Lesson
+        :gender: Female
+        :text: Твою мать...
+      - :stage: Lesson
+        :gender: Male
+        :text: Твою мать...
+  - :name: Основы вычислительной травологии
+    :gender: Female
+    :level: 1
+    :notes:
+      - :stage: Lesson
+        :gender: Female
+        :text: На часах двадцать минут пятого...
+      - :stage: Lesson
+        :gender: Male
+        :text: На часах двадцать минут пятого...
