@@ -14,10 +14,10 @@ create table spells (
 );;
 
 create table spells_students (
-  spell_id bigint references spells,
   student_id bigint references students,
+  spell_id bigint references spells,
 
-  primary key (spell_id, student_id)
+  primary key (student_id, spell_id)
 );;
 
 create function check_student_spells_all_kinds_present()

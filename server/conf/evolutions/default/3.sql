@@ -6,7 +6,7 @@ create type student_gender as enum
   ('Female', 'Male');;
 
 create type student_stage as enum
-  ('Lesson', 'Club', 'Travel', 'Fight', 'FightWon', 'FightLost', 'Infirmary');;
+  ('Lesson', 'Club', 'Travel', 'Fight', 'FightWon', 'FightLost', 'Infirmary', 'Library');;
 
 create table notes (
   id bigserial primary key,
@@ -22,20 +22,15 @@ create table notes (
   constraint note_stage_integrity check (
     (stage = 'Lesson'
       and lesson_id is not null
-      and club_id is null
-      and creature_id is null)
+      and club_id is null and creature_id is null)
     or (stage = 'Club'
-      and lesson_id is null
       and club_id is not null
-      and creature_id is null)
+      and lesson_id is null and creature_id is null)
     or ((stage = 'Fight' or stage = 'FightWon' or stage = 'FightLost')
-      and lesson_id is null
-      and club_id is null
-      and creature_id is not null)
-    or ((stage = 'Travel' or stage = 'Infirmary')
-      and lesson_id is null
-      and club_id is null
-      and creature_id is null)
+      and creature_id is not null
+      and lesson_id is null and club_id is null)
+    or ((stage = 'Travel' or stage = 'Library' or stage = 'Infirmary')
+      and lesson_id is null and club_id is null and creature_id is null)
   )
 );;
 

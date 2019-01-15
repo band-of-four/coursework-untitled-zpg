@@ -65,6 +65,11 @@ class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDi
     studentDao.updateStage(student, lessonNote, duration)
   }
 
+  def commitLibraryStage(student: StudentForUpdate, duration: Duration): Unit = {
+    val libraryNote = noteDao.findIdForCurrentStage(student.copy(stage = Student.Stage.Library))
+    studentDao.updateStage(student, libraryNote, duration)
+  }
+
   def commitInfirmaryStage(student: StudentForUpdate, duration: Duration): Unit = {
     val infirmaryNote = noteDao.findIdForCurrentStage(student.copy(stage = Student.Stage.Infirmary))
     studentDao.updateStage(student, infirmaryNote, duration)

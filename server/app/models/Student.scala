@@ -23,6 +23,7 @@ object Student {
     case object FightWon extends Stage
     case object FightLost extends Stage
     case object Infirmary extends Stage
+    case object Library extends Stage
 
     val values = findValues
   }

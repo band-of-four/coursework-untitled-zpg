@@ -22,7 +22,6 @@ create table owls_students (
 
 create function owl_apply(in user_id bigint, in target_owl_id bigint, out applied boolean)
   as $$
-  declare
     begin
       if exists(
           select from owls_students os

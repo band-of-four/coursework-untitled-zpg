@@ -17,6 +17,7 @@ object Travel {
 
   case class AttendClass(room: Long, lessonId: Long) extends Destination
   case class VisitClub(room: Long, clubId: Long) extends Destination
+  case class VisitLibrary(room: Long) extends Destination
   case class ContinueTravelling(room: Long) extends Destination
 
   def pickDestination(student: StudentForUpdate, rooms: Seq[RoomPreloaded], attendance: LessonAttendanceMap): Destination = {
@@ -24,23 +25,23 @@ object Travel {
       case RoomPreloaded(_, level, _, _, _) if level > student.level =>
         0
       case RoomPreloaded(_, level, Clubroom, Some(club), _) =>
-        0.15
+        0.3
       case RoomPreloaded(_, _, Classroom, _, Some(lesson)) =>
         0.5 * (lesson.requiredAttendance - attendance.getOrElse(lesson.id, 0))
       case RoomPreloaded(_, _, Library, _, _) =>
-        ???
+        0.05
       case RoomPreloaded(_, _, Infirmary, _, _) =>
-        ???
+        0
     }
 
     nextRoom match {
-      case Some(room) if room.lesson.isDefined =>
+      case Some(room) if room.kind == Classroom =>
         AttendClass(room.number, room.lesson.get.id)
-      case Some(room) if room.club.isDefined =>
+      case Some(room) if room.kind == Clubroom =>
         VisitClub(room.number, room.club.get.id)
-      case Some(room) =>
-        ??? // Library
-      case None =>
+      case Some(room) if room.kind == Library =>
+        VisitLibrary(room.number)
+      case _ =>
         val roomsByLevel = rooms.sortBy(c => (c.level, c.number))
         ContinueTravelling(
           if (roomsByLevel.head.level <= student.level)
