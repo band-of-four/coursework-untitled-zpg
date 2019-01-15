@@ -11,4 +11,7 @@ class StudentRelationshipDao(db: DbCtx) {
 
   def insert(senderId: Long, receiverId: Long): Unit =
     run(query[StudentLetter].insert(lift(StudentLetter(senderId, receiverId))))
+
+  def updateInClub(studentId: Long): Unit =
+    run(infix"""SELECT student_relationships_update_in_club(${lift(studentId)})""".as[Insert[Unit]])
 }

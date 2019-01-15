@@ -64,7 +64,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val libraryService = new _root_.services.LibraryService(
     spellDao, libraryDao)
   lazy val gameProgressionService = new _root_.services.GameProgressionService(
-    stageService, owlService, libraryService, roomDao, lessonDao, creatureDao, spellDao)
+    stageService, owlService, libraryService, roomDao, lessonDao, creatureDao, spellDao, relationshipDao)
   /* Actors */
   lazy val socketMessengerActor: ActorRef = actorSystem.actorOf(
     Props[SocketMessengerActor], "socket-messenger-actor")

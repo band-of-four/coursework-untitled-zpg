@@ -9,6 +9,7 @@ object Durations {
   val FightTurn = Duration.ofSeconds(15)
   val Study = Duration.ofSeconds(15)
   val Travel = Duration.ofSeconds(15)
+  val Club = Duration.ofSeconds(15)
 
   object Infirmary {
     def apply(student: StudentForUpdate): Duration =

@@ -39,6 +39,9 @@ class GameProgressionService(stageService: StageService,
           case Student.Stage.Travel =>
             enterNextRoom(student)
             CompletedGenericStage
+          case Student.Stage.Club =>
+            relationshipDao.updateInClub(student.id)
+            CompletedGenericStage
           case Student.Stage.Lesson =>
             lessonDao.updateAttendance(student.id)
             val newAttendance = lessonDao.loadAttendance(student.id, student.level)
@@ -86,7 +89,7 @@ class GameProgressionService(stageService: StageService,
       case AttendClass(_, lessonId) =>
         stageService.commitLessonStage(updatedStudent, lessonId, Durations.Study)
       case VisitClub(_, clubId) =>
-        ???
+        stageService.commitClubStage(updatedStudent, Durations.Club)
       case VisitLibrary(newRoom) =>
         libraryService.commitLibraryVisit(updatedStudent)
         stageService.commitLibraryStage(updatedStudent, Durations.Library)

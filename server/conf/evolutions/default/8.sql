@@ -74,20 +74,26 @@ create function student_relationships_update_in_club(in in_student_id bigint)
         inner join spells_students spst on spst.student_id = sl.sender_id
         inner join spells sp on sp.id = spst.spell_id and sp.kind = 'Charisma'
         where sl.receiver_id = in_student_id
+      ),
+      update_relationships as (
+        insert into student_relationships as sr (student_a, student_b, relationship)
+          (select l.sender_id, in_student_id, l.power from letters l where l.sender_id < ?)
+          union
+          (select in_student_id, l.sender_id, l.power from letters l where l.sender_id > ?)
+          on conflict (student_a, student_b)
+            do update set relationship = sr.relationship + (
+              case sr.relationship
+              when 0 then
+                (select l.power from letters l where l.sender_id = sr.student_a or l.sender_id = sr.student_b)
+              else
+                ((select l.power from letters l where l.sender_id = sr.student_a or l.sender_id = sr.student_b) /
+                 sr.relationship)
+              end
+            )
       )
-      insert into student_relationships as sr (student_a, student_b, relationship)
-        (select l.sender_id, in_student_id, l.power from letters l where l.sender_id < ?)
-        union
-        (select in_student_id, l.sender_id, l.power from letters l where l.sender_id > ?)
-      on conflict (student_a, student_b)
-         do update set relationship = sr.relationship + (
-           case sr.relationship
-             when 0 then
-               (select l.power from letters l where l.sender_id = sr.student_a or l.sender_id = sr.student_b)
-             else
-               ((select l.power from letters l where l.sender_id = sr.student_a or l.sender_id = sr.student_b) / sr.relationship)
-             end
-           );;
+      delete from student_letters sl
+      using letters
+      where sl.id = letters.id;;
     end;;
   $$
   language plpgsql;;
