@@ -23,7 +23,7 @@ defmodule Seeder do
   end
 
   def insert do
-    Note.travel_records()
+    Note.records()
     |> Enum.each(&Repo.insert!/1)
 
     lessons =

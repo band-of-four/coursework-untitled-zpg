@@ -3,8 +3,10 @@ defmodule Seeder.Note do
   import EctoEnum
   alias Seeder.{Note, Creature, Lesson}
 
-  defenum StudentStage, :student_stage, ["Fight", "FightWon", "FightLost", "Lesson", "Travel"]
+  defenum StudentStage, :student_stage, ["Fight", "FightWon", "FightLost", "Lesson", "Travel", "Library", "Infirmary"]
   defenum StudentGender, :student_gender, ["Female", "Male"]
+
+  @data YamlElixir.read_from_file!("notes.yaml", atoms: true)
 
   @primary_key {:id, :id, autogenerate: true}
   schema "notes" do
@@ -16,14 +18,8 @@ defmodule Seeder.Note do
     belongs_to :lesson, Lesson
   end
 
-  def travel_records do
-    [
-      {"Крыша в огне -- пусть полыхает, шампанское в руке, мне хорошо", "Female"},
-      {"Крыша в огне -- пусть полыхает, шампанское в руке, мне хорошо", "Male"}
-    ]
-    |> Enum.map(fn {text, gender} ->
-      %Note{stage: "Travel", text: text, text_gender: gender, is_approved: true}
-    end)
+  def records do
+    Enum.map(@data, &build/1)
   end
 
   def build(%{stage: stage, text: text, gender: gender}, %Creature{} = creature) do
@@ -32,5 +28,9 @@ defmodule Seeder.Note do
 
   def build(%{stage: stage, text: text, gender: gender}, %Lesson{} = lesson) do
     %Note{stage: stage, text: text, text_gender: gender, is_approved: true, lesson: lesson}
+  end
+
+  def build(%{stage: stage, text: text, gender: gender}) do
+    %Note{stage: stage, text: text, text_gender: gender, is_approved: true}
   end
 end
