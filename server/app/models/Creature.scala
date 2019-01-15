@@ -24,8 +24,7 @@ class CreatureDao(val db: DbCtx) {
         .join(query[Room])
         .on((c, r) => c.level == r.level && r.number == lift(roomNumber))
         .map(_._1)
-        .randomSort
-        .take(1)
+        .takeRandom
     ).head
 
   def createFightWith(studentId: Long, creature: Creature): Unit =

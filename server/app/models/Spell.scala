@@ -38,11 +38,11 @@ class SpellDao(val db: DbCtx) {
         .map(_._1)
     )
 
-  def findRandom(minLevel: Int, maxLevel: Int): Spell =
+  def findRandomToLearn(studentId: Long, level: Int): Spell =
     run(
       query[Spell]
-        .filter(s => s.level <= lift(maxLevel) && s.level >= lift(minLevel))
-        .randomSort
-        .take(1)
+        .filter(s => !query[SpellsStudent].filter(_.studentId == lift(studentId)).map(_.spellId).contains(s.id))
+        .filter(_.level == lift(level))
+        .takeRandom
     ).head
 }

@@ -31,7 +31,7 @@ package object db {
     }
 
     implicit class RandomSort[T](q: Query[T]) {
-      def randomSort = quote(infix"$q ORDER BY random()".as[Query[T]])
+      def takeRandom = quote(infix"$q ORDER BY random() LIMIT 1".as[Query[T]])
     }
 
     implicit val pgEnumRawEncoder: Encoder[PgEnumRaw] = encoder(java.sql.Types.OTHER,

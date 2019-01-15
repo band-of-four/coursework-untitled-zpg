@@ -52,5 +52,5 @@ class NoteDao(db: DbCtx) {
     ).head
 
   @inline private def findRandom =
-    quote(query[Note].filter(_.isApproved).randomSort.take(1))
+    quote(query[Note].filter(_.isApproved).takeRandom)
 }
