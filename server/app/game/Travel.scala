@@ -1,7 +1,5 @@
 package game
 
-import java.time.Duration
-
 import models.LessonDao.PartialAttendanceMap
 import models.{RoomPreloaded, StudentForUpdate}
 import models.Room.Kind._
@@ -9,7 +7,6 @@ import utils.WeightedSample
 
 object Travel {
   val TravelRadius = 10
-  val TravelDuration = Duration.ofSeconds(90)
 
   sealed trait Destination {
     def room: Long

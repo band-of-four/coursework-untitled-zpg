@@ -1,10 +1,9 @@
 package services
 
 import models._
-import game.{Durations, Fight, Heal, Travel}
+import game.{Durations, Fight, Travel}
 import game.Fight._
 import game.Travel._
-import game.Study._
 import services.GameProgressionService._
 import services.StageService.StageUpdate
 import utils.RandomEvent
@@ -42,12 +41,12 @@ class GameProgressionService(stageService: StageService,
           case Student.Stage.Lesson =>
             lessonDao.updateAttendance(student.id)
             val newAttendance = lessonDao.loadAttendance(student.id, student.level)
-            stageService.commitTravelStage(student, TravelDuration)
+            stageService.commitTravelStage(student, Durations.Travel)
             CompletedLesson(newAttendance)
           case Student.Stage.Library =>
             libraryService.commitVisitEnd(student)
             val newSpells = spellDao.load(student.id)
-            stageService.commitTravelStage(student, TravelDuration)
+            stageService.commitTravelStage(student, Durations.Travel)
             CompletedLibrary(newSpells)
         }
       }
@@ -56,14 +55,14 @@ class GameProgressionService(stageService: StageService,
   def startFight(student: StudentForUpdate): Unit = {
     val opponent = creatureDao.findNearRoom(student.currentRoom)
     creatureDao.createFightWith(student.id, opponent)
-    stageService.commitFight(student, opponent.id, FightTurnDuration)
+    stageService.commitFight(student, opponent.id, Durations.FightTurn)
   }
 
   def continueFight(student: StudentForUpdate): Unit = {
     val opponent = creatureDao.findInFightWith(student.id)
     val spells = spellDao.load(student.id)
     val turnOutcome = Fight.computeTurn(student, opponent, spells)
-    stageService.commitFightStage(turnOutcome, FightTurnDuration)
+    stageService.commitFightStage(turnOutcome, Durations.FightTurn)
     turnOutcome match {
       case FightContinues(_, creature) =>
         creatureDao.updateInFightWith(student.id, creature)
@@ -84,19 +83,19 @@ class GameProgressionService(stageService: StageService,
 
     destination match {
       case AttendClass(_, lessonId) =>
-        stageService.commitLessonStage(updatedStudent, lessonId, StudyDuration)
+        stageService.commitLessonStage(updatedStudent, lessonId, Durations.Study)
       case VisitClub(_, clubId) =>
         ???
       case VisitLibrary(newRoom) =>
         libraryService.commitLibraryVisit(updatedStudent)
         stageService.commitLibraryStage(updatedStudent, Durations.Library)
       case ContinueTravelling(newRoom) =>
-        stageService.commitTravelStage(student.copy(currentRoom = newRoom), TravelDuration)
+        stageService.commitTravelStage(student.copy(currentRoom = newRoom), Durations.Study)
     }
   }
 
   def enterInfirmary(student: StudentForUpdate): Unit = {
     val infirmary = roomDao.findClosest(Room.Kind.Infirmary, student.currentRoom)
-    stageService.commitInfirmaryStage(student.copy(currentRoom = infirmary), Heal.duration(student))
+    stageService.commitInfirmaryStage(student.copy(currentRoom = infirmary), Durations.Infirmary(student))
   }
 }

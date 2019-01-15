@@ -1,13 +1,10 @@
 package game
 
-import java.time.Duration
-
 import models._
 import utils.RandomDouble
 
 object Fight {
   val FightChance = 0.75
-  val FightTurnDuration = Duration.ofSeconds(25)
 
   val LuckSpellRange = 0.3
   val StudentAttackLevelWeight = 10.0

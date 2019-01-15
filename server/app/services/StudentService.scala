@@ -2,7 +2,7 @@ package services
 
 import java.time.LocalDateTime
 
-import game.Travel.TravelDuration
+import game.Durations
 import models._
 import org.postgresql.util.PSQLException
 import services.StudentService.{NewStudent, StudentAlreadyExistsException}
@@ -35,7 +35,7 @@ class StudentService(studentDao: StudentDao,
       currentRoom = 1,
       stageNoteId = noteDao.initialNoteId(entry.gender),
       stageStartTime = LocalDateTime.now(),
-      nextStageTime = LocalDateTime.now().plus(TravelDuration)
+      nextStageTime = LocalDateTime.now().plus(Durations.Travel)
     )
     studentDao.create(newStudent) { student =>
       spellDao.createBaseSpells(student.id)
