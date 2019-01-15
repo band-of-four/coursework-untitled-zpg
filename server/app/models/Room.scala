@@ -17,7 +17,7 @@ object Room {
 
 case class Room(number: Long, level: Int, kind: Room.Kind, clubId: Option[Long], lessonId: Option[Long])
 
-case class RoomPreloaded(number: Long, level: Int, kind: Room.Kind, club: Option[StudentClub], lesson: Option[Lesson])
+case class RoomPreloaded(number: Long, level: Int, kind: Room.Kind, club: Option[Club], lesson: Option[Lesson])
 
 class RoomDao(val db: DbCtx) {
   import db._
@@ -39,7 +39,7 @@ class RoomDao(val db: DbCtx) {
       query[Room]
         .filter(_.number != lift(aroundRoom))
         .filter(r => r.number < lift(aroundRoom + radius) && r.number > lift(aroundRoom - radius))
-        .leftJoin(query[StudentClub]).on {
+        .leftJoin(query[Club]).on {
           case (r, c) => r.clubId.exists(_ == c.id)
         }
         .leftJoin(query[Lesson]).on {

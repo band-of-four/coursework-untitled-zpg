@@ -21,7 +21,8 @@ class GameProgressionService(stageService: StageService,
                              roomDao: RoomDao,
                              lessonDao: LessonDao,
                              creatureDao: CreatureDao,
-                             spellDao: SpellDao) {
+                             spellDao: SpellDao,
+                             relationshipDao: StudentRelationshipDao) {
   def pendingUpdates(count: Int): Seq[StudentForUpdate] =
     stageService.findPendingUpdates(count)
 

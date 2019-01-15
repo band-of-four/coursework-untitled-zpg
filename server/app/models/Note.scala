@@ -24,7 +24,7 @@ class NoteDao(db: DbCtx) {
         .leftJoin(query[Lesson]).on {
           case (n, l) => n.lessonId.exists(_ == l.id)
         }
-        .leftJoin(query[StudentClub]).on {
+        .leftJoin(query[Club]).on {
           case ((n, l), cl) => n.clubId.exists(_ == cl.id)
         }
         .leftJoin(query[Creature]).on {

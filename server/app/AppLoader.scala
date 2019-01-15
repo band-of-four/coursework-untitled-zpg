@@ -51,7 +51,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val noteDao = new _root_.models.NoteDao(db)
   lazy val owlDao = new _root_.models.OwlDao(db)
   lazy val libraryDao = new _root_.models.StudentLibraryVisitDao(db)
-  lazy val letterDao = new _root_.models.StudentLetterDao(db)
+  lazy val relationshipDao = new _root_.models.StudentRelationshipDao(db)
   /* Services */
   lazy val userService = new _root_.services.UserService(
     userDao, userLoginInfoDao, db, dbExecCtx, configuration)
@@ -60,7 +60,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val stageService = new _root_.services.StageService(
     studentDao, noteDao, studentDiaryDao)
   lazy val owlService = new _root_.services.OwlService(
-    owlDao, studentDao, letterDao)
+    owlDao, studentDao, relationshipDao)
   lazy val libraryService = new _root_.services.LibraryService(
     spellDao, libraryDao)
   lazy val gameProgressionService = new _root_.services.GameProgressionService(

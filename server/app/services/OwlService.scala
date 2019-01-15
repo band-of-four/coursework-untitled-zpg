@@ -10,11 +10,13 @@ object OwlService {
   case class OwlApplicationResult()
 }
 
-class OwlService(owlDao: OwlDao, studentDao: StudentDao, letterDao: StudentLetterDao)
+class OwlService(owlDao: OwlDao,
+                 studentDao: StudentDao,
+                 relationshipDao: StudentRelationshipDao)
                 (implicit ec: ExecutionContext) {
   val owlImplMap: Map[String, Owl] = Map(
     "StageSkip" -> new StageSkipOwl(),
-    "StudentLetter" -> new StudentLetterOwl(letterDao)
+    "StudentLetter" -> new StudentLetterOwl(relationshipDao)
   )
 
   def getSorted(userId: Long): Future[Seq[OwlPreloaded]] = Future {

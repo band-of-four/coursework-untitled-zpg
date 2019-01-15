@@ -15,7 +15,7 @@ create table lessons (
   required_attendance integer not null check (required_attendance > 0)
 );;
 
-create table student_clubs (
+create table clubs (
   id bigserial primary key,
   name text not null
 );;
@@ -32,7 +32,7 @@ create table rooms (
   number bigserial primary key,
   level student_level not null,
   kind room_kind not null,
-  club_id bigint references student_clubs,
+  club_id bigint references clubs,
   lesson_id bigint references lessons,
 
   constraint room_kind_integrity check (
@@ -55,7 +55,7 @@ create table rooms (
 
 drop table rooms;
 drop table creatures;
-drop table student_clubs;
+drop table clubs;
 drop table lessons;
 drop type room_kind;
 drop domain student_level;

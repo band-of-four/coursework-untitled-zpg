@@ -16,7 +16,7 @@ create table notes (
   creator_id bigint references users,
 
   lesson_id bigint references lessons,
-  club_id bigint references student_clubs,
+  club_id bigint references clubs,
   creature_id bigint references creatures,
 
   constraint note_stage_integrity check (

@@ -1,10 +1,10 @@
 package owls
 import play.api.libs.json.JsValue
-import models.StudentLetterDao
+import models.StudentRelationshipDao
 
-class StudentLetterOwl(letterDao: StudentLetterDao) extends Owl { // TODO
+class StudentLetterOwl(relationshipDao: StudentRelationshipDao) extends Owl {
   override def apply(studentId: Long, payload: JsValue): Unit = {
     val receiverId = (payload \ "receiverId").as[Long]
-    letterDao.insert(studentId, receiverId)
+    relationshipDao.insert(studentId, receiverId)
   }
 }
