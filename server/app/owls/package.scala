@@ -1,5 +1,7 @@
+import play.api.libs.json.JsValue
+
 package object owls {
   abstract class Owl {
-    def apply(): Unit
+    def apply(studentId: Long, payload: JsValue): Unit
   }
 }

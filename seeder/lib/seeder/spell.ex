@@ -15,16 +15,6 @@ defmodule Seeder.Spell do
     field :level, :integer
   end
 
-  def names do
-    %{
-      0 => [
-        {"Удар палочкой", "Attack", 5},
-        {"Блок", "Defence", 2},
-        {"Скрестить пальцы", "Luck", 1}
-      ]
-    }
-  end
-
   def records do
     @data
     |> Enum.map(fn {year, spells} ->
