@@ -5,6 +5,8 @@ defmodule Seeder.Spell do
 
   defenum SpellKind, :spell_kind, ["Attack", "Defence", "Luck"]
 
+  @data YamlElixir.read_from_file!("spells.yaml", atoms: true)
+
   @primary_key {:id, :id, autogenerate: true}
   schema "spells" do
     field :name, :string
@@ -24,10 +26,10 @@ defmodule Seeder.Spell do
   end
 
   def records do
-    names()
+    @data
     |> Enum.map(fn {year, spells} ->
-      {year, Enum.map(spells, fn {name, type, power} -> 
-        %Spell{name: name, level: year, power: power, kind: type}
+      {year, Enum.map(spells, fn spell -> 
+        %Spell{name: spell.name, level: year, power: spell.power, kind: spell.kind}
       end)}
     end)
     |> Map.new()

@@ -2,13 +2,6 @@ defmodule Seeder do
   alias Seeder.{Repo, Lesson, Room, Note, Creature, Spell}
 
   def run do
-    seq_reset_queries = [
-      "ALTER SEQUENCE lessons_id_seq RESTART;",
-      "ALTER SEQUENCE spells_id_seq RESTART;",
-      "ALTER SEQUENCE rooms_number_seq RESTART;",
-      "ALTER SEQUENCE creatures_id_seq RESTART;",
-      "ALTER SEQUENCE notes_id_seq RESTART;"
-    ]
 
     Repo.delete_all(Note)
     Repo.delete_all(Room)
@@ -16,7 +9,13 @@ defmodule Seeder do
     Repo.delete_all(Creature)
     Repo.delete_all(Spell)
 
-    seq_reset_queries
+    [
+      "ALTER SEQUENCE lessons_id_seq RESTART;",
+      "ALTER SEQUENCE spells_id_seq RESTART;",
+      "ALTER SEQUENCE rooms_number_seq RESTART;",
+      "ALTER SEQUENCE creatures_id_seq RESTART;",
+      "ALTER SEQUENCE notes_id_seq RESTART;"
+    ]
     |> Enum.map(fn reset_qry -> Ecto.Adapters.SQL.query!(Repo, reset_qry, []) end)
 
     Repo.transaction(&insert/0)
