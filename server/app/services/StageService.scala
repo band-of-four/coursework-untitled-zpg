@@ -6,6 +6,7 @@ import services.StageService.StageUpdate
 import java.time.{Duration, LocalDateTime, ZoneId}
 
 import game.Fight.{FightContinues, StudentLost, StudentWon, TurnOutcome}
+import services.GameProgressionService.StageCompletion
 
 object StageService {
   case class StageUpdate(level: Int, hp: Int, note: NotePreloaded, stageDuration: Long, stageElapsed: Long)
@@ -30,7 +31,7 @@ class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDi
   def findPendingUpdates(count: Int): Seq[StudentForUpdate] =
     studentDao.findPendingStageUpdate(count)
 
-  def transactionalUpdate(userId: Long)(block: => Unit): StageUpdate = {
+  def transactionalUpdate(userId: Long)(block: => StageCompletion): StageUpdate = {
     studentDao.doTransaction(block)
     getStage(userId)
   }

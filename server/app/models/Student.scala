@@ -4,6 +4,7 @@ import java.time.{Duration, LocalDateTime}
 
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import db.{DbCtx, PgEnum}
+import play.api.libs.json.Json
 
 object Student {
   sealed trait Gender extends EnumEntry
@@ -27,6 +28,8 @@ object Student {
 
     val values = findValues
   }
+
+  implicit val studentWrites = Json.writes[Student]
 }
 
 case class Student(id: Long, name: String, gender: Student.Gender, level: Int, hp: Int, currentRoom: Long,
@@ -45,7 +48,7 @@ class StudentDao(val db: DbCtx) {
       student
     }
 
-  def doTransaction(block: => Unit): Unit = transaction(block)
+  def doTransaction[T](f: => T): T = transaction(f)
 
   def findForUser(userId: Long): Option[Student] =
     run(query[Student].filter(_.id == lift(userId))).headOption

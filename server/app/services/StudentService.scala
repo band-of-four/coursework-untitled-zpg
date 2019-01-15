@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 import game.Travel.TravelDuration
 import models._
 import org.postgresql.util.PSQLException
-import services.StudentService.{NewStudent, StudentAlreadyExistsException, StudentSpell}
+import services.StudentService.{NewStudent, StudentAlreadyExistsException}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -48,9 +48,8 @@ class StudentService(studentDao: StudentDao,
         Future.failed(e)
   }
 
-  def getSpells(userId: Long): Future[Seq[StudentSpell]] = Future {
-    spellDao.findLearned(userId).map(spell =>
-      StudentSpell(spell.name, spell.kind, spell.power))
+  def getSpells(userId: Long): Future[Seq[SpellPreloaded]] = Future {
+    spellDao.load(userId)
   }
 
   def getDiaryNotes(userId: Long): Future[Seq[StudentDiaryNote]] = Future {

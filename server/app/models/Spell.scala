@@ -2,10 +2,13 @@ package models
 
 import db.{DbCtx, PgEnum}
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import play.api.libs.json.Json
 
 case class Spell(name: String, kind: Spell.Kind, power: Int, level: Int, id: Long = -1)
 
 case class SpellsStudent(spellId: Long, studentId: Long)
+
+case class SpellPreloaded(name: String, kind: Spell.Kind, power: Int)
 
 object Spell {
   sealed trait Kind extends EnumEntry
@@ -16,6 +19,10 @@ object Spell {
 
     val values = findValues
   }
+}
+
+object SpellPreloaded {
+  implicit val spellPreloadedWrites = Json.writes[SpellPreloaded]
 }
 
 class SpellDao(val db: DbCtx) {
@@ -30,12 +37,15 @@ class SpellDao(val db: DbCtx) {
       )
     )
 
-  def findLearned(studentId: Long): Seq[Spell] =
+  def load(studentId: Long): Seq[SpellPreloaded] =
     run(
       query[Spell]
-        .join(query[SpellsStudent])
-        .on((sp, spst) => sp.id == spst.spellId && spst.studentId == lift(studentId))
-        .map(_._1)
+        .join(query[SpellsStudent]).on {
+          case (sp, spst) => sp.id == spst.spellId && spst.studentId == lift(studentId)
+        }
+        .map {
+          case (s, spst) => SpellPreloaded(s.name, s.kind, s.power)
+        }
     )
 
   def findRandomIdToLearn(studentId: Long, level: Int): Long =

@@ -36,8 +36,9 @@ class OwlService(owlDao: OwlDao, studentDao: StudentDao, letterDao: StudentLette
     else false
   }
 
-  def useActiveOwlsForUpdate(student: StudentForUpdate)(updateBlock: Seq[OwlStageUpdate] => Unit): Unit = {
-    updateBlock(owlDao.loadForStageUpdate(student.id, student.stage))
+  def useActiveOwlsForUpdate[T](student: StudentForUpdate)(f: Seq[OwlStageUpdate] => T): T = {
+    val updateResult = f(owlDao.loadForStageUpdate(student.id, student.stage))
     owlDao.updatePostStageUpdate(student.id, student.stage)
+    updateResult
   }
 }

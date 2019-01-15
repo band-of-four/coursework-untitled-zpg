@@ -20,7 +20,7 @@ object Travel {
   case class VisitLibrary(room: Long) extends Destination
   case class ContinueTravelling(room: Long) extends Destination
 
-  def pickDestination(student: StudentForUpdate, rooms: Seq[RoomPreloaded], attendance: LessonAttendanceMap): Destination = {
+  def pickDestination(student: StudentForUpdate, rooms: Seq[RoomPreloaded], attendance: PartialAttendanceMap): Destination = {
     val nextRoom = WeightedSample(rooms) {
       case RoomPreloaded(_, level, _, _, _) if level > student.level =>
         0

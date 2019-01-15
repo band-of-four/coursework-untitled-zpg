@@ -5,8 +5,16 @@ import game.{Durations, Fight, Heal, Travel}
 import game.Fight._
 import game.Travel._
 import game.Study._
+import services.GameProgressionService._
 import services.StageService.StageUpdate
 import utils.RandomEvent
+
+object GameProgressionService {
+  sealed trait StageCompletion
+  case class CompletedLesson(attendance: Seq[LessonAttendancePreloaded]) extends StageCompletion
+  case class CompletedLibrary(spells: Seq[SpellPreloaded]) extends StageCompletion
+  case object CompletedGenericStage extends StageCompletion
+}
 
 class GameProgressionService(stageService: StageService,
                              owlService: OwlService,
@@ -24,16 +32,23 @@ class GameProgressionService(stageService: StageService,
         student.stage match {
           case Student.Stage.Fight =>
             continueFight(student)
+            CompletedGenericStage
           case Student.Stage.Travel if RandomEvent(FightChance) =>
             startFight(student)
+            CompletedGenericStage
           case Student.Stage.Travel =>
             enterNextRoom(student)
+            CompletedGenericStage
           case Student.Stage.Lesson =>
             lessonDao.updateAttendance(student.id)
+            val newAttendance = lessonDao.loadAttendance(student.id, student.level)
             stageService.commitTravelStage(student, TravelDuration)
+            CompletedLesson(newAttendance)
           case Student.Stage.Library =>
             libraryService.commitVisitEnd(student)
+            val newSpells = spellDao.load(student.id)
             stageService.commitTravelStage(student, TravelDuration)
+            CompletedLibrary(newSpells)
         }
       }
     }
@@ -46,7 +61,7 @@ class GameProgressionService(stageService: StageService,
 
   def continueFight(student: StudentForUpdate): Unit = {
     val opponent = creatureDao.findInFightWith(student.id)
-    val spells = spellDao.findLearned(student.id)
+    val spells = spellDao.load(student.id)
     val turnOutcome = Fight.computeTurn(student, opponent, spells)
     stageService.commitFightStage(turnOutcome, FightTurnDuration)
     turnOutcome match {
@@ -63,7 +78,7 @@ class GameProgressionService(stageService: StageService,
 
   def enterNextRoom(student: StudentForUpdate): Unit = {
     val nearbyRooms = roomDao.preloadInRadius(student.currentRoom, TravelRadius)
-    val attendance = lessonDao.buildAttendanceMap(student.id, nearbyRooms.flatMap(_.lesson.map(_.id)))
+    val attendance = lessonDao.loadPartialAttendance(student.id, nearbyRooms.flatMap(_.lesson.map(_.id)))
     val destination = Travel.pickDestination(student, nearbyRooms, attendance)
     val updatedStudent = student.copy(currentRoom = destination.room)
 
