@@ -3,7 +3,7 @@
 # --- !Ups
 
 create type spell_kind as enum
-  ('Attack', 'Defence', 'Luck');;
+  ('Attack', 'Defence', 'Luck', 'Charisma');;
 
 create table spells (
   id bigserial primary key,

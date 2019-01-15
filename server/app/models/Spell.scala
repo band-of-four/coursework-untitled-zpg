@@ -16,6 +16,7 @@ object Spell {
     case object Attack extends Kind
     case object Defence extends Kind
     case object Luck extends Kind
+    case object Charisma extends Kind
 
     val values = findValues
   }
@@ -31,7 +32,7 @@ class SpellDao(val db: DbCtx) {
   def createBaseSpells(studentId: Long): Unit =
     run(
       liftQuery(
-        List(SpellsStudent(1, studentId), SpellsStudent(2, studentId), SpellsStudent(3, studentId))
+        List(SpellsStudent(1, studentId), SpellsStudent(2, studentId), SpellsStudent(3, studentId), SpellsStudent(4, studentId))
       ).foreach(
         query[SpellsStudent].insert(_)
       )

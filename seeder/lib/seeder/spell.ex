@@ -3,7 +3,7 @@ defmodule Seeder.Spell do
   import EctoEnum
   alias Seeder.Spell
 
-  defenum SpellKind, :spell_kind, ["Attack", "Defence", "Luck"]
+  defenum SpellKind, :spell_kind, ["Attack", "Defence", "Luck", "Charisma"]
 
   @data YamlElixir.read_from_file!("spells.yaml", atoms: true)
 

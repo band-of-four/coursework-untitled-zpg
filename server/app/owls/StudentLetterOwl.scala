@@ -5,6 +5,6 @@ import models.StudentRelationshipDao
 class StudentLetterOwl(relationshipDao: StudentRelationshipDao) extends Owl {
   override def apply(studentId: Long, payload: JsValue): Unit = {
     val receiverId = (payload \ "receiverId").as[Long]
-    relationshipDao.insert(studentId, receiverId)
+    relationshipDao.createLetter(studentId, receiverId)
   }
 }

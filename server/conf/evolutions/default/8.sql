@@ -62,24 +62,29 @@ create table student_relationships (
   student_a bigint not null references students,
   student_b bigint not null references students,
   relationship integer not null,
-  delta integer not null
+  delta integer not null,
+
+  primary key (student_a, student_b),
+
+  constraint relationship_uniqueness_through_direction
+    check (student_a < student_b)
 );;
 
 create function student_relationships_delta_update()
   returns trigger as $$
     begin
       if tg_op = 'INSERT'
-      then new.delta = new.relationship;;
+      then new.delta := new.relationship;;
       end if;;
       if tg_op = 'UPDATE'
-      then new.delta = old.delta + (new.relationship - old.relationship);;
+      then new.delta := old.delta + (new.relationship - old.relationship);;
       end if;;
       return new;;
     end;;
   $$
   language plpgsql;;
 
-create trigger student_relationship_delta_update_trig
+create trigger student_relationships_delta_update_trig
   before insert or update on student_relationships
   for each row execute procedure student_relationships_delta_update();;
 
@@ -95,9 +100,9 @@ create function student_relationships_update_in_club(in in_student_id bigint)
       ),
       update_relationships as (
         insert into student_relationships as sr (student_a, student_b, relationship)
-          (select l.sender_id, in_student_id, l.power from letters l where l.sender_id < ?)
+          (select l.sender_id, in_student_id, l.power from letters l where l.sender_id < in_student_id)
           union
-          (select in_student_id, l.sender_id, l.power from letters l where l.sender_id > ?)
+          (select in_student_id, l.sender_id, l.power from letters l where l.sender_id > in_student_id)
           on conflict (student_a, student_b)
             do update set relationship = sr.relationship + (
               case sr.relationship
