@@ -71,10 +71,10 @@ class GameProgressionService(stageService: StageService,
       case FightContinues(_, creature) =>
         creatureDao.updateInFightWith(student.id, creature)
       case StudentWon(student, _) =>
-        creatureDao.removeFightWith(student.id)
+        creatureDao.removeFightWithStudentUpdatingSkill(student.id, skillDelta = 1)
         enterNextRoom(student)
       case StudentLost(student, _) =>
-        creatureDao.removeFightWith(student.id)
+        creatureDao.removeFightWithStudentUpdatingSkill(student.id, skillDelta = 0)
         enterInfirmary(student)
     }
   }

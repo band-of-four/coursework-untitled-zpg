@@ -35,9 +35,6 @@ class CreatureDao(val db: DbCtx) {
         .insert(lift(CreatureFight(studentId, creature.id, creature.totalHp)))
     )
 
-  def removeFightWith(studentId: Long): Unit =
-    run(query[CreatureFight].filter(_.studentId == lift(studentId)).delete)
-
   def updateInFightWith(studentId: Long, creature: OpponentCreature): Unit =
     run(
       query[CreatureFight]
@@ -58,6 +55,9 @@ class CreatureDao(val db: DbCtx) {
           case ((c, fight), skill) => OpponentCreature(c.id, c.power, c.level, fight.creatureHp, skill.map(_.modifier))
         }
     ).head
+
+  def removeFightWithStudentUpdatingSkill(studentId: Long, skillDelta: Int): Unit =
+    run(infix"""SELECT creature_fights_end_updating_skill(${lift(studentId)}, ${lift(skillDelta)})""".as[Insert[Unit]])
 
   def loadStudentSkills(studentId: Long)(implicit pagination: Pagination): Seq[StudentCreatureHandlingSkill] =
     run(

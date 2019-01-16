@@ -117,8 +117,8 @@ create function student_relationships_update_in_club(in in_student_id bigint)
             )
       )
       delete from student_letters sl
-      using letters
-      where sl.id = letters.id;;
+        using letters
+        where sl.id = letters.id;;
     end;;
   $$
   language plpgsql;;
