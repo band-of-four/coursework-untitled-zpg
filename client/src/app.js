@@ -1,9 +1,9 @@
 import Vue from 'vue';
 
-import store from './store';
-import router from './router.js';
+import store from '/store';
+import router from '/router.js';
 
-import App from './App.vue';
+import App from '/views/App.vue';
 
 store.dispatch('load').then(() => new Vue({
   el: '#app',

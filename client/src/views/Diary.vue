@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { getDiaryEntries } from './api/student.js';
+import { getDiaryEntries } from '/api/student.js';
 
 export default {
   name: 'Diary',

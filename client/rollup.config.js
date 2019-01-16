@@ -7,6 +7,23 @@ import commonjs from 'rollup-plugin-commonjs';
 const production = process.env.NODE_ENV === "production",
       development = !production;
 
+/* https://github.com/rollup/rollup/issues/558#issuecomment-353797769 */
+const fs = require('fs'), path = require('path');
+const resolveRoot = ({ root }) => ({
+  resolveId: (importee, importer) => {
+    if (!importee.startsWith('/')) return;
+
+    if (importee.endsWith('.js') || importee.endsWith('.vue')) {
+      const rootPath = path.resolve(__dirname, `${root}${importee}`)
+      if (fs.existsSync(rootPath)) return rootPath;
+    }
+    else {
+      const rootPath = path.resolve(__dirname, `${root}${importee}/index.js`)
+      if (fs.existsSync(rootPath)) return rootPath;
+    }
+  }
+});
+
 export default {
   input: './src/app.js',
   output: {
@@ -15,6 +32,9 @@ export default {
     sourcemap: development ? 'inline' : false
   },
   plugins: [
+    resolveRoot({
+      root: './src'
+    }),
     babel({
       exclude: 'node_modules/**',
       plugins: [

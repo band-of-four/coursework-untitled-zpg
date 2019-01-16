@@ -1,4 +1,4 @@
-import { WS_IN_STAGE_UPDATE } from '../api/ws.js';
+import { WS_IN_STAGE_UPDATE } from '/api/ws.js';
 
 export default ({ name, level, hp }, spells) => ({
   namespaced: true,

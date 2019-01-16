@@ -1,4 +1,4 @@
-import { WS_IN_STAGE_UPDATE } from '../api/ws.js';
+import { WS_IN_STAGE_UPDATE } from '/api/ws.js';
 
 const PROGRESS_TICK_MS = 10000;
 

@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { API_UNAUTHENTICATED } from '../api';
-import { getStudent, postStudent, getSpells, STUDENT_NOT_CREATED } from '../api/student.js';
-import { postSignIn, postSignUp } from '../api/auth.js';
-import { WS_URI, WS_OUT_GET_STAGE } from '../api/ws.js';
+import { API_UNAUTHENTICATED } from '/api';
+import { getStudent, postStudent, getSpells, STUDENT_NOT_CREATED } from '/api/student.js';
+import { postSignIn, postSignUp } from '/api/auth.js';
+import { WS_URI, WS_OUT_GET_STAGE } from '/api/ws.js';
 
 import studentModule from './student.js';
 import stageModule from './stage.js';

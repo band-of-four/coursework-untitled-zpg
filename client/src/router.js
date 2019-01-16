@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Auth from './Auth.vue';
-import Intro from './Intro.vue';
-import Overview from './Overview.vue';
-import Diary from './Diary.vue';
+import Auth from '/views/Auth.vue';
+import Intro from '/views/Intro.vue';
+import Overview from '/views/Overview.vue';
+import Diary from '/views/Diary.vue';
+import Suggestions from '/views/Suggestions.vue';
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,7 @@ export default function (store) {
       { path: '/intro', component: Intro },
       { path: '/', component: Overview },
       { path: '/diary', component: Diary },
+      { path: '/suggest', component: Suggestions },
     ]
   });
 
