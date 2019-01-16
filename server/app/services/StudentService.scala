@@ -2,7 +2,9 @@ package services
 
 import java.time.LocalDateTime
 
+import db.Pagination
 import game.Durations
+import javafx.scene.control.Pagination
 import models._
 import org.postgresql.util.PSQLException
 import services.StudentService.{NewStudent, StudentAlreadyExistsException}
@@ -53,6 +55,6 @@ class StudentService(studentDao: StudentDao,
   }
 
   def getDiaryNotes(userId: Long): Future[Seq[StudentDiaryNote]] = Future {
-    studentDiaryDao.load(userId, 10)
+    studentDiaryDao.load(userId)(db.Pagination(page = 0, perPage = 10))
   }
 }

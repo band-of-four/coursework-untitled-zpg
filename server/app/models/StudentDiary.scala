@@ -1,9 +1,9 @@
 package models
 
 import java.time.LocalDateTime
-import play.api.libs.json.Json
 
-import db.DbCtx
+import play.api.libs.json.Json
+import db.{DbCtx, Pagination}
 
 case class StudentDiaryEntry(studentId: Long, noteId: Long, date: LocalDateTime)
 
@@ -17,7 +17,7 @@ class StudentDiaryDao(db: DbCtx) {
 
   private val schema = quote(querySchema[StudentDiaryEntry]("student_diary_entries"))
 
-  def load(studentId: Long, count: Int): Seq[StudentDiaryNote] =
+  def load(studentId: Long)(implicit pagination: Pagination): Seq[StudentDiaryNote] =
     run(
       schema
         .filter(_.studentId == lift(studentId))
@@ -38,7 +38,7 @@ class StudentDiaryDao(db: DbCtx) {
           case ((((sde, n), l), cl), cr) =>
             StudentDiaryNote(n.text, sde.date, n.stage, l.map(_.name), cl.map(_.name), cr.map(_.name))
         }
-        .take(lift(count))
+        .paginate
     )
 
   def createEntry(entry: StudentDiaryEntry): Unit =

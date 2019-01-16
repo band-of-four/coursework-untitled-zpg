@@ -11,6 +11,8 @@ package object db {
   type DbCtx = ExtendedPostgresJdbcContext[CompositeNamingStrategy2[SnakeCase, PluralizedTableNames]]
   type PgEnumRaw = String
 
+  case class Pagination(page: Int, perPage: Int)
+
   trait PgEnum[E <: EnumEntry] { this: Enum[E] =>
     implicit val enumDecoder: MappedEncoding[PgEnumRaw, E] =  MappedEncoding(this.withName)
     implicit val enumEncoder: MappedEncoding[E, PgEnumRaw] = MappedEncoding(_.entryName)
@@ -18,6 +20,11 @@ package object db {
 
   class ExtendedPostgresJdbcContext[N <: NamingStrategy](naming: N, dataSource: DataSource with Closeable)
     extends PostgresJdbcContext(naming, dataSource) {
+
+    implicit class PaginatedQuery[T](q: Query[T]) {
+      def paginate(implicit pagination: Pagination) =
+        quote(q.drop(lift(pagination.page * pagination.perPage)).take(lift(pagination.perPage)))
+    }
 
     implicit class LocalDateTimeQuotes(lhs: LocalDateTime) {
       def >(rhs: LocalDateTime) = quote(infix"$lhs > $rhs".as[Boolean])

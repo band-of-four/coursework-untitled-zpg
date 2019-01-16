@@ -1,6 +1,6 @@
 package models
 
-import db.DbCtx
+import db.{DbCtx, Pagination}
 
 /* Entities */
 
@@ -13,6 +13,8 @@ case class CreatureHandlingSkill(creatureId: Long, studentId: Long, modifier: In
 /* DTOs */
 
 case class OpponentCreature(id: Long, power: Int, level: Int, hp: Int, studentsSkill: Option[Int])
+
+case class StudentCreatureHandlingSkill(creatureName: String, modifier: Int)
 
 class CreatureDao(val db: DbCtx) {
   import db._
@@ -56,4 +58,17 @@ class CreatureDao(val db: DbCtx) {
           case ((c, fight), skill) => OpponentCreature(c.id, c.power, c.level, fight.creatureHp, skill.map(_.modifier))
         }
     ).head
+
+  def loadStudentSkills(studentId: Long)(implicit pagination: Pagination): Seq[StudentCreatureHandlingSkill] =
+    run(
+      query[CreatureHandlingSkill]
+        .join(query[Creature]).on {
+          case (chs, c) => c.id == chs.creatureId && chs.studentId == lift(studentId)
+        }
+        .map {
+          case (chs, c) => StudentCreatureHandlingSkill(c.name, chs.modifier)
+        }
+        .sortBy(s => (s.modifier, s.creatureName))(Ord(Ord.desc, Ord.asc))
+        .paginate
+    )
 }
