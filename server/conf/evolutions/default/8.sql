@@ -55,7 +55,9 @@ create function lesson_attendance_update_at_lesson_end(in in_student_id bigint)
 create table student_letters (
   id bigserial primary key,
   sender_id bigint not null references students,
-  receiver_id bigint not null references students
+  receiver_id bigint not null references students,
+
+  constraint no_letters_to_self check (sender_id <> receiver_id)
 );;
 
 create table student_relationships (

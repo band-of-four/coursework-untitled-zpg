@@ -44,19 +44,17 @@ create constraint trigger spells_students_integrity_trig
   for each row execute procedure check_student_spells_all_kinds_present();;
 
 create table creature_fights (
+  student_id bigint primary key references students,
   creature_id bigint references creatures,
-  student_id bigint references students,
-  creature_hp integer not null,
-
-  primary key (creature_id, student_id)
+  creature_hp integer not null
 );;
 
 create table creature_handling_skills (
-  creature_id bigint references creatures,
   student_id bigint references students,
+  creature_id bigint references creatures,
   modifier integer not null,
 
-  primary key (creature_id, student_id)
+  primary key (student_id, creature_id)
 );;
 
 # --- !Downs

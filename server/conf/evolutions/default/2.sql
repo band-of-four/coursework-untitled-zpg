@@ -10,14 +10,14 @@ create type room_kind as enum
 
 create table lessons (
   id bigserial primary key,
-  name text not null,
+  name text unique not null,
   level student_level not null,
   required_attendance integer not null check (required_attendance > 0)
 );;
 
 create table clubs (
   id bigserial primary key,
-  name text not null
+  name text unique not null
 );;
 
 create table creatures (
@@ -25,8 +25,12 @@ create table creatures (
   name text not null,
   power integer not null,
   total_hp integer not null,
-  level student_level not null
+  level student_level not null,
+  is_approved boolean not null default false
 );;
+
+create index creatures_levels_approved_idx
+  on creatures (level) where is_approved;;
 
 create table rooms (
   number bigserial primary key,

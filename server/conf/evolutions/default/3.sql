@@ -14,6 +14,7 @@ create table notes (
   text text not null,
   text_gender student_gender not null,
   creator_id bigint references users,
+  is_approved boolean not null default false,
 
   lesson_id bigint references lessons,
   club_id bigint references clubs,
@@ -34,9 +35,12 @@ create table notes (
   )
 );;
 
+create index notes_stage_gender_approved_idx
+  on notes (stage, text_gender) where is_approved;;
+
 create table students (
   id bigint primary key references users,
-  name text not null,
+  name text unique not null,
   gender student_gender not null,
   level student_level not null,
   hp integer not null,
@@ -46,6 +50,9 @@ create table students (
   stage_start_time timestamp not null
 );;
 
+create index students_next_stage_time_idx
+  on students (next_stage_time asc);;
+
 create table student_diary_entries (
   student_id bigint not null references students,
   note_id bigint not null references notes,
@@ -53,11 +60,10 @@ create table student_diary_entries (
 );;
 
 create unique index student_diary_entries_pkey
-  on student_diary_entries (student_id, date desc);
+  on student_diary_entries (student_id, date desc);;
 
 # --- !Downs
 
-drop index student_diary_entries_pkey;
 drop table student_diary_entries;
 drop table students;
 drop table notes;

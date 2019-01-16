@@ -2,10 +2,6 @@
 
 # --- !Ups
 
-alter table notes add is_approved boolean not null default false;;
-
-alter table creatures add is_approved boolean not null default false;;
-
 create function check_creature_notes_all_kinds_present()
   returns trigger as $$
     begin
@@ -35,5 +31,3 @@ create constraint trigger notes_creatures_integrity_trig
 
 drop trigger notes_creatures_integrity_trig on creatures;
 drop function check_creature_notes_all_kinds_present();
-alter table creatures drop column is_approved;
-alter table notes drop column is_approved;

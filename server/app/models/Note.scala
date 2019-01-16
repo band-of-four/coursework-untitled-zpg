@@ -36,21 +36,35 @@ class NoteDao(db: DbCtx) {
         }
     ).head
 
-  def findIdForLesson(gender: Student.Gender, lessonId: Long): Long =
-    run(findRandom.filter(n => n.textGender == lift(gender) && n.lessonId.exists(_ == lift(lessonId))).map(_.id)).head
-
   def findIdForCurrentStage(student: StudentForUpdate): Long =
-    run(findRandom.filter(n => n.stage == lift(student.stage) && n.textGender == lift(student.gender)).map(_.id)).head
+    run(
+      query[Note]
+        .filter(n => n.isApproved &&
+          n.stage == lift(student.stage) &&
+          n.textGender == lift(student.gender))
+        .map(_.id)
+        .takeRandom
+    ).head
+
+  def findIdForLesson(gender: Student.Gender, lessonId: Long): Long =
+    run(
+      query[Note]
+        .filter(n => n.isApproved &&
+          n.stage == lift(Student.Stage.Lesson: Student.Stage) &&
+          n.textGender == lift(gender) &&
+          n.lessonId.exists(_ == lift(lessonId)))
+        .map(_.id)
+        .takeRandom
+    ).head
 
   def findIdForFight(student: StudentForUpdate, creatureId: Long): Long =
     run(
-      findRandom
-        .filter(n => n.stage == lift(student.stage) &&
+      query[Note]
+        .filter(n => n.isApproved &&
+          n.stage == lift(student.stage) &&
           n.textGender == lift(student.gender) &&
           n.creatureId.exists(_ == lift(creatureId)))
         .map(_.id)
+        .takeRandom
     ).head
-
-  @inline private def findRandom =
-    quote(query[Note].filter(_.isApproved).takeRandom)
 }
