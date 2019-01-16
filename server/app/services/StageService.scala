@@ -72,6 +72,11 @@ class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDi
     studentDao.updateStage(student, lessonNote, duration)
   }
 
+  def commitClubStage(student: StudentForUpdate, clubId: Long, duration: Duration): Unit = {
+    val clubNote = noteDao.findIdForClub(student.gender, clubId)
+    studentDao.updateStage(student, clubNote, duration)
+  }
+
   def commitTravelStage(student: StudentForUpdate, duration: Duration): Unit = {
     val travelNote = noteDao.findIdForCurrentStage(student.copy(stage = Student.Stage.Travel))
     studentDao.updateStage(student, travelNote, duration)
@@ -80,11 +85,6 @@ class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDi
   def commitLibraryStage(student: StudentForUpdate, duration: Duration): Unit = {
     val libraryNote = noteDao.findIdForCurrentStage(student.copy(stage = Student.Stage.Library))
     studentDao.updateStage(student, libraryNote, duration)
-  }
-
-  def commitClubStage(student: StudentForUpdate, duration: Duration): Unit = {
-    val clubNote = noteDao.findIdForCurrentStage(student.copy(stage = Student.Stage.Club))
-    studentDao.updateStage(student, clubNote, duration)
   }
 
   def commitInfirmaryStage(student: StudentForUpdate, duration: Duration): Unit = {

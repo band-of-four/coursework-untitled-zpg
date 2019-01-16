@@ -89,7 +89,7 @@ class GameProgressionService(stageService: StageService,
       case AttendClass(_, lessonId) =>
         stageService.commitLessonStage(updatedStudent, lessonId, Durations.Study)
       case VisitClub(_, clubId) =>
-        stageService.commitClubStage(updatedStudent, Durations.Club)
+        stageService.commitClubStage(updatedStudent, clubId, Durations.Club)
       case VisitLibrary(newRoom) =>
         libraryService.commitLibraryVisit(updatedStudent)
         stageService.commitLibraryStage(updatedStudent, Durations.Library)

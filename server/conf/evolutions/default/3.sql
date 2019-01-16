@@ -27,16 +27,29 @@ create table notes (
     or (stage = 'Club'
       and club_id is not null
       and lesson_id is null and creature_id is null)
-    or ((stage = 'Fight' or stage = 'FightWon' or stage = 'FightLost')
+    or (stage in ('Fight', 'FightWon', 'FightLost')
       and creature_id is not null
       and lesson_id is null and club_id is null)
-    or ((stage = 'Travel' or stage = 'Library' or stage = 'Infirmary')
+    or (stage in ('Travel', 'Library', 'Infirmary')
       and lesson_id is null and club_id is null and creature_id is null)
   )
 );;
 
-create index notes_stage_gender_approved_idx
-  on notes (stage, text_gender) where is_approved;;
+create index notes_lessons_gender_approved_idx
+  on notes (lesson_id, text_gender)
+  where is_approved and stage = 'Lesson';;
+
+create index notes_clubs_gender_approved_idx
+  on notes (club_id, text_gender)
+  where is_approved and stage = 'Club';;
+
+create index notes_creatures_gender_approved_idx
+  on notes (creature_id, text_gender)
+  where is_approved and stage in ('Fight', 'FightWon', 'FightLost');;
+
+create index notes_generic_stage_gender_approved_idx
+  on notes (stage, text_gender)
+  where is_approved and stage in ('Travel', 'Library', 'Infirmary');;
 
 create table students (
   id bigint primary key references users,

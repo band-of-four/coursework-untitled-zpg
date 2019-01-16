@@ -50,9 +50,20 @@ class NoteDao(db: DbCtx) {
     run(
       query[Note]
         .filter(n => n.isApproved &&
-          n.stage == lift(Student.Stage.Lesson: Student.Stage) &&
+          n.stage == lift(Student.Stage.Lesson: Student.Stage) && // hint to use the right index
           n.textGender == lift(gender) &&
           n.lessonId.exists(_ == lift(lessonId)))
+        .map(_.id)
+        .takeRandom
+    ).head
+
+  def findIdForClub(gender: Student.Gender, clubId: Long): Long =
+    run(
+      query[Note]
+        .filter(n => n.isApproved &&
+          n.stage == lift(Student.Stage.Club: Student.Stage) && // hint to use the right index
+          n.textGender == lift(gender) &&
+          n.clubId.exists(_ == lift(clubId)))
         .map(_.id)
         .takeRandom
     ).head
