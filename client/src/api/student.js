@@ -1,4 +1,4 @@
-import { get, post } from './index.js';
+import { get, post, getResource, postResource } from './index.js';
 
 export const STUDENT_NOT_CREATED = 'student_not_created';
 
@@ -9,17 +9,8 @@ export async function getStudent() {
   return await response.json();
 }
 
-export async function postStudent(data) {
-  const response = await post('/student', data);
-  return await response.json();
-}
+export const postStudent = postResource('/student');
 
-export async function getSpells() {
-  const response = await get('/student/spells');
-  return await response.json();
-}
+export const getSpells = getResource('/student/spells');
 
-export async function getDiaryEntries() {
-  const response = await get('/student/diary');
-  return await response.json();
-}
+export const getDiaryEntries = getResource('/student/diary');

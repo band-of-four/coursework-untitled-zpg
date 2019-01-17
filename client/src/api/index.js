@@ -1,6 +1,14 @@
 export const API_ERROR = 'api_error';
 export const API_UNAUTHENTICATED = 'api_unauthenticated';
 
+export const getResource = (url) => () => {
+  return get(url).then((r) => r.json());
+}
+
+export const postResource = (url) => (body) => {
+  return post(url, body).then((r) => r.json());
+}
+
 export function get(url) {
   return fetch(url, {
     method: 'GET',
