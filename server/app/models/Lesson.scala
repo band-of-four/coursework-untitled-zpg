@@ -21,8 +21,18 @@ object LessonAttendancePreloaded {
 class LessonDao(val db: DbCtx) {
   import db._
 
-  def getLessons(s: Student): Seq[Lesson] =
+  def findIdByName(lessonName: String): Option[Long] =
+    run(query[Lesson].filter(_.name == lift(lessonName)).map(_.id)).headOption
+
+  def findForStudent(s: Student): Seq[Lesson] =
     run(query[Lesson].filter(_.level == lift(s.level)))
+
+  def findNamesForStudentId(studentId: Long): Seq[String] =
+    run(
+      query[Lesson]
+        .join(query[Student]).on((l, s) => l.level == s.level && s.id == lift(studentId))
+        .map(_._1.name)
+    )
 
   def loadAttendance(studentId: Long, studentLevel: Int): Seq[LessonAttendancePreloaded] =
     run(

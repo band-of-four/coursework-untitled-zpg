@@ -3,7 +3,7 @@ package models
 import db.DbCtx
 
 case class Note(text: String, textGender: Student.Gender, stage: Student.Stage,
-                lessonId: Option[Long], clubId: Option[Long], creatureId: Option[Long],
+                lessonId: Option[Long] = None, clubId: Option[Long] = None, creatureId: Option[Long] = None,
                 isApproved: Boolean = false, id: Long = -1)
 
 case class NotePreloaded(text: String, stage: Student.Stage,
@@ -78,4 +78,7 @@ class NoteDao(db: DbCtx) {
         .map(_.id)
         .takeRandom
     ).head
+
+  def createSuggestionForLesson(creatorId: Long, text: String, gender: Student.Gender, lessonId: Long): Unit =
+    run(query[Note].insert(lift(Note(text, gender, Student.Stage.Lesson, lessonId = Some(lessonId)))).returning(_.id))
 }

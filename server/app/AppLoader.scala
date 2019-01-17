@@ -65,6 +65,8 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
     spellDao, libraryDao)
   lazy val gameProgressionService = new _root_.services.GameProgressionService(
     stageService, owlService, libraryService, roomDao, lessonDao, creatureDao, spellDao, relationshipDao)
+  lazy val suggestionService = new _root_.services.SuggestionService(
+    noteDao, lessonDao)
   /* Actors */
   lazy val socketMessengerActor: ActorRef = actorSystem.actorOf(
     Props[SocketMessengerActor], "socket-messenger-actor")
@@ -79,7 +81,9 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
     controllerComponents, silhouette.env, socketMessengerActor, stageService)(materializer, executionContext, actorSystem)
   lazy val studentController = new _root_.controllers.StudentController(
     controllerComponents, silhouette.env, studentService, stageService)
+  lazy val suggestionController = new _root_.controllers.SuggestionController(
+    controllerComponents, silhouette.env, suggestionService)
   /* Routes */
   lazy val router: Router = new _root_.router.Routes(
-    httpErrorHandler, applicationController, assets, authController, studentController)
+    httpErrorHandler, applicationController, assets, authController, studentController, suggestionController)
 }

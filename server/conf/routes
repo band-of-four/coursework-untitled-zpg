@@ -17,3 +17,6 @@ GET     /student                    controllers.StudentController.get
 POST    /student                    controllers.StudentController.create
 GET     /student/spells             controllers.StudentController.getSpells
 GET     /student/diary              controllers.StudentController.getDiary
+
+GET     /suggest/lesson/names       controllers.SuggestionController.getLessonNames
+POST    /suggest/text               controllers.SuggestionController.createText
