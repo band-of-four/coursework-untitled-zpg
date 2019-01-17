@@ -1,10 +1,7 @@
 <template>
 <div>
   <h1>Предложить</h1>
-  <router-link to="/bar">Урок</router-link>
-  <section v-for="entry in entries">
-    {{ entry }}
-  </section>
+  <router-link to="/suggest/lesson">Урок</router-link>
 </div>
 </template>
 

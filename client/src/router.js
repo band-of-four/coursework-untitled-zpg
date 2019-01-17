@@ -6,6 +6,7 @@ import Intro from '/views/Intro.vue';
 import Overview from '/views/Overview.vue';
 import Diary from '/views/Diary.vue';
 import Suggestions from '/views/Suggestions.vue';
+import SuggestionsLesson from '/views/suggestions/Lesson.vue';
 
 Vue.use(VueRouter);
 
@@ -17,6 +18,7 @@ export default function (store) {
       { path: '/', component: Overview },
       { path: '/diary', component: Diary },
       { path: '/suggest', component: Suggestions },
+      { path: '/suggest/lesson', component: SuggestionsLesson },
     ]
   });
 
