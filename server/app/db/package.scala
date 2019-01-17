@@ -22,8 +22,8 @@ package object db {
     extends PostgresJdbcContext(naming, dataSource) {
 
     implicit class PaginatedQuery[T](q: Query[T]) {
-      def paginate(implicit pagination: Pagination) =
-        quote(q.drop(lift(pagination.page * pagination.perPage)).take(lift(pagination.perPage)))
+      def paginate(pagination: Pagination) =
+        quote(q.drop(pagination.page * pagination.perPage).take(pagination.perPage))
     }
 
     implicit class LocalDateTimeQuotes(lhs: LocalDateTime) {

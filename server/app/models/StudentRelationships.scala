@@ -17,7 +17,7 @@ class StudentRelationshipDao(db: DbCtx) {
   def updateInClub(studentId: Long): Unit =
     run(infix"""SELECT student_relationships_update_in_club(${lift(studentId)})""".as[Insert[Unit]])
 
-  def loadForStudent(studentId: Long)(implicit pagination: Pagination): Seq[StudentRelationshipPreloaded] = {
+  def loadForStudent(studentId: Long, pagination: Pagination): Seq[StudentRelationshipPreloaded] = {
     /* Could be replaced with UPDATE RETURNING, https://github.com/getquill/quill/issues/572 */
     val relationships = run(
       query[StudentRelationship]
@@ -28,7 +28,7 @@ class StudentRelationshipDao(db: DbCtx) {
         .map {
           case (sr, s) => ((sr.studentA, sr.studentB), StudentRelationshipPreloaded(s.name, sr.relationship, sr.delta))
         }
-        .paginate
+        .paginate(lift(pagination))
     )
     relationships.foreach { case ((studentA, studentB), _) =>
       run(

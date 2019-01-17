@@ -17,7 +17,7 @@ class StudentDiaryDao(db: DbCtx) {
 
   private val schema = quote(querySchema[StudentDiaryEntry]("student_diary_entries"))
 
-  def load(studentId: Long)(implicit pagination: Pagination): Seq[StudentDiaryNote] =
+  def load(studentId: Long, pagination: Pagination): Seq[StudentDiaryNote] =
     run(
       schema
         .filter(_.studentId == lift(studentId))
@@ -38,7 +38,7 @@ class StudentDiaryDao(db: DbCtx) {
           case ((((sde, n), l), cl), cr) =>
             StudentDiaryNote(n.text, sde.date, n.stage, l.map(_.name), cl.map(_.name), cr.map(_.name))
         }
-        .paginate
+        .paginate(lift(pagination))
     )
 
   def createEntry(entry: StudentDiaryEntry): Unit =

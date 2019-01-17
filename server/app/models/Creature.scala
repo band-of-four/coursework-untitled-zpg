@@ -66,7 +66,7 @@ class CreatureDao(val db: DbCtx) {
   def removeFightWithStudentUpdatingSkill(studentId: Long, skillDelta: Int): Unit =
     run(infix"""SELECT creature_fights_end_updating_skill(${lift(studentId)}, ${lift(skillDelta)})""".as[Insert[Unit]])
 
-  def loadStudentSkills(studentId: Long)(implicit pagination: Pagination): Seq[StudentCreatureHandlingSkill] =
+  def loadStudentSkills(studentId: Long, pagination: Pagination): Seq[StudentCreatureHandlingSkill] =
     run(
       query[CreatureHandlingSkill]
         .join(query[Creature]).on {
@@ -76,6 +76,6 @@ class CreatureDao(val db: DbCtx) {
           case (chs, c) => StudentCreatureHandlingSkill(c.name, chs.modifier)
         }
         .sortBy(s => (s.modifier, s.creatureName))(Ord(Ord.desc, Ord.asc))
-        .paginate
+        .paginate(lift(pagination))
     )
 }

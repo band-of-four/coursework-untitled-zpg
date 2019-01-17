@@ -55,6 +55,6 @@ class StudentService(studentDao: StudentDao,
   }
 
   def getDiaryNotes(userId: Long): Future[Seq[StudentDiaryNote]] = Future {
-    studentDiaryDao.load(userId)(db.Pagination(page = 0, perPage = 10))
+    studentDiaryDao.load(userId, db.Pagination(page = 0, perPage = 10))
   }
 }
