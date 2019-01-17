@@ -4,7 +4,7 @@ import db.DbCtx
 
 case class Note(text: String, textGender: Student.Gender, stage: Student.Stage,
                 lessonId: Option[Long] = None, clubId: Option[Long] = None, creatureId: Option[Long] = None,
-                isApproved: Boolean = false, id: Long = -1)
+                creatorId: Option[Long] = None, isApproved: Boolean = false, heartCount: Long = 0, id: Long = -1)
 
 case class NotePreloaded(text: String, stage: Student.Stage,
                          lesson: Option[String], club: Option[String], creature: Option[String])
@@ -79,6 +79,13 @@ class NoteDao(db: DbCtx) {
         .takeRandom
     ).head
 
-  def createSuggestionForLesson(creatorId: Long, text: String, gender: Student.Gender, lessonId: Long): Unit =
-    run(query[Note].insert(lift(Note(text, gender, Student.Stage.Lesson, lessonId = Some(lessonId)))).returning(_.id))
+  def createForLesson(creatorId: Long, text: String, gender: Student.Gender, lessonId: Long): Unit =
+    run(query[Note].insert(lift(
+      Note(text, gender, Student.Stage.Lesson, lessonId = Some(lessonId), creatorId = Some(creatorId)))
+    ).returning(_.id))
+
+  def createForCreature(creatorId: Long, text: String, gender: Student.Gender, stage: Student.Stage, creatureId: Long): Unit =
+    run(query[Note].insert(lift(
+      Note(text, gender, stage, creatureId = Some(creatureId), creatorId = Some(creatorId)))
+    ).returning(_.id))
 }

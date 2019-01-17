@@ -20,3 +20,4 @@ GET     /student/diary              controllers.StudentController.getDiary
 
 GET     /suggest/lesson/names       controllers.SuggestionController.getLessonNames
 POST    /suggest/text               controllers.SuggestionController.createText
+POST    /suggest/creature           controllers.SuggestionController.createCreature

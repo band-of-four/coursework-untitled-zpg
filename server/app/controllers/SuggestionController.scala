@@ -18,13 +18,15 @@ class SuggestionController(cc: ControllerComponents,
 
   def createText() = silhouette.SecuredAction(parse.json) async { request =>
     request.body.validate[SuggestionService.TextSuggestion].fold(
-      err =>
-        Future.successful(BadRequest),
-      suggestion =>
-        suggestionService.create(request.identity.id, suggestion).map {
-          case Right(_) => Ok
-          case Left(err) => UnprocessableEntity(err)
-        }
+      err => Future.successful(BadRequest),
+      suggestion => suggestionService.create(request.identity.id, suggestion).map(_ => Ok)
+    )
+  }
+
+  def createCreature() = silhouette.SecuredAction(parse.json) async { request =>
+    request.body.validate[SuggestionService.CreatureSuggestion].fold(
+      err => Future.successful(BadRequest),
+      suggestion => suggestionService.create(request.identity.id, suggestion).map(_ => Ok)
     )
   }
 }

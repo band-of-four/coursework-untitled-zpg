@@ -50,6 +50,9 @@ class StudentDao(val db: DbCtx) {
 
   def doTransaction[T](f: => T): T = transaction(f)
 
+  def findLevelById(studentId: Long): Int =
+    run(query[Student].filter(_.id == lift(studentId)).map(_.level)).head
+
   def findForUser(userId: Long): Option[Student] =
     run(query[Student].filter(_.id == lift(userId))).headOption
 

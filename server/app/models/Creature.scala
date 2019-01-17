@@ -19,6 +19,13 @@ case class StudentCreatureHandlingSkill(creatureName: String, modifier: Int)
 class CreatureDao(val db: DbCtx) {
   import db._
 
+  def create(creature: Creature)(depsTransaction: Creature => Unit): Creature =
+    transaction {
+      val newCreature = creature.copy(id = run(query[Creature].insert(lift(creature)).returning(_.id)))
+      depsTransaction(newCreature)
+      newCreature
+    }
+
   def findNearRoom(roomNumber: Long): Creature =
     run(
       query[Creature]

@@ -8,13 +8,13 @@
       <label><input type="radio" value="Female" v-model="n.gender">Ж</label>
       <label><input type="radio" value="Male" v-model="n.gender">М</label>
       <br>
-      <label><input type="radio" value="Fight" v-model="n.kind">В бою</label>
-      <label><input type="radio" value="FightWon" v-model="n.kind">Победа</label>
-      <label><input type="radio" value="FightLost" v-model="n.kind">Поражение</label>
+      <label><input type="radio" value="Fight" v-model="n.stage">В бою</label>
+      <label><input type="radio" value="FightWon" v-model="n.stage">Победа</label>
+      <label><input type="radio" value="FightLost" v-model="n.stage">Поражение</label>
       <button v-if="i >= 6" @click="removeNote(i)">-</button>
       <p>{{ n.error }}</p>
     </div>
-    <button @click="addNote">+</button>
+    <button @click.prevent="addNote">+</button>
     <button type="submit">Отправить</button>
     <p>{{ error }}</p>
   </form>
@@ -29,18 +29,18 @@ export default {
   data: () => ({
     creatureName: '',
     notes: [
-      { text: '', gender: 'Female', kind: 'Fight', error: null },
-      { text: '', gender: 'Male', kind: 'Fight', error: null },
-      { text: '', gender: 'Female', kind: 'FightWon', error: null },
-      { text: '', gender: 'Male', kind: 'FightWon', error: null },
-      { text: '', gender: 'Female', kind: 'FightLost', error: null },
-      { text: '', gender: 'Male', kind: 'FightLost', error: null },
+      { text: '', gender: 'Female', stage: 'Fight', error: null },
+      { text: '', gender: 'Male', stage: 'Fight', error: null },
+      { text: '', gender: 'Female', stage: 'FightWon', error: null },
+      { text: '', gender: 'Male', stage: 'FightWon', error: null },
+      { text: '', gender: 'Female', stage: 'FightLost', error: null },
+      { text: '', gender: 'Male', stage: 'FightLost', error: null },
     ],
     error: null
   }),
   methods: {
     addNote() {
-      this.notes.push({ text: '', gender: 'Female', kind: 'Fight' });
+      this.notes.push({ text: '', gender: 'Female', stage: 'Fight' });
     },
     removeNote(index) {
       this.notes.splice(index, 1);

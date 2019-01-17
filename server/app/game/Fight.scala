@@ -6,6 +6,12 @@ import utils.RandomDouble
 object Fight {
   val FightChance = 0.75
 
+  case class BaseCreatureStats(totalHp: Int, power: Int)
+  object BaseCreatureStats {
+    def apply(level: Int): BaseCreatureStats =
+      BaseCreatureStats(totalHp = 20 * (level + 1), power = 5 * (level + 1))
+  }
+
   val LuckSpellRange = 0.3
   val StudentAttackLevelWeight = 10.0
   val StudentAttackSkillWeight = 2.0
