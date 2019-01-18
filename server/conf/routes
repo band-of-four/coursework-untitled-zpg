@@ -16,7 +16,8 @@ GET     /auth/social/:provider      controllers.AuthController.social(provider: 
 GET     /student                    controllers.StudentController.get
 POST    /student                    controllers.StudentController.create
 GET     /student/spells             controllers.StudentController.getSpells
-GET     /student/diary              controllers.StudentController.getDiary(page: Int ?= 0)
+
+GET     /notes/diary                controllers.NoteController.getDiary(page: Int ?= 0)
 
 GET     /suggest/lesson/names       controllers.SuggestionController.getLessonNames
 POST    /suggest/text               controllers.SuggestionController.createText

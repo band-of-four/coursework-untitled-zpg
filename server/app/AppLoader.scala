@@ -82,10 +82,12 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val applicationController = new _root_.controllers.ApplicationController(
     controllerComponents, silhouette.env, socketMessengerActor, stageService)(materializer, executionContext, actorSystem)
   lazy val studentController = new _root_.controllers.StudentController(
-    controllerComponents, silhouette.env, studentService, stageService, noteService)
+    controllerComponents, silhouette.env, studentService)
   lazy val suggestionController = new _root_.controllers.SuggestionController(
     controllerComponents, silhouette.env, suggestionService)
+  lazy val noteController = new _root_.controllers.NoteController(
+    controllerComponents, silhouette.env, noteService)
   /* Routes */
   lazy val router: Router = new _root_.router.Routes(
-    httpErrorHandler, applicationController, assets, authController, studentController, suggestionController)
+    httpErrorHandler, applicationController, assets, authController, studentController, noteController, suggestionController)
 }
