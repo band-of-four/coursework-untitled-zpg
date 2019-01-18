@@ -19,4 +19,11 @@ class NoteController(cc: ControllerComponents,
       .loadDiary(request.identity.id, Pagination(page, perPage = 1))
       .map(s => Ok(Json.toJson(s)))
   }
+
+  def toggleHeart(noteId: Long) = silhouette.SecuredAction async { implicit request =>
+    noteService.toggleHeart(request.identity.id, noteId).map {
+      case Some(result) => Ok(Json.toJson(result))
+      case _ => UnprocessableEntity
+    }
+  }
 }

@@ -34,6 +34,7 @@ object NoteService {
   implicit val headingWrites = Json.writes[DiarySectionHeading]
   implicit val sectionWrites = Json.writes[DiarySection]
   implicit val formattedWrites = Json.writes[FormattedNote]
+  implicit val toggledWrites = Json.writes[NoteHeartToggled]
 }
 
 class NoteService(noteDao: NoteDao,
@@ -42,6 +43,10 @@ class NoteService(noteDao: NoteDao,
                  (implicit ec: ExecutionContext) {
   def loadStageNote(student: Student): FormattedNote =
     formatNote(student.id, noteDao.load(student.id, student.stageNoteId))
+
+  def toggleHeart(userId: Long, noteId: Long): Future[Option[NoteHeartToggled]] = Future {
+    noteDao.toggleHeart(userId, noteId)
+  }
 
   def loadDiary(userId: Long, pagination: Pagination): Future[Seq[DiarySection]] = Future {
     val noteList = diaryDao.load(userId, Pagination(page = 0, perPage = 10))

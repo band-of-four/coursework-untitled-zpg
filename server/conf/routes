@@ -18,6 +18,7 @@ POST    /student                    controllers.StudentController.create
 GET     /student/spells             controllers.StudentController.getSpells
 
 GET     /notes/diary                controllers.NoteController.getDiary(page: Int ?= 0)
+POST    /notes/heart/:noteId        controllers.NoteController.toggleHeart(noteId: Long)
 
 GET     /suggest/lesson/names       controllers.SuggestionController.getLessonNames
 POST    /suggest/text               controllers.SuggestionController.createText

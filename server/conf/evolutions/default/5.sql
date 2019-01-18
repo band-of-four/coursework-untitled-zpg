@@ -2,13 +2,7 @@
 
 # --- !Ups
 
-alter table notes add heart_count bigint;;
-
-alter table notes add constraint heart_count_integrity
-  check (
-    (creator_id is null and heart_count is null) or
-    (creator_id is not null and heart_count is not null and heart_count >= 0)
-  );;
+alter table notes add heart_count bigint not null default 0 check (heart_count >= 0);;
 
 create table note_hearts_users (
   user_id bigint not null references users,
@@ -46,7 +40,7 @@ create function note_heart_toggle(in heart_user_id bigint, in heart_note_id bigi
     begin
       note_creator_id := (select creator_id from notes where id = heart_note_id);;
 
-      if note_creator_id is null or note_creator_id = heart_user_id
+      if note_creator_id = heart_user_id
       then
         status := 'error';;
         return;;

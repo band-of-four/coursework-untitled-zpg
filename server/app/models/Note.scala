@@ -12,12 +12,25 @@ case class NotePreloaded(id: Long, text: String, stage: Student.Stage,
 
 case class NoteHeartsUser(userId: Long, noteId: Long)
 
+case class NoteHeartToggled(heartCount: Long, isHearted: Boolean)
+
 class NoteDao(db: DbCtx) {
   import db._
 
   def initialNoteId(gender: Student.Gender): Long = gender match {
     case Student.Gender.Female => 1
     case Student.Gender.Male => 2
+  }
+
+  def toggleHeart(userId: Long, noteId: Long): Option[NoteHeartToggled] = {
+    run(
+      infix"""SELECT status as "_1", new_heart_count as "_2" FROM note_heart_toggle(${lift(userId)}, ${lift(noteId)})"""
+        .as[Query[(String, Long)]]
+    ).head match {
+      case ("error", _) => None
+      case ("added", heartCount) => Some(NoteHeartToggled(heartCount, isHearted = true))
+      case ("removed", heartCount) => Some(NoteHeartToggled(heartCount, isHearted = false))
+    }
   }
 
   def load(studentId: Long, noteId: Long): NotePreloaded =
