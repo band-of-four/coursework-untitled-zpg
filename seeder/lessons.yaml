@@ -11,7 +11,7 @@
         :text: Морским пехотинцам запрещено умирать без разрешения!
 1:
   - :name: Дискретная трансфигурация
-    :requred_attendance: 5
+    :required_attendance: 5
     :level: 1
     :notes:
       - :stage: Lesson
@@ -21,6 +21,7 @@
         :gender: Male
         :text: Твою мать...
   - :name: Основы вычислительной травологии
+    :required_attendance: 7
     :gender: Female
     :level: 1
     :notes:

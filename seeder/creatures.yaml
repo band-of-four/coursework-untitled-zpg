@@ -69,26 +69,26 @@
       - :stage: FightLost
         :gender: Male
         :text: Интересно, они принимают новых последователей? Не можешь одолеть - примкни
-    - :name: Задира
-      :power: 5
-      :hp: 28
-      :level: 1
-      :notes:
-        - :stage: Figh
-          :gender: Female
-          :text: Ох, да ладно, киношные задиры? Ничего оригинальнее не могли придумать?
-        - :stage: Figh
-          :gender: Male
-          :text: Ох, да ладно, киношные задиры? Ничего оригинальнее не могли придумать?
-        - :stage: FightWon
-          :gender: Female
-          :text: Ха! И кто теперь лохозавр!
-        - :stage: FightWon
-          :gender: Male
-          :text: Ха! И кто теперь лохозавр!
-        - :stage: FightLost
-          :gender: Female
-          :text: Меня официально зачмырили...
-        - :stage: FightLost
-          :gender: Male
-          :text: Меня официально зачмырили...
+  - :name: Задира
+    :power: 5
+    :hp: 28
+    :level: 1
+    :notes:
+      - :stage: Fight
+        :gender: Female
+        :text: Ох, да ладно, киношные задиры? Ничего оригинальнее не могли придумать?
+      - :stage: Fight
+        :gender: Male
+        :text: Ох, да ладно, киношные задиры? Ничего оригинальнее не могли придумать?
+      - :stage: FightWon
+        :gender: Female
+        :text: Ха! И кто теперь лохозавр!
+      - :stage: FightWon
+        :gender: Male
+        :text: Ха! И кто теперь лохозавр!
+      - :stage: FightLost
+        :gender: Female
+        :text: Меня официально зачмырили...
+      - :stage: FightLost
+        :gender: Male
+        :text: Меня официально зачмырили...

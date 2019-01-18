@@ -11,6 +11,18 @@
   - :name: Кусок харизмы
     :kind: Charisma
     :power: -1
+  - :name: Грозный взгляд
+    :kind: Attack
+    :power: 2
+  - :name: Обезоруживающая улыбка
+    :kind: Defence
+    :power: 1
+  - :name: Счастливый камешек
+    :kind: Luck
+    :power: 2
+  - :name: Харизма камешка
+    :kind: Charisma
+    :power: -1
 1:
   - :name: Оскорбительная шутка
     :kind: Attack
