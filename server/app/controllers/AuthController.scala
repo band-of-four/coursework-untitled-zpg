@@ -19,12 +19,12 @@ object AuthController {
   val EmailTaken = "email_taken"
 }
 
-class AuthController (cc: ControllerComponents,
-                      silhouette: Silhouette[CookieAuthEnv],
-                      credentialsProvider: CredentialsProvider,
-                      socialProviderRegistry: SocialProviderRegistry,
-                      userService: UserService)
-                     (implicit ec: ExecutionContext) extends AbstractController(cc) {
+class AuthController(cc: ControllerComponents,
+                     silhouette: Silhouette[CookieAuthEnv],
+                     credentialsProvider: CredentialsProvider,
+                     socialProviderRegistry: SocialProviderRegistry,
+                     userService: UserService)
+                    (implicit ec: ExecutionContext) extends AbstractController(cc) {
   case class AuthRequest(email: String, password: String)
   implicit val authReads = Json.reads[AuthRequest]
 
@@ -68,6 +68,11 @@ class AuthController (cc: ControllerComponents,
     }).recover {
       case _: ProviderException => UnprocessableEntity(AuthController.InvalidCreds)
     }
+  }
+
+  def signOut() = silhouette.SecuredAction async { implicit request =>
+    silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
+    silhouette.env.authenticatorService.discard(request.authenticator, Redirect(routes.ApplicationController.index()))
   }
 
   private def authenticate[T](loginInfo: LoginInfo, loginEvent: LoginEvent[User])(implicit request: Request[T]) = for {

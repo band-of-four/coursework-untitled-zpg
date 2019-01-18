@@ -12,6 +12,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 POST    /auth/signin                controllers.AuthController.signIn
 POST    /auth/signup                controllers.AuthController.signUp
 GET     /auth/social/:provider      controllers.AuthController.social(provider: String)
+GET     /auth/signout               controllers.AuthController.signOut
 
 GET     /student                    controllers.StudentController.get
 POST    /student                    controllers.StudentController.create

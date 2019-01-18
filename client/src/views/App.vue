@@ -5,6 +5,7 @@
       <router-link to="/">Обзор</router-link>
       <router-link to="/diary">Дневник</router-link>
       <router-link to="/suggest">Предложить</router-link>
+      <a href="/auth/signout">Выйти</a>
     </section>
     <router-view></router-view>
   </section>
