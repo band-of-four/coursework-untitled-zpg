@@ -7,8 +7,16 @@ create table owls (
   impl text not null,
   display_name text not null,
   description text not null,
-  applicable_stage student_stage,
-  stages_active integer not null
+  applicable_stages student_stage[],
+  stages_active integer,
+  is_immediate boolean not null,
+
+  constraint immediate_integrity 
+    check (is_immediate and stages_active is null),
+
+  constraint non_immediate_integrity
+    check (not is_immediate and stages_active is not null
+      and applicable_stages is not null)
 );;
 
 create table owls_students (
