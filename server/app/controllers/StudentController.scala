@@ -1,9 +1,10 @@
 package controllers
 
 import com.mohiva.play.silhouette.api.Silhouette
+import db.Pagination
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
-import services.{StudentService, StageService}
+import services.{NoteService, StageService, StudentService}
 import services.StudentService.StudentAlreadyExistsException
 import utils.auth.CookieAuthEnv
 
@@ -16,7 +17,8 @@ object StudentController {
 class StudentController(cc: ControllerComponents,
                         silhouette: Silhouette[CookieAuthEnv],
                         studentService: StudentService,
-                        stageService: StageService)
+                        stageService: StageService,
+                        noteService: NoteService)
                        (implicit ec: ExecutionContext) extends AbstractController(cc) {
   def get() = silhouette.SecuredAction async { implicit request =>
     studentService get request.identity.id map {
@@ -38,7 +40,9 @@ class StudentController(cc: ControllerComponents,
     studentService.getSpells(request.identity.id).map(s => Ok(Json.toJson(s)))
   }
 
-  def getDiary() = silhouette.SecuredAction async { implicit request =>
-    studentService.getDiarySections(request.identity.id).map(s => Ok(Json.toJson(s)))
+  def getDiary(page: Int) = silhouette.SecuredAction async { implicit request =>
+    noteService
+      .loadDiary(request.identity.id, Pagination(page, perPage = 1))
+      .map(s => Ok(Json.toJson(s)))
   }
 }

@@ -6,7 +6,7 @@ import db.{DbCtx, Pagination}
 
 case class StudentDiaryEntry(studentId: Long, noteId: Long, date: LocalDateTime)
 
-case class StudentDiaryNote(text: String, date: LocalDateTime, stage: Student.Stage,
+case class StudentDiaryNote(id: Long, text: String, date: LocalDateTime, stage: Student.Stage,
                             lesson: Option[String], club: Option[String], creature: Option[String],
                             heartCount: Long, isHearted: Boolean)
 
@@ -37,7 +37,7 @@ class StudentDiaryDao(db: DbCtx) {
         }
         .map {
           case (((((sde, n), l), cl), cr), heart) => StudentDiaryNote(
-            n.text, sde.date, n.stage, l.map(_.name), cl.map(_.name), cr.map(_.name), n.heartCount, heart.nonEmpty)
+            n.id, n.text, sde.date, n.stage, l.map(_.name), cl.map(_.name), cr.map(_.name), n.heartCount, heart.nonEmpty)
         }
         .sortBy(_.date)(Ord.desc)
     )

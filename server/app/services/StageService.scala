@@ -7,20 +7,20 @@ import java.time.{Duration, LocalDateTime, ZoneId}
 
 import game.Fight.{FightContinues, StudentLost, StudentWon, TurnOutcome}
 import services.GameProgressionService.{CompletedGenericStage, CompletedLesson, CompletedLibrary, StageCompletion}
+import services.NoteService.FormattedNote
 
 object StageService {
-  case class StageUpdate(level: Int, hp: Int, note: NotePreloaded, stageDuration: Long, stageElapsed: Long,
+  case class StageUpdate(level: Int, hp: Int, note: FormattedNote, stageDuration: Long, stageElapsed: Long,
                          attendance: Option[Seq[LessonAttendancePreloaded]] = None,
                          spells: Option[Seq[SpellPreloaded]] = None)
 
-  implicit val noteWrites = Json.writes[NotePreloaded]
   implicit val updateWrites = Json.writes[StageUpdate]
 }
 
-class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDiaryDao) {
+class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDiaryDao, noteService: NoteService) {
   def getStage(userId: Long): StageUpdate = {
     val student = studentDao.findForUser(userId).get
-    val stageNote = noteDao.load(student.stageNoteId)
+    val stageNote = noteService.loadStageNote(student)
 
     val startTime = student.stageStartTime.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli
     val endTime = student.nextStageTime.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli

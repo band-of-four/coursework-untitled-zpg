@@ -6,8 +6,9 @@ case class Note(text: String, textGender: Student.Gender, stage: Student.Stage,
                 lessonId: Option[Long] = None, clubId: Option[Long] = None, creatureId: Option[Long] = None,
                 creatorId: Option[Long] = None, isApproved: Boolean = false, heartCount: Long = 0, id: Long = -1)
 
-case class NotePreloaded(text: String, stage: Student.Stage,
-                         lesson: Option[String], club: Option[String], creature: Option[String])
+case class NotePreloaded(id: Long, text: String, stage: Student.Stage,
+                         lesson: Option[String], club: Option[String], creature: Option[String],
+                         heartCount: Long, isHearted: Boolean)
 
 case class NoteHeartsUser(userId: Long, noteId: Long)
 
@@ -19,7 +20,7 @@ class NoteDao(db: DbCtx) {
     case Student.Gender.Male => 2
   }
 
-  def load(noteId: Long): NotePreloaded =
+  def load(studentId: Long, noteId: Long): NotePreloaded =
     run(
       query[Note]
         .filter(_.id == lift(noteId))
@@ -32,9 +33,12 @@ class NoteDao(db: DbCtx) {
         .leftJoin(query[Creature]).on {
           case (((n, l), cl), cr) => n.creatureId.exists(_ == cr.id)
         }
+        .leftJoin(query[NoteHeartsUser]).on {
+          case ((((n, l), cl), cr), heart) => heart.noteId == n.id && heart.userId == lift(studentId)
+        }
         .map {
-          case (((n, l), cl), cr)  => NotePreloaded(
-            n.text, n.stage, l.map(_.name), cl.map(_.name), cr.map(_.name))
+          case ((((n, l), cl), cr), heart) => NotePreloaded(
+            n.id, n.text, n.stage, l.map(_.name), cl.map(_.name), cr.map(_.name), n.heartCount, heart.nonEmpty)
         }
     ).head
 

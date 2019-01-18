@@ -56,9 +56,11 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val userService = new _root_.services.UserService(
     userDao, userLoginInfoDao, db, dbExecCtx, configuration)
   lazy val studentService = new _root_.services.StudentService(
-    studentDao, spellDao, noteDao, studentDiaryDao)
+    studentDao, spellDao, noteDao)
+  lazy val noteService = new _root_.services.NoteService(
+    noteDao, studentDiaryDao, libraryDao)
   lazy val stageService = new _root_.services.StageService(
-    studentDao, noteDao, studentDiaryDao)
+    studentDao, noteDao, studentDiaryDao, noteService)
   lazy val owlService = new _root_.services.OwlService(
     owlDao, studentDao, relationshipDao)
   lazy val libraryService = new _root_.services.LibraryService(
@@ -80,7 +82,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val applicationController = new _root_.controllers.ApplicationController(
     controllerComponents, silhouette.env, socketMessengerActor, stageService)(materializer, executionContext, actorSystem)
   lazy val studentController = new _root_.controllers.StudentController(
-    controllerComponents, silhouette.env, studentService, stageService)
+    controllerComponents, silhouette.env, studentService, stageService, noteService)
   lazy val suggestionController = new _root_.controllers.SuggestionController(
     controllerComponents, silhouette.env, suggestionService)
   /* Routes */
