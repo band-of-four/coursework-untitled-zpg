@@ -58,15 +58,20 @@ defmodule Orion do
   end
 
   def process_creature_name(monster) do
-    Messenger.send_message("Ну, что. Мы почти закончили с этим парнем.
+    Messenger.send_message("""
+      Ну, что. Мы почти закончили с этим парнем.
       Осталось последнее одобрение. Итак, монстр, по имени #{monster.name}.
-      Что думаете?", :approve)
+      Что думаете?
+      """, :approve)
     case Messenger.next_text() do
       "Редактировать" ->
         name = edit_monster_name()
         process_creature_name(%{monster | name: name})
       "Одобрить" -> %{id: monster.id, name: monster.name, is_approved: true}
       "Отклонить" -> %{id: monster.id, name: monster.name, is_approved: false}
+      _ ->
+        Messenger.send_message("Ну и что ты хотел этим сказать? У тебя есть кнопки - используй их!")
+        process_creature_name(monster)
     end
   end
 
@@ -81,7 +86,7 @@ defmodule Orion do
       case stage do
         "Fight" -> "дерутся с монстром, они говорят:\n"
         "FightWon" -> "побеждают монстра, они говорят:\n"
-        "FightLost" -> "пали от руки монстра, они говорят:\n"
+        "FightLose" -> "пали от руки монстра, они говорят:\n"
       end
     {new_text, is_approved} = process_text(head_text, mid_text, text)
     processed_note = %{id: id, text: new_text, is_approved: is_approved, stage: stage, gender: gender}
@@ -99,6 +104,9 @@ defmodule Orion do
         {text, true}
       "Отклонить" ->
         {text, false}
+      _ ->
+        Messenger.send_message("Ну и что ты хотел этим сказать? У тебя есть кнопки - используй их!")
+        process_text(head_text, mid_text, text)
     end
   end
 
@@ -106,9 +114,16 @@ defmodule Orion do
   end
 
   def get_unapproved_creature() do
-    string = ~s({"name": "Сама смерть", "notes": [{"id": 1, "stage": "Fight", 
-      "gender": "Female", "text": "Ну вот и все."},
-      {"id": 2, "stage": "FightWon", "gender": "Female", "text": "Я теперь бессмертна?"}]})
+    string = ~s({"id": 1, "name": "Сама смерть",
+      "notes": [
+        {"id": 1, "stage": "Fight", "gender": "Female", "text": "Ну вот и все."},
+        {"id": 2, "stage": "FightWon", "gender": "Female", "text": "Я теперь бессмертна?"},
+        {"id": 3, "stage": "FightLose", "gender": "Female", "text": "Ну а чего я ожидала?"},
+        {"id": 4, "stage": "Fight", "gender": "Male", "text": "Ну вот и все."},
+        {"id": 5, "stage": "FightWon", "gender": "Male", "text": "Я теперь бессмертен?"},
+        {"id": 6, "stage": "FightLose", "gender": "Male", "text": "Ну а чего я ожидал?"}
+      ]
+    })
     Poison.Parser.parse!(string, %{keys: :atoms})
   end
 
