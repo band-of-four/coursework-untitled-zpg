@@ -12,5 +12,3 @@ export async function getStudent() {
 export const postStudent = postResource('/student');
 
 export const getSpells = getResource('/student/spells');
-
-export const getDiaryEntries = getResource('/student/diary');
