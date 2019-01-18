@@ -54,5 +54,5 @@ class LessonDao(val db: DbCtx) {
     ).toMap
 
   def updateAttendance(studentId: Long): Unit =
-    run(infix"""SELECT lesson_attendance_update_at_lesson_end(${lift(studentId)})""".as[Insert[Unit]])
+    run(infix"""SELECT lesson_attendance_update_at_lesson_end(${lift(studentId)})""".as[Query[String]])
 }

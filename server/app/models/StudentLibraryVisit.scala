@@ -25,6 +25,6 @@ class StudentLibraryVisitDao(db: DbCtx) {
     run(query[StudentLibraryVisit].insert(lift(StudentLibraryVisit(studentId, spellId))))
 
   def endVisit(studentId: Long): Unit =
-    run(infix"""SELECT student_library_visit_end(${lift(studentId)})""".as[Insert[Unit]])
+    run(infix"""SELECT student_library_visit_end(${lift(studentId)})""".as[Query[String]])
 }
 

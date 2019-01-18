@@ -63,8 +63,8 @@ class CreatureDao(val db: DbCtx) {
         }
     ).head
 
-  def removeFightWithStudentUpdatingSkill(studentId: Long, skillDelta: Int): Unit =
-    run(infix"""SELECT creature_fights_end_updating_skill(${lift(studentId)}, ${lift(skillDelta)})""".as[Insert[Unit]])
+  def removeFightWithStudentUpdatingSkill(studentId: Long, skillDelta: Short): Unit =
+    run(infix"""SELECT creature_fights_end_updating_skill(${lift(studentId)}, ${lift(skillDelta)})""".as[Query[String]])
 
   def loadStudentSkills(studentId: Long, pagination: Pagination): Seq[StudentCreatureHandlingSkill] =
     run(

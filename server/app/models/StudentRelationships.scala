@@ -15,7 +15,7 @@ class StudentRelationshipDao(db: DbCtx) {
     run(query[StudentLetter].insert(lift(StudentLetter(senderId, receiverId))))
 
   def updateInClub(studentId: Long): Unit =
-    run(infix"""SELECT student_relationships_update_in_club(${lift(studentId)})""".as[Insert[Unit]])
+    run(infix"""SELECT student_relationships_update_in_club(${lift(studentId)})""".as[Query[String]])
 
   def loadForStudent(studentId: Long, pagination: Pagination): Seq[StudentRelationshipPreloaded] = {
     /* Could be replaced with UPDATE RETURNING, https://github.com/getquill/quill/issues/572 */
