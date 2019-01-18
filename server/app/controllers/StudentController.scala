@@ -1,7 +1,6 @@
 package controllers
 
 import com.mohiva.play.silhouette.api.Silhouette
-import models.Student
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import services.{StudentService, StageService}
@@ -19,10 +18,6 @@ class StudentController(cc: ControllerComponents,
                         studentService: StudentService,
                         stageService: StageService)
                        (implicit ec: ExecutionContext) extends AbstractController(cc) {
-  implicit val studentWrites = Json.writes[Student]
-  implicit val spellWrites = Json.writes[StudentService.StudentSpell]
-  implicit val entryReads = Json.reads[StudentService.NewStudent]
-
   def get() = silhouette.SecuredAction async { implicit request =>
     studentService get request.identity.id map {
       case Some(student) => Ok(Json.toJson(student))
@@ -40,10 +35,10 @@ class StudentController(cc: ControllerComponents,
   }
   
   def getSpells() = silhouette.SecuredAction async { implicit request =>
-    studentService getSpells request.identity.id map { s => Ok(Json.toJson(s)) }
+    studentService.getSpells(request.identity.id).map(s => Ok(Json.toJson(s)))
   }
 
   def getDiary() = silhouette.SecuredAction async { implicit request =>
-    studentService getDiaryNotes request.identity.id map { s => Ok(Json.toJson(s)) }
+    studentService.getDiarySections(request.identity.id).map(s => Ok(Json.toJson(s)))
   }
 }

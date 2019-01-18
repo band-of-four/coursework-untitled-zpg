@@ -2,15 +2,13 @@ package models
 
 import java.time.LocalDateTime
 
-import play.api.libs.json.Json
 import db.{DbCtx, Pagination}
 
 case class StudentDiaryEntry(studentId: Long, noteId: Long, date: LocalDateTime)
 
 case class StudentDiaryNote(text: String, date: LocalDateTime, stage: Student.Stage,
-                            lesson: Option[String], club: Option[String], creature: Option[String])
-
-object StudentDiaryNote { implicit val jsonWrites = Json.format[StudentDiaryNote] }
+                            lesson: Option[String], club: Option[String], creature: Option[String],
+                            heartCount: Long, isHearted: Boolean)
 
 class StudentDiaryDao(db: DbCtx) {
   import db._
@@ -21,7 +19,7 @@ class StudentDiaryDao(db: DbCtx) {
     run(
       schema
         .filter(_.studentId == lift(studentId))
-        .sortBy(_.date)(Ord.desc)
+        .paginate(lift(pagination))
         .join(query[Note]).on {
           case (sde, n) => sde.noteId == n.id
         }
@@ -34,11 +32,14 @@ class StudentDiaryDao(db: DbCtx) {
         .leftJoin(query[Creature]).on {
           case ((((sde, n), l), cl), cr) => n.creatureId.exists(_ == cr.id)
         }
-        .map {
-          case ((((sde, n), l), cl), cr) =>
-            StudentDiaryNote(n.text, sde.date, n.stage, l.map(_.name), cl.map(_.name), cr.map(_.name))
+        .leftJoin(query[NoteHeartsUser]).on {
+          case (((((sde, n), l), cl), cr), heart) => heart.noteId == n.id && heart.userId == lift(studentId)
         }
-        .paginate(lift(pagination))
+        .map {
+          case (((((sde, n), l), cl), cr), heart) => StudentDiaryNote(
+            n.text, sde.date, n.stage, l.map(_.name), cl.map(_.name), cr.map(_.name), n.heartCount, heart.nonEmpty)
+        }
+        .sortBy(_.date)(Ord.desc)
     )
 
   def createEntry(entry: StudentDiaryEntry): Unit =

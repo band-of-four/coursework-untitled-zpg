@@ -9,6 +9,8 @@ case class Note(text: String, textGender: Student.Gender, stage: Student.Stage,
 case class NotePreloaded(text: String, stage: Student.Stage,
                          lesson: Option[String], club: Option[String], creature: Option[String])
 
+case class NoteHeartsUser(userId: Long, noteId: Long)
+
 class NoteDao(db: DbCtx) {
   import db._
 
