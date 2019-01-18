@@ -6,10 +6,6 @@ import owls._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object OwlService {
-  case class OwlApplicationResult()
-}
-
 class OwlService(owlDao: OwlDao,
                  studentDao: StudentDao,
                  relationshipDao: StudentRelationshipDao)

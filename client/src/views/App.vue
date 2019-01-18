@@ -3,6 +3,7 @@
   <section v-else>
     <section v-if="signedIn && student">
       <router-link to="/">Обзор</router-link>
+      <router-link to="/owls">Совы</router-link>
       <router-link to="/diary">Дневник</router-link>
       <router-link to="/suggest">Предложить</router-link>
       <a href="/auth/signout">Выйти</a>

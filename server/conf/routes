@@ -18,6 +18,8 @@ GET     /student                    controllers.StudentController.get
 POST    /student                    controllers.StudentController.create
 GET     /student/spells             controllers.StudentController.getSpells
 
+GET     /owls                       controllers.OwlController.get
+
 GET     /notes/diary                controllers.NoteController.getDiary(page: Int ?= 0)
 POST    /notes/heart/:noteId        controllers.NoteController.toggleHeart(noteId: Long)
 
