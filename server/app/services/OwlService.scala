@@ -21,7 +21,7 @@ class OwlService(owlDao: OwlDao,
                 (implicit ec: ExecutionContext) {
   val owlImplMap: Map[String, Owl] = Map(
     "StageSkip" -> new StageSkipOwl(),
-    "StudentLetter" -> new StudentLetterOwl(relationshipDao)
+    "StudentLetter" -> new StudentLetterOwl(studentDao, relationshipDao)
   )
 
   def getSorted(userId: Long): Future[Seq[OwlPreloaded]] = Future {
@@ -37,10 +37,10 @@ class OwlService(owlDao: OwlDao,
         NonImmediateApplied
       case Some(owl) if owl.applicableStages.forall(_.contains(studentDao.findStageForUser(userId))) =>
         owlDao.applyImmediate(userId, owlImpl) {
-          owlImplMap(owlImpl).apply(userId, payload) match {
-            case Right(successMessage) => ImmediateApplied(successMessage)
-            case Left(errorMessage) => ImmediateFailed(errorMessage)
-          }
+          owlImplMap(owlImpl).apply(userId, payload)
+        } match {
+          case Right(successMessage) => ImmediateApplied(successMessage)
+          case Left(errorMessage) => ImmediateFailed(errorMessage)
         }
       case _ =>
         ImmediateFailed("Сова не сможет достичь своей цели, дождись походящего момента.")

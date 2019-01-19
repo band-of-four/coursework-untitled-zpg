@@ -33,7 +33,10 @@ object Student {
 }
 
 case class Student(id: Long, name: String, gender: Student.Gender, level: Int, hp: Int, currentRoom: Long,
-                   stageNoteId: Long, stageStartTime: LocalDateTime, nextStageTime: LocalDateTime)
+                   stageNoteId: Long, stageStartTime: LocalDateTime, nextStageTime: LocalDateTime) {
+  // Convenience getter for constructing gender-specific messages
+  def fem: Boolean = gender == Student.Gender.Female
+}
 
 case class StudentForUpdate(id: Long, gender: Student.Gender,
                             level: Int, hp: Int, currentRoom: Long, stage: Student.Stage)
@@ -49,6 +52,9 @@ class StudentDao(val db: DbCtx) {
     }
 
   def doTransaction[T](f: => T): T = transaction(f)
+
+  def findByName(name: String): Option[Student] =
+    run(query[Student].filter(_.name == lift(name))).headOption
 
   def findLevelById(studentId: Long): Int =
     run(query[Student].filter(_.id == lift(studentId)).map(_.level)).head

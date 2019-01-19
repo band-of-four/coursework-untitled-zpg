@@ -44,15 +44,19 @@ class OwlDao(db: DbCtx) {
           _.activeStagesLeft -> lift(Some(owl.stagesActive): Option[Int]))
     )
 
-  def applyImmediate[T](studentId: Long, owlImpl: String)(apply: => T): T =
+  def applyImmediate[L, R](studentId: Long, owlImpl: String)(apply: => Either[L, R]): Either[L, R] =
     transaction {
-      val applicationResult = apply
-      run(
-        query[OwlsStudent]
-          .filter(os => os.studentId == lift(studentId) && os.owlImpl == lift(owlImpl))
-          .update(os => os.owlCount -> (os.owlCount - 1))
-      )
-      applicationResult
+      apply match {
+        case ok @ Right(_) =>
+          run(
+            query[OwlsStudent]
+              .filter(os => os.studentId == lift(studentId) && os.owlImpl == lift(owlImpl))
+              .update(os => os.owlCount -> (os.owlCount - 1))
+          )
+          ok
+        case error =>
+          error
+      }
     }
 
   def loadForStageUpdate(studentId: Long, stage: Student.Stage): Seq[String] =
