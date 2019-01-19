@@ -3,8 +3,7 @@
 # --- !Ups
 
 create table owls (
-  id bigserial primary key,
-  impl text not null,
+  impl text primary key,
   display_name text not null,
   description text not null,
   applicable_stages student_stage[],
@@ -19,11 +18,11 @@ create table owls (
 
 create table owls_students (
   student_id bigint references students,
-  owl_id bigint references owls,
+  owl_impl text references owls,
   owl_count smallint not null check (owl_count >= 0),
   active_stages_left smallint check (active_stages_left > 0),
 
-  primary key (student_id, owl_id)
+  primary key (student_id, owl_impl)
 );;
 
 # --- !Downs

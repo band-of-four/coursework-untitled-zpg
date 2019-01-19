@@ -17,7 +17,7 @@
     <div v-for="o in availableOwls">
       {{ o.name }} ~ {{ o.owlCount }}
       <p>{{ o.description }}</p>
-      <button @click.prevent="apply(o.id)">Применить</button>
+      <button @click.prevent="apply(o.impl)">Применить</button>
     </div>
   </section>
 </div>
@@ -46,8 +46,8 @@ export default {
         this.availableOwls = owls.filter((o) => !o.isActive);
       });
     },
-    async apply(id) {
-      const response = await applyOwl(id, {}); // TODO: implement custom payloads smh?
+    async apply(impl) {
+      const response = await applyOwl(impl, {}); // TODO: implement custom payloads smh?
       if (response.status === 'failed') {
         this.status.isError = true;
         this.status.text = response.message || 'Не удалось применить сову, попробуй еще раз.';

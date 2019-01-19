@@ -28,16 +28,16 @@ class OwlService(owlDao: OwlDao,
     owlDao.load(userId).sortBy(o => (o.isActive, o.name))
   }
 
-  def apply(userId: Long, owlId: Long, payload: JsValue): Future[OwlApplicationStatus] = Future {
-    owlDao.findAvailable(userId, owlId) match {
+  def apply(userId: Long, owlImpl: String, payload: JsValue): Future[OwlApplicationStatus] = Future {
+    owlDao.findAvailable(userId, owlImpl) match {
       case None =>
         NotApplicable
       case Some(owl) if !owl.isImmediate =>
         owlDao.applyNonImmediate(userId, owl)
         NonImmediateApplied
       case Some(owl) if owl.applicableStages.forall(_.contains(studentDao.findStageForUser(userId))) =>
-        owlDao.applyImmediate(userId, owlId) {
-          owlImplMap(owl.impl).apply(userId, payload) match {
+        owlDao.applyImmediate(userId, owlImpl) {
+          owlImplMap(owlImpl).apply(userId, payload) match {
             case Right(successMessage) => ImmediateApplied(successMessage)
             case Left(errorMessage) => ImmediateFailed(errorMessage)
           }
@@ -48,9 +48,9 @@ class OwlService(owlDao: OwlDao,
   }
 
   def useActiveOwlsForUpdate[T](student: StudentForUpdate)(f: Seq[String] => T): T = {
-    val (owlIds, owlImpls) = owlDao.loadForStageUpdate(student.id, student.stage).unzip
+    val owlImpls = owlDao.loadForStageUpdate(student.id, student.stage)
     val updateResult = f(owlImpls)
-    owlDao.updatePostStageUpdate(student.id, owlIds)
+    owlDao.updatePostStageUpdate(student.id, owlImpls)
     updateResult
   }
 }

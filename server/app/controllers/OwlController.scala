@@ -20,8 +20,8 @@ class OwlController(cc: ControllerComponents,
     owlService.getSorted(request.identity.id).map(r => Ok(Json.toJson(r)))
   }
 
-  def apply(owlId: Long) = silhouette.SecuredAction(parse.json) async { request =>
-    owlService.apply(request.identity.id, owlId, request.body) map {
+  def apply(owlImpl: String) = silhouette.SecuredAction(parse.json) async { request =>
+    owlService.apply(request.identity.id, owlImpl, request.body) map {
       case ImmediateApplied(message) => Ok(Json.obj("status" -> "applied", "message" -> message))
       case ImmediateFailed(message) => UnprocessableEntity(Json.obj("status" -> "failed", "message" -> message))
       case NonImmediateApplied => Ok(Json.obj("status" -> "applied"))

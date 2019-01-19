@@ -19,7 +19,7 @@ POST    /student                    controllers.StudentController.create
 GET     /student/spells             controllers.StudentController.getSpells
 
 GET     /owls                       controllers.OwlController.get
-POST    /owls/:owlId/apply          controllers.OwlController.apply(owlId: Long)
+POST    /owls/:owlImpl/apply        controllers.OwlController.apply(owlImpl: String)
 
 GET     /notes/diary                controllers.NoteController.getDiary(page: Int ?= 0)
 POST    /notes/:noteId/heart        controllers.NoteController.toggleHeart(noteId: Long)
