@@ -31,7 +31,7 @@ class GameProgressionService(stageService: StageService,
       owlService.useActiveOwlsForUpdate(student) { owls =>
         student.stage match {
           case Student.Stage.Fight =>
-            continueFight(student)
+            continueFight(student, owls)
             CompletedGenericStage
           case Student.Stage.Travel if RandomEvent(FightChance) =>
             startFight(student)
@@ -62,10 +62,10 @@ class GameProgressionService(stageService: StageService,
     stageService.commitFight(student, opponent.id, Durations.FightTurn)
   }
 
-  def continueFight(student: StudentForUpdate): Unit = {
+  def continueFight(student: StudentForUpdate, owls: Seq[String]): Unit = {
     val opponent = creatureDao.findInFightWith(student.id)
     val spells = spellDao.load(student.id)
-    val turnOutcome = Fight.computeTurn(student, opponent, spells)
+    val turnOutcome = Fight.computeTurn(student, opponent, spells, owls)
     stageService.commitFightStage(turnOutcome, Durations.FightTurn)
     turnOutcome match {
       case FightContinues(_, creature) =>
