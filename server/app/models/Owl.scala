@@ -8,7 +8,7 @@ case class Owl(impl: String, displayName: String, description: String,
 
 case class OwlsStudent(studentId: Long, owlId: Long, owlCount: Int, activeStagesLeft: Option[Int])
 
-case class OwlPreloaded(name: String, description: String, applicableStages: Option[Seq[Student.Stage]],
+case class OwlPreloaded(id: Long, name: String, description: String, applicableStages: Option[Seq[Student.Stage]],
                         owlCount: Int, isActive: Boolean)
 
 class OwlDao(db: DbCtx) {
@@ -22,7 +22,7 @@ class OwlDao(db: DbCtx) {
           case (os, o) => os.owlId == o.id
         }
         .map {
-          case (os, o) => OwlPreloaded(o.displayName, o.description, o.applicableStages,
+          case (os, o) => OwlPreloaded(o.id, o.displayName, o.description, o.applicableStages,
             os.owlCount, os.activeStagesLeft.isDefined)
         }
     )
