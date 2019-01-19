@@ -2,6 +2,7 @@ package services
 
 import java.time.LocalDateTime
 
+import db.Pagination
 import game.Durations
 import models._
 import org.postgresql.util.PSQLException
@@ -14,16 +15,19 @@ object StudentService {
   case class NewStudent(name: String, gender: Student.Gender)
   case class StudentSpell(name: String, kind: Spell.Kind, power: Int)
 
+  implicit val entryReads = Json.reads[StudentService.NewStudent]
+
   implicit val studentWrites = Json.writes[Student]
   implicit val spellWrites = Json.writes[StudentService.StudentSpell]
-  implicit val entryReads = Json.reads[StudentService.NewStudent]
+  implicit val relationshipWrites = Json.writes[StudentRelationshipPreloaded]
 
   class StudentAlreadyExistsException extends RuntimeException
 }
 
 class StudentService(studentDao: StudentDao,
                      spellDao: SpellDao,
-                     noteDao: NoteDao)
+                     noteDao: NoteDao,
+                     relationshipDao: StudentRelationshipDao)
                     (implicit ec: ExecutionContext) {
   def get(userId: Long): Future[Option[Student]] = Future {
     studentDao.findForUser(userId)
@@ -54,5 +58,9 @@ class StudentService(studentDao: StudentDao,
 
   def getSpells(userId: Long): Future[Seq[SpellPreloaded]] = Future {
     spellDao.load(userId)
+  }
+
+  def getRelationships(userId: Long, pagination: Pagination): Future[Seq[StudentRelationshipPreloaded]] = Future {
+    relationshipDao.loadForStudent(userId, pagination)
   }
 }

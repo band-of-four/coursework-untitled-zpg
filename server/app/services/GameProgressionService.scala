@@ -41,6 +41,7 @@ class GameProgressionService(stageService: StageService,
             CompletedGenericStage
           case Student.Stage.Club =>
             relationshipDao.updateInClub(student.id)
+            stageService.commitTravelStage(student, Durations.Travel)
             CompletedGenericStage
           case Student.Stage.Lesson =>
             lessonDao.updateAttendance(student.id)

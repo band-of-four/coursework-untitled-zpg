@@ -17,6 +17,7 @@ GET     /auth/signout               controllers.AuthController.signOut
 GET     /student                    controllers.StudentController.get
 POST    /student                    controllers.StudentController.create
 GET     /student/spells             controllers.StudentController.getSpells
+GET     /student/relationships      controllers.StudentController.getRelationships(page: Int ?= 0)
 
 GET     /owls                       controllers.OwlController.get
 POST    /owls/:owlImpl/apply        controllers.OwlController.apply(owlImpl: String)
