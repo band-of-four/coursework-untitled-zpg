@@ -6,6 +6,7 @@ import Intro from '/views/Intro.vue';
 import Overview from '/views/Overview.vue';
 import Diary from '/views/Diary.vue';
 import Owls from '/views/Owls.vue';
+import Relationships from '/views/Relationships.vue';
 import Suggestions from '/views/Suggestions.vue';
 import SuggestionsLesson from '/views/suggestions/Lesson.vue';
 import SuggestionsCreature from '/views/suggestions/Creature.vue';
@@ -20,6 +21,7 @@ export default function (store) {
       { path: '/', component: Overview },
       { path: '/diary', component: Diary },
       { path: '/owls', component: Owls },
+      { path: '/relationships', component: Relationships },
       { path: '/suggest', component: Suggestions },
       { path: '/suggest/lesson', component: SuggestionsLesson },
       { path: '/suggest/creature', component: SuggestionsCreature },

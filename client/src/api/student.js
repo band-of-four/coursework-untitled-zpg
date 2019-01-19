@@ -12,3 +12,7 @@ export async function getStudent() {
 export const postStudent = postResource('/student');
 
 export const getSpells = getResource('/student/spells');
+
+export function getRelationships(page = 0) {
+  return get(`/student/relationships?page=${page}`).then((r) => r.json());
+}
