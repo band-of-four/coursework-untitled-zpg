@@ -4,7 +4,8 @@ import models.StudentRelationshipDao
 
 class StudentLetterOwl(relationshipDao: StudentRelationshipDao) extends Owl {
   override def apply(studentId: Long, payload: JsValue): Either[String, String] = {
-    val receiverId = (payload \ "receiverId").as[Long]
+    val receiverName = (payload \ "receiver").as[String]
+    val receiverId = ???
     relationshipDao.createLetter(studentId, receiverId)
     ???
   }
