@@ -3,8 +3,17 @@ package services
 import play.api.libs.json.JsValue
 import models.{Owl => _, _}
 import owls._
+import services.OwlService._
 
 import scala.concurrent.{ExecutionContext, Future}
+
+object OwlService {
+  sealed trait OwlApplicationStatus
+  case class ImmediateApplied(message: String) extends OwlApplicationStatus
+  case class ImmediateFailed(message: String) extends OwlApplicationStatus
+  case object NonImmediateApplied extends OwlApplicationStatus
+  case object NotApplicable extends OwlApplicationStatus
+}
 
 class OwlService(owlDao: OwlDao,
                  studentDao: StudentDao,
@@ -19,19 +28,23 @@ class OwlService(owlDao: OwlDao,
     owlDao.load(userId).sortBy(o => (o.isActive, o.name))
   }
 
-  def apply(userId: Long, owlId: Long, payload: JsValue): Future[Boolean] = Future {
-    if (owlDao.apply(userId, owlId)) {
-      val owl = owlDao.findById(owlId)
-      owl.applicableStage match {
-        case None =>
-          owlImplMap(owl.impl).apply(userId, payload)
-        case Some(stage) if studentDao.findStageForUser(userId) == stage =>
-          owlImplMap(owl.impl).apply(userId, payload)
-        case _ =>
-      }
-      true
+  def apply(userId: Long, owlId: Long, payload: JsValue): Future[OwlApplicationStatus] = Future {
+    owlDao.findAvailable(userId, owlId) match {
+      case None =>
+        NotApplicable
+      case Some(owl) if !owl.isImmediate =>
+        owlDao.applyNonImmediate(userId, owl)
+        NonImmediateApplied
+      case Some(owl) if owl.applicableStages.forall(_.contains(studentDao.findStageForUser(userId))) =>
+        owlDao.applyImmediate(userId, owlId) {
+          owlImplMap(owl.impl).apply(userId, payload) match {
+            case Right(successMessage) => ImmediateApplied(successMessage)
+            case Left(errorMessage) => ImmediateFailed(errorMessage)
+          }
+        }
+      case _ =>
+        ImmediateFailed("Сова не сможет достичь своей цели, дождись походящего момента.")
     }
-    else false
   }
 
   def useActiveOwlsForUpdate[T](student: StudentForUpdate)(f: Seq[String] => T): T = {

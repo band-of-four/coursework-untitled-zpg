@@ -14,12 +14,6 @@ case class OwlPreloaded(name: String, description: String, applicableStages: Opt
 class OwlDao(db: DbCtx) {
   import db._
 
-  def apply(studentId: Long, owlId: Long): Boolean =
-    run(infix"owl_apply(${lift(studentId)}, ${lift(owlId)})".as[Boolean])
-
-  def findById(owlId: Long): Owl =
-    run(query[Owl].filter(_.id == lift(owlId))).head
-
   def load(studentId: Long): Seq[OwlPreloaded] =
     run(
       query[OwlsStudent]
@@ -32,6 +26,35 @@ class OwlDao(db: DbCtx) {
             os.owlCount, os.activeStagesLeft.isDefined)
         }
     )
+
+  def findAvailable(studentId: Long, owlId: Long): Option[Owl] =
+    run(
+      query[OwlsStudent]
+        .filter(os => os.studentId == lift(studentId) && os.owlId == lift(owlId) && os.owlCount > 0 && os.activeStagesLeft.isEmpty)
+        .join(query[Owl]).on {
+          case (os, o) => os.owlId == o.id
+        }
+        .map(_._2)
+    ).headOption
+
+  def applyNonImmediate(studentId: Long, owl: Owl): Unit =
+    run(
+      query[OwlsStudent]
+        .filter(os => os.studentId == lift(studentId) && os.owlId == lift(owl.id))
+        .update(os => os.owlCount -> (os.owlCount - 1),
+          _.activeStagesLeft -> lift(Some(owl.stagesActive): Option[Int]))
+    )
+
+  def applyImmediate[T](studentId: Long, owlId: Long)(apply: => T): T =
+    transaction {
+      val applicationResult = apply
+      run(
+        query[OwlsStudent]
+          .filter(os => os.studentId == lift(studentId) && os.owlId == lift(owlId))
+          .update(os => os.owlCount -> (os.owlCount - 1))
+      )
+      applicationResult
+    }
 
   def loadForStageUpdate(studentId: Long, stage: Student.Stage): Seq[(Long, String)] =
     run(
