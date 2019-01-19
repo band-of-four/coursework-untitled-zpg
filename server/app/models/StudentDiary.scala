@@ -20,6 +20,7 @@ class StudentDiaryDao(db: DbCtx) {
       schema
         .filter(_.studentId == lift(studentId))
         .paginate(lift(pagination))
+        .sortBy(_.date)(Ord.desc)
         .join(query[Note]).on {
           case (sde, n) => sde.noteId == n.id
         }
@@ -39,7 +40,7 @@ class StudentDiaryDao(db: DbCtx) {
           case (((((sde, n), l), cl), cr), heart) => StudentDiaryNote(
             n.id, n.text, sde.date, n.stage, l.map(_.name), cl.map(_.name), cr.map(_.name), n.heartCount, heart.nonEmpty)
         }
-        .sortBy(_.date)(Ord.desc)
+        .sortBy(_.date)(Ord.desc) // repeated sortBy is intentional, due to joins producing a subquery in quill (check the generated sql)
     )
 
   def createEntry(entry: StudentDiaryEntry): Unit =

@@ -49,7 +49,7 @@ class NoteService(noteDao: NoteDao,
   }
 
   def loadDiary(userId: Long, pagination: Pagination): Future[Seq[DiarySection]] = Future {
-    val noteList = diaryDao.load(userId, Pagination(page = 0, perPage = 10))
+    val noteList = diaryDao.load(userId, pagination)
 
     noteList
       .groupConsecutiveBy { note =>

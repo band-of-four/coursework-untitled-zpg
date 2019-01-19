@@ -5,6 +5,10 @@ export const getResource = (url) => () => {
   return get(url).then((r) => r.json());
 }
 
+export const getResourcePage = (url) => (page) => {
+  return get(url + `?page=${page}`).then((r) => r.json());
+}
+
 export const postResource = (url) => (body) => {
   return post(url, body).then((r) => r.json());
 }

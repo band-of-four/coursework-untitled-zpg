@@ -16,7 +16,7 @@ class NoteController(cc: ControllerComponents,
                     (implicit ec: ExecutionContext) extends AbstractController(cc) {
   def getDiary(page: Int) = silhouette.SecuredAction async { implicit request =>
     noteService
-      .loadDiary(request.identity.id, Pagination(page, perPage = 1))
+      .loadDiary(request.identity.id, Pagination(page, perPage = 10))
       .map(s => Ok(Json.toJson(s)))
   }
 
