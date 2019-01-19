@@ -11,12 +11,10 @@ create table owls (
   stages_active integer,
   is_immediate boolean not null,
 
-  constraint immediate_integrity 
-    check (is_immediate and stages_active is null),
-
-  constraint non_immediate_integrity
-    check (not is_immediate and stages_active is not null
-      and applicable_stages is not null)
+  constraint immediacy_integrity check (
+    (is_immediate and stages_active is null) or
+    (not is_immediate and stages_active is not null and applicable_stages is not null)
+  )
 );;
 
 create table owls_students (

@@ -3,14 +3,13 @@ package models
 import db.DbCtx
 
 case class Owl(impl: String, displayName: String, description: String,
-               applicableStage: Option[Student.Stage], stagesActive: Int, id: Long = -1)
+               applicableStages: Option[Seq[Student.Stage]], stagesActive: Int,
+               isImmediate: Boolean, id: Long = -1)
 
 case class OwlsStudent(studentId: Long, owlId: Long, owlCount: Int, activeStagesLeft: Option[Int])
 
-case class OwlPreloaded(name: String, description: String, applicableStage: Option[Student.Stage],
+case class OwlPreloaded(name: String, description: String, applicableStages: Option[Seq[Student.Stage]],
                         owlCount: Int, isActive: Boolean)
-
-case class OwlStageUpdate(impl: String, applicableStage: Option[Student.Stage], activeStagesLeft: Option[Int])
 
 class OwlDao(db: DbCtx) {
   import db._
@@ -29,26 +28,27 @@ class OwlDao(db: DbCtx) {
           case (os, o) => os.owlId == o.id
         }
         .map {
-          case (os, o) => OwlPreloaded(o.displayName, o.description, o.applicableStage,
+          case (os, o) => OwlPreloaded(o.displayName, o.description, o.applicableStages,
             os.owlCount, os.activeStagesLeft.isDefined)
         }
     )
 
-  def loadForStageUpdate(studentId: Long, stage: Student.Stage): Seq[OwlStageUpdate] =
+  def loadForStageUpdate(studentId: Long, stage: Student.Stage): Seq[(Long, String)] =
     run(
       query[OwlsStudent]
         .filter(os => os.studentId == lift(studentId) && os.activeStagesLeft.isDefined)
         .join(query[Owl]).on {
-          case (os, o) => os.owlId == o.id && o.applicableStage.forall(_ == lift(stage))
+          case (os, o) => os.owlId == o.id && o.applicableStages.exists(_.contains(lift(stage)))
         }
         .map {
-          case (os, o) => OwlStageUpdate(o.impl, o.applicableStage, os.activeStagesLeft)
+          case (os, o) => (o.id, o.impl)
         }
     )
 
-  def updatePostStageUpdate(studentId: Long, stage: Student.Stage): Unit =
+  def updatePostStageUpdate(studentId: Long, owlIds: Seq[Long]): Unit =
     run(
-      query[OwlsStudent].update(os =>
-        os.activeStagesLeft -> os.activeStagesLeft.flatMap(s => if (s > 1) Some(s - 1) else None))
+      query[OwlsStudent]
+        .filter(os => os.studentId == lift(studentId) && lift(owlIds).contains(os.owlId))
+        .update(os => os.activeStagesLeft -> os.activeStagesLeft.flatMap(s => if (s > 1) Some(s - 1) else None))
     )
 }
