@@ -1,0 +1,7 @@
+- :impl: rage_owl
+  :display_name: Сова ярости
+  :description: Увеличивает наносимый урон на 5 в текущем бою
+  :applicable_stages:
+    - Fight
+  :stages_active: 1
+  :is_immediate: false
