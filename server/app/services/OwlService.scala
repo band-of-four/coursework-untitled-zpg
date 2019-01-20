@@ -21,7 +21,8 @@ class OwlService(owlDao: OwlDao,
                 (implicit ec: ExecutionContext) {
   val owlImplMap: Map[String, Owl] = Map(
     "StageSkip" -> new StageSkipOwl(),
-    "StudentLetter" -> new StudentLetterOwl(studentDao, relationshipDao)
+    "StudentLetter" -> new StudentLetterOwl(studentDao, relationshipDao),
+    "HealingOwl" -> new HealingOwl(studentDao)
   )
 
   def getSorted(userId: Long): Future[Seq[OwlPreloaded]] = Future {

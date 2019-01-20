@@ -16,12 +16,10 @@ defmodule Seeder.Owl do
 
   def records do
     @data
-    |> Enum.map(fn %{impl: impl, display_name: d_name, description: desc,
-      applicable_stages: app_stgs, stages_active: stg_act, is_immediate: imm,
-      occurrence: occ} ->
-      %Owl{impl: impl, display_name: d_name, description: desc,       
-        applicable_stages: app_stgs, stages_active: stg_act, is_immediate: imm,
-        occurrence: occ}
+    |> Enum.map(fn o ->
+      %Owl{impl: o.impl, display_name: o.display_name, description: o.description,       
+        applicable_stages: o.applicable_stages, stages_active: o[:stages_active],
+        is_immediate: o.is_immediate, occurrence: o.occurrence}
     end)
   end
 end

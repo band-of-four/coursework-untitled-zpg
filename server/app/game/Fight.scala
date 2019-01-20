@@ -36,7 +36,7 @@ object Fight {
       ((student.level + 1) * StudentAttackLevelWeight) +
       (creature.studentsSkill.getOrElse(0) * StudentAttackSkillWeight) +
       (luckSpell * RandomDouble(LuckSpellRange))).toInt +
-      (if (owls.contains("rage_owl")) 5 else 0)
+      (if (owls.contains("RageOwl")) 5 else 0)
 
     val creatureAttack = (((creature.level + 1) * CreatureAttackLevelWeight) +
       (creature.studentsSkill.getOrElse(0) * CreatureAttackSkillWeight) -

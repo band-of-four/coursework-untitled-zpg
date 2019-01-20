@@ -94,4 +94,11 @@ class StudentDao(val db: DbCtx) {
           _.stageStartTime -> lift(LocalDateTime.now()),
           _.nextStageTime -> lift(LocalDateTime.now().plus(stageDuration)))
     )
+
+  def updateHp(studentId: Long, power: Int): Unit =
+    run(
+      query[Student]
+        .filter(_.id == lift(studentId))
+        .update(s => s.hp -> (s.hp + lift(power)))
+      )
 }
