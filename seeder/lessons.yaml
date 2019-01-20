@@ -3,31 +3,25 @@
     :required_attendance: 1
     :level: 0
     :notes:
-      - :stage: Lesson
-        :gender: Female
+      - :gender: Female
         :text: Морским пехотинцам запрещено умирать без разрешения!
-      - :stage: Lesson
-        :gender: Male
+      - :gender: Male
         :text: Морским пехотинцам запрещено умирать без разрешения!
 1:
   - :name: Дискретная трансфигурация
     :required_attendance: 5
     :level: 1
     :notes:
-      - :stage: Lesson
-        :gender: Female
+      - :gender: Female
         :text: Твою мать...
-      - :stage: Lesson
-        :gender: Male
+      - :gender: Male
         :text: Твою мать...
   - :name: Основы вычислительной травологии
     :required_attendance: 7
     :gender: Female
     :level: 1
     :notes:
-      - :stage: Lesson
-        :gender: Female
+      - :gender: Female
         :text: На часах двадцать минут пятого...
-      - :stage: Lesson
-        :gender: Male
+      - :gender: Male
         :text: На часах двадцать минут пятого...

@@ -1,0 +1,25 @@
+0:
+  - :name: Тук-тук
+    :notes:
+      - :gender: Female
+        :text: Позависай с нами :)
+      - :gender: Male
+        :text: Позависай с нами :)
+  - :name: Р3202
+    :notes:
+      - :gender: Female
+        :text: Это так.
+      - :gender: Male
+        :text: Это так.
+  - :name: Без Имени
+    :notes:
+      - :gender: Female
+        :text: Не задавай вопросов.
+      - :gender: Male
+        :text: Не задавай вопросов.
+  - :name: Отакус Юнайтед
+    :notes:
+      - :gender: Female
+        :text: Ну где делают таких женщин?!
+      - :gender: Male
+        :text: Ну где делают таких женщин?!
