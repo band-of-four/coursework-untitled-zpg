@@ -11,6 +11,7 @@ case object GameProgressionResource extends Enum[GameProgressionResource]
   case object LessonAttendance extends GameProgressionResource
   case object Relationships extends GameProgressionResource
   case object CreatureHandlingSkills extends GameProgressionResource
+  case object Owls extends GameProgressionResource
 
   val values = findValues
 }

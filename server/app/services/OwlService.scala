@@ -48,6 +48,9 @@ class OwlService(owlDao: OwlDao,
     }
   }
 
+  def assignRandomToStudent(studentId: Long): Unit =
+    owlDao.addRandomToStudent(studentId)
+
   def useActiveOwlsForUpdate[T](student: StudentForUpdate)(f: Seq[String] => T): T = {
     val owlImpls = owlDao.loadForStageUpdate(student.id, student.stage)
     val updateResult = f(owlImpls)

@@ -34,8 +34,9 @@ class GameProgressionService(stageService: StageService,
             startFight(student)
             CompletedStage()
           case Stage.Travel =>
+            owlService.assignRandomToStudent(student.id)
             enterNextRoom(student)
-            CompletedStage()
+            CompletedStage(updates = Seq(Resource.Owls))
           case Stage.Club =>
             relationshipDao.updateInClub(student.id)
             stageService.writeStageNoteToDiary(student)

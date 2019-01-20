@@ -13,6 +13,9 @@ case class OwlPreloaded(impl: String, name: String, description: String, applica
 class OwlDao(db: DbCtx) {
   import db._
 
+  def addRandomToStudent(studentId: Long): Unit =
+    run(infix"""SELECT owls_add_random_to_student(${lift(studentId)})""".as[Query[String]])
+
   def load(studentId: Long): Seq[OwlPreloaded] =
     run(
       query[OwlsStudent]
