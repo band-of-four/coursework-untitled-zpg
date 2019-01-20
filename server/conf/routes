@@ -31,5 +31,5 @@ GET     /suggest/lesson/names       controllers.SuggestionController.getLessonNa
 POST    /suggest/text               controllers.SuggestionController.createText
 POST    /suggest/creature           controllers.SuggestionController.createCreature
 
-GET     /bot/get                    controllers.BotController.get
-POST    /bot/post                   controllers.BotController.post
+GET     /bot/unapproved             controllers.BotController.getUnapproved
+POST    /bot/approve                controllers.BotController.postApproved

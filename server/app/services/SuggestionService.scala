@@ -48,4 +48,8 @@ class SuggestionService(noteDao: NoteDao,
   def getLessonNamesForStudent(studentId: Long): Future[Seq[String]] = Future {
     lessonDao.findNamesForStudentId(studentId)
   }
+
+  def getFirstUnapprovedCreature(): Future[Option[CreatureForApproval]] = Future {
+    creatureDao.loadFirstUnapproved()
+  }
 }
