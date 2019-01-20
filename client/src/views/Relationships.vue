@@ -21,7 +21,7 @@ export default {
   name: 'Relationships',
   components: { ShowMorePaginator },
   created() {
-    this.loadNext();
+    this.refresh();
   },
   methods: mapActions('relationships', ['loadNext', 'refresh']),
   computed: mapState(['relationships'])

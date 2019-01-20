@@ -19,7 +19,7 @@ export default {
   name: 'Skills',
   components: { ShowMorePaginator },
   created() {
-    this.loadNext();
+    this.refresh();
   },
   methods: mapActions('skills', ['loadNext', 'refresh']),
   computed: mapState(['skills'])

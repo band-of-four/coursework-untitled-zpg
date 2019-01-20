@@ -24,7 +24,7 @@ export default {
   name: 'Diary',
   components: { Note, ShowMorePaginator },
   created() {
-    this.loadNext();
+    this.refresh();
   },
   methods: mapActions('diary', ['loadNext', 'refresh']),
   computed: {

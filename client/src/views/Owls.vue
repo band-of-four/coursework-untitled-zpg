@@ -1,17 +1,23 @@
 <template>
 <div>
   <h1>Совы</h1>
-  <section v-show="status.text" :class="{ error: status.isError }">
-    {{ status.text }}
-    <button @click.prevent="status.text = null">Закрыть</button>
+  <section v-if="!dynamicOwlView">
+    <section v-show="owls.stale">
+      <a href="#" @click.prevent="loadOwls">Обновить</a> 
+    </section>
+    <section v-show="status.text" :class="{ error: status.isError }">
+      {{ status.text }}
+      <button @click.prevent="status.text = null">Закрыть</button>
+    </section>
+    <OwlList :owls="owls.items" @select="apply" />
   </section>
-  <OwlList v-if="!dynamicOwlView" :owls="owls" @select="apply" />
   <component v-else :is="dynamicOwlView" @submit="submitDynamic" @cancel="cancelDynamic" />
 </div>
 </template>
 
 <script>
-import { getOwls, applyOwl } from '/api/owls.js';
+import { mapActions, mapState } from 'vuex';
+import { applyOwl } from '/api/owls.js';
 
 import OwlList from '/components/OwlList.vue';
 import DynamicOwlViews from '/components/owls';
@@ -20,7 +26,6 @@ export default {
   name: 'Owls',
   components: { OwlList },
   data: () => ({
-    owls: [],
     status: {
       text: null,
       isError: false
@@ -28,12 +33,11 @@ export default {
     dynamicOwlView: null
   }),
   created() {
-    this.refreshOwls();
+    this.loadOwls();
   },
+  computed: mapState(['owls']),
   methods: {
-    async refreshOwls() {
-      this.owls = await getOwls();
-    },
+    ...mapActions({ loadOwls: 'owls/load' }),
     apply(impl) {
       const dynamic = DynamicOwlViews[impl];
       if (dynamic)
@@ -59,7 +63,7 @@ export default {
         this.status.isError = false;
         this.status.text = response.message || 'Еще одна сова отправилась в полет... Пожелаем ей удачи.';
       }
-      this.refreshOwls();
+      this.loadOwls();
     }
   }
 }

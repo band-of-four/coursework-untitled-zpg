@@ -32,7 +32,7 @@ create function owls_add_random_to_student(in in_student_id bigint)
     begin
       with available_owls as (
         select o.impl, o.occurrence from owls o
-        inner join students s on s.id = in_student_id and s.level = o.level
+        inner join students s on s.id = in_student_id and s.level >= o.level
       ), rand as (
         select random() * (select sum(occurrence) from available_owls) r
       )
