@@ -1,7 +1,7 @@
 package models
 
 import db.{DbCtx, Pagination}
-
+import services.SuggestionService.{CreatureApproved, NoteApproved}
 /* Entities */
 
 case class Creature(name: String, power: Int, totalHp: Int, level: Int, isApproved: Boolean = false, id: Long = -1)
@@ -96,4 +96,27 @@ class CreatureDao(val db: DbCtx) {
       )
       CreatureForApproval(id, name, notes)
     }
+  def applyApproved(ac: CreatureApproved): Unit = {
+    if (!ac.isApproved) {
+      ac.notes.foreach {note =>
+        run(query[Note].filter(_.id == lift(note.id)).delete) 
+      }
+      run(query[Creature].filter(_.id == lift(ac.id)).delete)
+    } else {
+      ac.notes.foreach { note =>
+        if (note.isApproved)
+          run(
+            query[Note]
+              .filter(_.id == lift(note.id))
+              .update(_.text -> lift(note.text), _.isApproved -> true)
+            )
+        else run(query[Note].filter(_.id == lift(note.id)).delete)
+      }
+      run(
+        query[Creature]
+          .filter(_.id == lift(ac.id))
+          .update(_.name -> lift(ac.name), _.isApproved -> true)
+        )
+    }
+  }
 }

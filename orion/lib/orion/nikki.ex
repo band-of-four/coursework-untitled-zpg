@@ -3,9 +3,9 @@ defmodule Orion.Nikki do
   @token "trust-me-im-orion"
 
   def get_unapproved() do
-    case HTTPoison.get("localhost:9000/bot/unapproved", [{"Token", @token}]) do
+    case HTTPoison.get("localhost:9000/bot/creatures/unapproved", [{"Token", @token}]) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        body
+        Poison.Parser.parse!(body, %{keys: :atoms}) 
       {:ok, %HTTPoison.Response{status_code: 404}} ->
         nil
       e ->

@@ -9,6 +9,8 @@ import services.SuggestionService._
 import scala.concurrent.{ExecutionContext, Future}
 
 object SuggestionService {
+  case class NoteApproved(id: Long, text: String, isApproved: Boolean)
+  case class CreatureApproved(id: Long, name: String, isApproved: Boolean, notes: Seq[NoteApproved])
   case class TextSuggestion(text: String, gender: Student.Gender, lessonName: Option[String])
   case class CreatureSuggestion(name: String, notes: Seq[CreatureTextSuggestion])
   case class CreatureTextSuggestion(text: String, gender: Student.Gender, stage: Student.Stage)
@@ -57,5 +59,9 @@ class SuggestionService(noteDao: NoteDao,
 
   def getCreatedByUser(userId: Long, pagination: Pagination): Future[Seq[NoteForCreator]] = Future {
     noteDao.loadForCreator(userId, pagination)
+  }
+  
+  def applyApprovedCreature(ac: CreatureApproved): Future[Unit] = Future {
+    creatureDao.applyApproved(ac)
   }
 }

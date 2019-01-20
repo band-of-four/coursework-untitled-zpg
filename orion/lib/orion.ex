@@ -8,14 +8,14 @@ defmodule Orion do
   end
 
   def text_processing() do
-    monster = get_unapproved_creature()
+    monster = Nikki.get_unapproved()
     text = ~s(Сегодня на повестке дня - монстр по имени #{monster.name}!)
     Messenger.send_message(text, :start)
     text = Messenger.next_text()
     new_notes = process_creature_notes(monster.notes)
     new_monster = process_creature(monster, new_notes)
     new_notes = Enum.map(new_notes, fn note ->
-      %{id: note.id, text: note.text, is_approved: note.is_approved}
+      %{id: note.id, text: note.text, isApproved: note.isApproved}
     end)
     new_monster = Map.put(new_monster, :notes, new_notes)
     Nikki.post_approved(new_monster)
@@ -33,26 +33,26 @@ defmodule Orion do
         has_male_fight_lose: false
       },
       fn
-        %{stage: "Fight", gender: "Female", is_approved: true}, acc -> %{acc | has_female_fight: true}
-        %{stage: "FightWon", gender: "Female", is_approved: true}, acc -> %{acc | has_female_fight_won: true}
-        %{stage: "FightLose", gender: "Female", is_approved: true}, acc -> %{acc | has_female_fight_lose: true}
-        %{stage: "Fight", gender: "Male", is_approved: true}, acc -> %{acc | has_male_fight: true}
-        %{stage: "FightWon", gender: "Male", is_approved: true}, acc -> %{acc | has_male_fight_won: true}
-        %{stage: "FightLose", gender: "Male", is_approved: true}, acc -> %{acc | has_male_fight_lose: true}
+        %{stage: "Fight", gender: "Female", isApproved: true}, acc -> %{acc | has_female_fight: true}
+        %{stage: "FightWon", gender: "Female", isApproved: true}, acc -> %{acc | has_female_fight_won: true}
+        %{stage: "FightLost", gender: "Female", isApproved: true}, acc -> %{acc | has_female_fight_lose: true}
+        %{stage: "Fight", gender: "Male", isApproved: true}, acc -> %{acc | has_male_fight: true}
+        %{stage: "FightWon", gender: "Male", isApproved: true}, acc -> %{acc | has_male_fight_won: true}
+        %{stage: "FightLost", gender: "Male", isApproved: true}, acc -> %{acc | has_male_fight_lose: true}
       end
     )
     |> Enum.find(fn {k, v} -> !v end)
     |> case do
-      nil -> %{id: monster.id, is_approved: true}
+      nil -> %{id: monster.id, isApproved: true}
       _ ->
         Messenger.send_message("Не могу одобрить монстра - не хватает одобренных фраз")
-        notes = Enum.map(notes, fn note -> %{note | is_approved: false} end)
-        %{id: monster.id, is_approved: false}
+        notes = Enum.map(notes, fn note -> %{note | isApproved: false} end)
+        %{id: monster.id, isApproved: false}
       end
-    if result.is_approved == true do
+    if result.isApproved == true do
       process_creature_name(monster)
     else
-      %{id: monster.id, name: monster.name, is_approved: false}
+      %{id: monster.id, name: monster.name, isApproved: false}
     end
   end
 
@@ -71,8 +71,8 @@ defmodule Orion do
       "Редактировать" ->
         name = edit_monster_name()
         process_creature_name(%{monster | name: name})
-      "Одобрить" -> %{id: monster.id, name: monster.name, is_approved: true}
-      "Отклонить" -> %{id: monster.id, name: monster.name, is_approved: false}
+      "Одобрить" -> %{id: monster.id, name: monster.name, isApproved: true}
+      "Отклонить" -> %{id: monster.id, name: monster.name, isApproved: false}
       _ ->
         Messenger.send_message("Ну и что ты хотел этим сказать? У тебя есть кнопки - используй их!")
         process_creature_name(monster)
@@ -90,10 +90,10 @@ defmodule Orion do
       case stage do
         "Fight" -> "дерутся с монстром, они говорят:\n"
         "FightWon" -> "побеждают монстра, они говорят:\n"
-        "FightLose" -> "пали от руки монстра, они говорят:\n"
+        "FightLost" -> "пали от руки монстра, они говорят:\n"
       end
-    {new_text, is_approved} = process_text(head_text, mid_text, text)
-    processed_note = %{id: id, text: new_text, is_approved: is_approved, stage: stage, gender: gender}
+    {new_text, isApproved} = process_text(head_text, mid_text, text)
+    processed_note = %{id: id, text: new_text, isApproved: isApproved, stage: stage, gender: gender}
     [processed_note | process_creature_notes(notes)]
   end
   def process_creature_notes([]), do: []
