@@ -1,4 +1,4 @@
-import { paginatedStore } from './paginated-store.js';
+import { paginatedStore } from './_resource.js';
 import { getDiarySections } from '/api/note.js';
 
 const store = paginatedStore('Diary', getDiarySections);
