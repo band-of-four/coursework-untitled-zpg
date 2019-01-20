@@ -33,6 +33,16 @@
       {{ spell.name }}: вид {{ spell.kind }}, сила {{ spell.power }}
     </li>
   </ul>
+  <h2>Зачетная книжка:</h2>
+  <section v-show="attendance.stale">
+    <a href="#" @click.prevent="loadAttendance">Обновить</a> 
+  </section>
+  <ul>
+    <li v-for="a in attendance.items">
+      {{ a.lesson }}: {{ Math.round(a.attended / a.requiredAttendance * 100) }}%
+    </li>
+  </ul>
+
 </div>
 </template>
 
@@ -43,13 +53,14 @@ export default {
   name: 'Overview',
   created() {
     this.loadSpells();
+    this.loadAttendance();
   },
   methods: {
-    ...mapActions({ loadSpells: 'spells/load' })
+    ...mapActions({ loadSpells: 'spells/load', loadAttendance: 'attendance/load' })
   },
   computed: {
     ...mapState('stage', ['note']),
-    ...mapState(['spells']),
+    ...mapState(['spells', 'attendance']),
     ...mapState('student', ['name', 'level', 'hp']),
     ...mapGetters('stage', ['progress']),
     ...mapGetters('stage', ['progress']),

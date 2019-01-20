@@ -13,6 +13,8 @@ export const postStudent = postResource('/student');
 
 export const getSpells = getResource('/student/spells');
 
+export const getAttendance = getResource('/student/attendance');
+
 export const getRelationships = getResourcePage('/student/relationships');
 
 export const getCreatureHandlingSkills = getResourcePage('/student/skills');
