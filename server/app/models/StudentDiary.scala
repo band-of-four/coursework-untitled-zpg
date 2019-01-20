@@ -45,4 +45,7 @@ class StudentDiaryDao(db: DbCtx) {
 
   def createEntry(entry: StudentDiaryEntry): Unit =
     run(schema.insert(lift(entry)))
+
+  def writeStageNote(studentId: Long, date: LocalDateTime): Unit =
+    run(infix"""SELECT student_diary_entry_write_stage_note(${lift(studentId)}, ${lift(date)})""".as[Query[String]])
 }

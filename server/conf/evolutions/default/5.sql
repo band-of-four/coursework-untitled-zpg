@@ -72,5 +72,4 @@ drop function note_heart_toggle(bigint, bigint, out text, out bigint);
 drop trigger note_hearts_counter_cache_trig on note_hearts_users;;
 drop function note_hearts_counter_cache_update;;
 drop table note_hearts_users;;
-alter table notes drop constraint heart_count_integrity;
 alter table notes drop column heart_count;

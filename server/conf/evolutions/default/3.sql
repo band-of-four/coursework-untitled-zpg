@@ -75,8 +75,19 @@ create table student_diary_entries (
 create unique index student_diary_entries_pkey
   on student_diary_entries (student_id, date desc);;
 
+create function student_diary_entry_write_stage_note(in in_student_id bigint, in in_entry_date timestamp)
+  returns void as $$
+    begin
+      insert into student_diary_entries as sde (student_id, note_id, date)
+        select s.id, s.stage_note_id, in_entry_date from students s
+        where s.id = in_student_id;;
+    end;;
+  $$
+  language plpgsql;;
+
 # --- !Downs
 
+drop function student_diary_entry_write_stage_note(bigint, timestamp);
 drop table student_diary_entries;
 drop table students;
 drop table notes;

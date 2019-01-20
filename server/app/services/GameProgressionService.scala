@@ -1,7 +1,8 @@
 package services
 
 import models._
-import game.{Durations, Fight, Travel}
+import models.Student.Stage
+import game.{Durations, Fight, GameProgressionResource => Resource, Travel}
 import game.Fight._
 import game.Travel._
 import services.GameProgressionService._
@@ -9,10 +10,7 @@ import services.StageService.StageUpdate
 import utils.RandomEvent
 
 object GameProgressionService {
-  sealed trait StageCompletion
-  case class CompletedLesson(attendance: Seq[LessonAttendancePreloaded]) extends StageCompletion
-  case class CompletedLibrary(spells: Seq[SpellPreloaded]) extends StageCompletion
-  case object CompletedGenericStage extends StageCompletion
+  case class CompletedStage(updates: Seq[Resource] = Nil)
 }
 
 class GameProgressionService(stageService: StageService,
@@ -30,29 +28,28 @@ class GameProgressionService(stageService: StageService,
     stageService.transactionalUpdateWithResult(student.id) {
       owlService.useActiveOwlsForUpdate(student) { owls =>
         student.stage match {
-          case Student.Stage.Fight =>
+          case Stage.Fight =>
             continueFight(student, owls)
-            CompletedGenericStage
-          case Student.Stage.Travel if RandomEvent(FightChance) =>
+          case Stage.Travel if RandomEvent(FightChance) =>
             startFight(student)
-            CompletedGenericStage
-          case Student.Stage.Travel =>
+            CompletedStage()
+          case Stage.Travel =>
             enterNextRoom(student)
-            CompletedGenericStage
-          case Student.Stage.Club =>
+            CompletedStage()
+          case Stage.Club =>
             relationshipDao.updateInClub(student.id)
-            stageService.commitTravelStage(student, Durations.Travel)
-            CompletedGenericStage
-          case Student.Stage.Lesson =>
+            stageService.writeStageNoteToDiary(student)
+            stageService.setGenericStageNote(student, Stage.Travel, Durations.Travel)
+            CompletedStage(updates = Seq(Resource.Diary, Resource.Relationships))
+          case Stage.Lesson =>
             lessonDao.updateAttendance(student.id)
-            val newAttendance = lessonDao.loadAttendance(student.id, student.level)
-            stageService.commitTravelStage(student, Durations.Travel)
-            CompletedLesson(newAttendance)
-          case Student.Stage.Library =>
+            stageService.writeStageNoteToDiary(student)
+            stageService.setGenericStageNote(student, Stage.Travel, Durations.Travel)
+            CompletedStage(updates = Seq(Resource.Diary, Resource.LessonAttendance))
+          case Stage.Library =>
             libraryService.commitVisitEnd(student)
-            val newSpells = spellDao.load(student.id)
-            stageService.commitTravelStage(student, Durations.Travel)
-            CompletedLibrary(newSpells)
+            stageService.setGenericStageNote(student, Stage.Travel, Durations.Travel)
+            CompletedStage(updates = Seq(Resource.Spells))
         }
       }
     }
@@ -60,23 +57,28 @@ class GameProgressionService(stageService: StageService,
   def startFight(student: StudentForUpdate): Unit = {
     val opponent = creatureDao.findNearRoom(student.currentRoom)
     creatureDao.createFightWith(student.id, opponent)
-    stageService.commitFight(student, opponent.id, Durations.FightTurn)
+    stageService.setFightNote(student, opponent.id, Durations.FightTurn)
   }
 
-  def continueFight(student: StudentForUpdate, owls: Seq[String]): Unit = {
+  def continueFight(student: StudentForUpdate, owls: Seq[String]): CompletedStage = {
     val opponent = creatureDao.findInFightWith(student.id)
     val spells = spellDao.load(student.id)
     val turnOutcome = Fight.computeTurn(student, opponent, spells, owls)
-    stageService.commitFightStage(turnOutcome, Durations.FightTurn)
     turnOutcome match {
-      case FightContinues(_, creature) =>
-        creatureDao.updateInFightWith(student.id, creature)
-      case StudentWon(student, _) =>
+      case FightContinues(_, opponent) =>
+        stageService.setFightNote(student, opponent.id, Durations.FightTurn)
+        creatureDao.updateInFightWith(student.id, opponent)
+        CompletedStage()
+      case StudentWon(student, opponent) =>
+        stageService.writeFightResultToDiary(student, opponent.id, Stage.FightWon)
         creatureDao.removeFightWithStudentUpdatingSkill(student.id, skillDelta = 1)
         enterNextRoom(student)
-      case StudentLost(student, _) =>
+        CompletedStage(updates = Seq(Resource.Diary, Resource.CreatureHandlingSkills))
+      case StudentLost(student, opponent) =>
+        stageService.writeFightResultToDiary(student, opponent.id, Stage.FightLost)
         creatureDao.removeFightWithStudentUpdatingSkill(student.id, skillDelta = 0)
         enterInfirmary(student)
+        CompletedStage(updates = Seq(Resource.Diary))
     }
   }
 
@@ -88,19 +90,19 @@ class GameProgressionService(stageService: StageService,
 
     destination match {
       case AttendClass(_, lessonId) =>
-        stageService.commitLessonStage(updatedStudent, lessonId, Durations.Study)
+        stageService.setLessonNote(updatedStudent, lessonId, Durations.Study)
       case VisitClub(_, clubId) =>
-        stageService.commitClubStage(updatedStudent, clubId, Durations.Club)
+        stageService.setClubNote(updatedStudent, clubId, Durations.Club)
       case VisitLibrary(newRoom) =>
         libraryService.commitLibraryVisit(updatedStudent)
-        stageService.commitLibraryStage(updatedStudent, Durations.Library)
+        stageService.setGenericStageNote(updatedStudent, Stage.Library, Durations.Library)
       case ContinueTravelling(newRoom) =>
-        stageService.commitTravelStage(student.copy(currentRoom = newRoom), Durations.Study)
+        stageService.setGenericStageNote(student.copy(currentRoom = newRoom), Stage.Travel, Durations.Travel)
     }
   }
 
   def enterInfirmary(student: StudentForUpdate): Unit = {
     val infirmary = roomDao.findClosest(Room.Kind.Infirmary, student.currentRoom)
-    stageService.commitInfirmaryStage(student.copy(currentRoom = infirmary), Durations.Infirmary(student))
+    stageService.setGenericStageNote(student.copy(currentRoom = infirmary), Stage.Infirmary, Durations.Infirmary(student))
   }
 }
