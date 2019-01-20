@@ -1,5 +1,6 @@
 package services
 
+import db.Pagination
 import game.Fight
 import models._
 import play.api.libs.json.Json
@@ -15,6 +16,7 @@ object SuggestionService {
   implicit val textSuggestionReads = Json.reads[TextSuggestion]
   implicit val creatureTextSuggestionReads = Json.reads[CreatureTextSuggestion]
   implicit val creatureSuggestionReads = Json.reads[CreatureSuggestion]
+  implicit val creatorNoteWrites = Json.writes[NoteForCreator]
 }
 
 class SuggestionService(noteDao: NoteDao,
@@ -51,5 +53,9 @@ class SuggestionService(noteDao: NoteDao,
 
   def getFirstUnapprovedCreature(): Future[Option[CreatureForApproval]] = Future {
     creatureDao.loadFirstUnapproved()
+  }
+
+  def getCreatedByUser(userId: Long, pagination: Pagination): Future[Seq[NoteForCreator]] = Future {
+    noteDao.loadForCreator(userId, pagination)
   }
 }

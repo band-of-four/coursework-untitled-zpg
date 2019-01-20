@@ -1,7 +1,9 @@
-import { getResource, post } from './index.js';
+import { getResource, getResourcePage, post } from './index.js';
 
-export const getLessonNames = getResource('/suggest/lesson/names');
+export const getLessonNames = getResource('/suggestions/lesson/names');
 
-export const postText = (data) => post('/suggest/text', data);
+export const postText = (data) => post('/suggestions/text', data);
 
-export const postCreature = (data) => post('/suggest/creature', data);
+export const postCreature = (data) => post('/suggestions/creature', data);
+
+export const getApproved = getResourcePage('/suggestions/approved');

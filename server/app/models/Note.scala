@@ -1,6 +1,6 @@
 package models
 
-import db.DbCtx
+import db.{DbCtx, Pagination}
 
 case class Note(text: String, textGender: Student.Gender, stage: Student.Stage,
                 lessonId: Option[Long] = None, clubId: Option[Long] = None, creatureId: Option[Long] = None,
@@ -10,11 +10,15 @@ case class NotePreloaded(id: Long, text: String, stage: Student.Stage,
                          lesson: Option[String], club: Option[String], creature: Option[String],
                          heartCount: Long, isHearted: Boolean)
 
+case class NoteForCreator(id: Long, text: String, gender: Student.Gender, stage: Student.Stage,
+                          lesson: Option[String], club: Option[String], creature: Option[String],
+                          heartCount: Long)
+
+case class NoteForApproval(id: Long, stage: Student.Stage, gender: Student.Gender, text: String)
+
 case class NoteHeartsUser(userId: Long, noteId: Long)
 
 case class NoteHeartToggled(heartCount: Long, isHearted: Boolean)
-
-case class NoteForApproval(id: Long, stage: Student.Stage, gender: Student.Gender, text: String)
 
 class NoteDao(db: DbCtx) {
   import db._
@@ -56,6 +60,28 @@ class NoteDao(db: DbCtx) {
             n.id, n.text, n.stage, l.map(_.name), cl.map(_.name), cr.map(_.name), n.heartCount, heart.nonEmpty)
         }
     ).head
+
+  def loadForCreator(creatorId: Long, pagination: Pagination): Seq[NoteForCreator] =
+    run(
+      query[Note]
+        .filter(_.creatorId.exists(_ == lift(creatorId)))
+        .sortBy(n => n.id)(Ord.desc)
+        .paginate(lift(pagination))
+        .nested
+        .leftJoin(query[Lesson]).on {
+          case (n, l) => n.lessonId.exists(_ == l.id)
+        }
+        .leftJoin(query[Club]).on {
+          case ((n, l), cl) => n.clubId.exists(_ == cl.id)
+        }
+        .leftJoin(query[Creature]).on {
+          case (((n, l), cl), cr) => n.creatureId.exists(_ == cr.id)
+        }
+        .map {
+          case (((n, l), cl), cr) => NoteForCreator(
+            n.id, n.text, n.textGender, n.stage, l.map(_.name), cl.map(_.name), cr.map(_.name), n.heartCount)
+        }
+    )
 
   def findIdForCurrentStage(student: StudentForUpdate): Long =
     run(

@@ -27,9 +27,10 @@ POST    /owls/:owlImpl/apply        controllers.OwlController.apply(owlImpl: Str
 GET     /notes/diary                controllers.NoteController.getDiary(page: Int ?= 0)
 POST    /notes/:noteId/heart        controllers.NoteController.toggleHeart(noteId: Long)
 
-GET     /suggest/lesson/names       controllers.SuggestionController.getLessonNames
-POST    /suggest/text               controllers.SuggestionController.createText
-POST    /suggest/creature           controllers.SuggestionController.createCreature
+POST    /suggestions/text           controllers.SuggestionController.createText
+POST    /suggestions/creature       controllers.SuggestionController.createCreature
+GET     /suggestions/approved       controllers.SuggestionController.getApproved(page: Int ?= 0)
+GET     /suggestions/lesson/names   controllers.SuggestionController.getLessonNames
 
 GET     /bot/unapproved             controllers.BotController.getUnapproved
 POST    /bot/approve                controllers.BotController.postApproved
