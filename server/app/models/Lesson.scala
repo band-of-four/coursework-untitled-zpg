@@ -8,7 +8,7 @@ case class Lesson(name: String, level: Int, requiredAttendance: Int, id: Long = 
 
 case class LessonAttendance(lessonId: Long, studentId: Long, classesAttended: Int)
 
-case class LessonAttendancePreloaded(name: String, requiredAttendance: Int, attended: Int)
+case class LessonAttendancePreloaded(lesson: String, requiredAttendance: Int, attended: Int)
 
 object LessonDao {
   type PartialAttendanceMap = Map[Long, Int]
@@ -34,15 +34,17 @@ class LessonDao(val db: DbCtx) {
         .map(_._1.name)
     )
 
-  def loadAttendance(studentId: Long, studentLevel: Int): Seq[LessonAttendancePreloaded] =
+  def loadAttendance(studentId: Long): Seq[LessonAttendancePreloaded] =
     run(
       query[Lesson]
-        .filter(_.level == lift(studentLevel))
+        .join(query[Student]).on {
+          case (l, s) => l.level == s.level && s.id == lift(studentId)
+        }
         .leftJoin(query[LessonAttendance]).on {
-          case (l, la) => la.lessonId == l.id && la.studentId == lift(studentId)
+          case ((l, s), la) => la.lessonId == l.id && la.studentId == lift(studentId)
         }
         .map {
-          case (l, la) => LessonAttendancePreloaded(l.name, l.requiredAttendance, la.map(_.classesAttended).getOrElse(0))
+          case ((l, s), la) => LessonAttendancePreloaded(l.name, l.requiredAttendance, la.map(_.classesAttended).getOrElse(0))
         }
     )
 

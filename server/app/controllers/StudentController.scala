@@ -33,9 +33,13 @@ class StudentController(cc: ControllerComponents,
       case _: StudentAlreadyExistsException => UnprocessableEntity(StudentController.AlreadyExists)
     }
   }
-  
+
   def getSpells() = silhouette.SecuredAction async { request =>
     studentService.getSpells(request.identity.id).map(s => Ok(Json.toJson(s)))
+  }
+
+  def getAttendance() = silhouette.SecuredAction async { request =>
+    studentService.getAttendance(request.identity.id).map(s => Ok(Json.toJson(s)))
   }
 
   def getRelationships(page: Int) = silhouette.SecuredAction async { request =>

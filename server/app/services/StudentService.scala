@@ -27,6 +27,7 @@ object StudentService {
 
 class StudentService(studentDao: StudentDao,
                      spellDao: SpellDao,
+                     lessonDao: LessonDao,
                      noteDao: NoteDao,
                      creatureDao: CreatureDao,
                      relationshipDao: StudentRelationshipDao)
@@ -60,6 +61,10 @@ class StudentService(studentDao: StudentDao,
 
   def getSpells(userId: Long): Future[Seq[SpellPreloaded]] = Future {
     spellDao.load(userId)
+  }
+
+  def getAttendance(userId: Long): Future[Seq[LessonAttendancePreloaded]] = Future {
+    lessonDao.loadAttendance(userId)
   }
 
   def getRelationships(userId: Long, pagination: Pagination): Future[Seq[StudentRelationshipPreloaded]] = Future {

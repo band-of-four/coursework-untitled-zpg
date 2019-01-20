@@ -17,6 +17,7 @@ GET     /auth/signout               controllers.AuthController.signOut
 GET     /student                    controllers.StudentController.get
 POST    /student                    controllers.StudentController.create
 GET     /student/spells             controllers.StudentController.getSpells
+GET     /student/attendance         controllers.StudentController.getAttendance
 GET     /student/relationships      controllers.StudentController.getRelationships(page: Int ?= 0)
 GET     /student/skills             controllers.StudentController.getSkills(page: Int ?= 0)
 
