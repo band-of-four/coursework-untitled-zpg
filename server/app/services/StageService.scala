@@ -11,7 +11,7 @@ import services.StageService.StageUpdate
 
 object StageService {
   case class StageUpdate(level: Int, hp: Int, note: FormattedNote, stageDuration: Long, stageElapsed: Long,
-                         updatedResources: Seq[GameProgressionResource] = Nil)
+                         updated: Seq[GameProgressionResource] = Nil)
 
   implicit val updateWrites = Json.writes[StageUpdate]
 }
@@ -34,7 +34,7 @@ class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDi
 
   def transactionalUpdateWithResult(userId: Long)(block: => CompletedStage): StageUpdate = {
     val completedStage = studentDao.doTransaction(block)
-    getStage(userId).copy(updatedResources = completedStage.updates)
+    getStage(userId).copy(updated = completedStage.updates)
   }
 
   def writeFightResultToDiary(student: StudentForUpdate, opponentId: Long, outcome: Student.Stage): Unit = {

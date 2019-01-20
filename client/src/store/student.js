@@ -1,9 +1,11 @@
 import { WS_IN_STAGE_UPDATE } from '/api/ws.js';
 
-export default ({ name, level, hp }, spells) => ({
+export default ({ name, level, hp }) => ({
   namespaced: true,
   state: {
-    name, level, hp, spells
+    name,
+    level,
+    hp
   },
   mutations: {
     processMessage(state, { type, payload }) {

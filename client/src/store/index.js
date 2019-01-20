@@ -2,12 +2,13 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import { API_UNAUTHENTICATED } from '/api';
-import { getStudent, postStudent, getSpells, STUDENT_NOT_CREATED } from '/api/student.js';
+import { getStudent, postStudent, STUDENT_NOT_CREATED } from '/api/student.js';
 import { postSignIn, postSignUp } from '/api/auth.js';
 import { WS_URI, WS_OUT_GET_STAGE } from '/api/ws.js';
 
 import studentModule from './student.js';
 import stageModule from './stage.js';
+import spellsModule from './spells.js';
 
 Vue.use(Vuex);
 
@@ -16,9 +17,7 @@ export default new Vuex.Store({
     error: false,
     loading: true,
     signedIn: true,
-    student: null,
-    ws: null,
-    stage: null
+    ws: null
   },
   actions: {
     async load({ commit, dispatch }) {
@@ -54,8 +53,8 @@ export default new Vuex.Store({
       return await dispatch('initState', await postStudent(student));
     },
     async initState({ commit, dispatch }, student) {
-      const spells = await getSpells();
-      this.registerModule('student', studentModule(student, spells));
+      this.registerModule('student', studentModule(student));
+      this.registerModule('spells', spellsModule);
 
       this.registerModule('stage', stageModule);
       dispatch('stage/init');
@@ -75,6 +74,7 @@ export default new Vuex.Store({
       const message = JSON.parse(data);
       commit('stage/processMessage', message);
       commit('student/processMessage', message);
+      commit('spells/processMessage', message);
     }
   },
   mutations: {

@@ -25,8 +25,11 @@
   </section>
   <span>Прогресс: {{ progress }}</span>
   <h2>Заклинания:</h2>
+  <section v-show="spells.stale">
+    <a href="#" @click.prevent="loadSpells">Обновить</a> 
+  </section>
   <ul>
-    <li v-for="spell in spells">
+    <li v-for="spell in spells.items">
       {{ spell.name }}: вид {{ spell.kind }}, сила {{ spell.power }}
     </li>
   </ul>
@@ -34,14 +37,22 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Overview',
+  created() {
+    this.loadSpells();
+  },
+  methods: {
+    ...mapActions({ loadSpells: 'spells/load' })
+  },
   computed: {
     ...mapState('stage', ['note']),
-    ...mapState('student', ['name', 'level', 'hp', 'spells']),
-    ...mapGetters('stage', ['progress'])
+    ...mapState(['spells']),
+    ...mapState('student', ['name', 'level', 'hp']),
+    ...mapGetters('stage', ['progress']),
+    ...mapGetters('stage', ['progress']),
   }
 }
 </script>
