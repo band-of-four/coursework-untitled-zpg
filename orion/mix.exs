@@ -23,6 +23,7 @@ defmodule Orion.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:httpoison, "~> 1.1.1"},
       {:poison, "~> 3.1"},
       {:nadia, "~> 0.4.4"}
     ]
