@@ -43,4 +43,10 @@ class StudentController(cc: ControllerComponents,
       .getRelationships(request.identity.id, Pagination(page, perPage = 10))
       .map(s => Ok(Json.toJson(s)))
   }
+
+  def getSkills(page: Int) = silhouette.SecuredAction async { request =>
+    studentService
+      .getSkills(request.identity.id, Pagination(page, perPage = 10))
+      .map(s => Ok(Json.toJson(s)))
+  }
 }

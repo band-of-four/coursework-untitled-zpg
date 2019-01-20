@@ -20,6 +20,7 @@ object StudentService {
   implicit val studentWrites = Json.writes[Student]
   implicit val spellWrites = Json.writes[StudentService.StudentSpell]
   implicit val relationshipWrites = Json.writes[StudentRelationshipPreloaded]
+  implicit val skillWrites = Json.writes[StudentCreatureHandlingSkill]
 
   class StudentAlreadyExistsException extends RuntimeException
 }
@@ -27,6 +28,7 @@ object StudentService {
 class StudentService(studentDao: StudentDao,
                      spellDao: SpellDao,
                      noteDao: NoteDao,
+                     creatureDao: CreatureDao,
                      relationshipDao: StudentRelationshipDao)
                     (implicit ec: ExecutionContext) {
   def get(userId: Long): Future[Option[Student]] = Future {
@@ -62,5 +64,9 @@ class StudentService(studentDao: StudentDao,
 
   def getRelationships(userId: Long, pagination: Pagination): Future[Seq[StudentRelationshipPreloaded]] = Future {
     relationshipDao.loadForStudent(userId, pagination)
+  }
+
+  def getSkills(userId: Long, pagination: Pagination): Future[Seq[StudentCreatureHandlingSkill]] = Future {
+    creatureDao.loadStudentSkills(userId, pagination)
   }
 }
