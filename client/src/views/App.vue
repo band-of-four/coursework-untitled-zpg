@@ -6,6 +6,7 @@
       <router-link to="/diary">Дневник</router-link>
       <router-link to="/owls">Совы</router-link>
       <router-link to="/relationships">Отношения</router-link>
+      <router-link to="/skills">Навыки</router-link>
       <router-link to="/suggest">Предложить</router-link>
       <a href="/auth/signout">Выйти</a>
     </section>
