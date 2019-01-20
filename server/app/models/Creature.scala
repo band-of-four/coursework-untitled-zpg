@@ -16,6 +16,8 @@ case class OpponentCreature(id: Long, power: Int, level: Int, hp: Int, studentsS
 
 case class StudentCreatureHandlingSkill(creatureName: String, modifier: Int)
 
+case class CreatureForApproval(id: Long, name: String, notes: Seq[NoteForApproval])
+
 class CreatureDao(val db: DbCtx) {
   import db._
 
@@ -78,4 +80,20 @@ class CreatureDao(val db: DbCtx) {
         .sortBy(s => (s.modifier, s.creatureName))(Ord(Ord.desc, Ord.asc))
         .paginate(lift(pagination))
     )
+
+  def loadFirstUnapproved(): Option[CreatureForApproval] =
+    run(
+      query[Creature]
+        .filter(!_.isApproved)
+        .sortBy(_.id)(Ord.asc)
+        .take(1)
+        .map(c => (c.id, c.name))
+    ).headOption.map { case (id, name) =>
+      val notes = run(
+        query[Note]
+          .filter(_.creatureId.exists(_ == lift(id)))
+          .map(n => NoteForApproval(n.id, n.stage, n.textGender, n.text))
+      )
+      CreatureForApproval(id, name, notes)
+    }
 }

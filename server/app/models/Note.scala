@@ -14,6 +14,8 @@ case class NoteHeartsUser(userId: Long, noteId: Long)
 
 case class NoteHeartToggled(heartCount: Long, isHearted: Boolean)
 
+case class NoteForApproval(id: Long, stage: Student.Stage, gender: Student.Gender, text: String)
+
 class NoteDao(db: DbCtx) {
   import db._
 
