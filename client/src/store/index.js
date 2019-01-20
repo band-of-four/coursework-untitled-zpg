@@ -9,6 +9,7 @@ import { WS_URI, WS_OUT_GET_STAGE } from '/api/ws.js';
 import studentModule from './student.js';
 import stageModule from './stage.js';
 import spellsModule from './spells.js';
+import diaryModule from './diary.js';
 
 Vue.use(Vuex);
 
@@ -55,6 +56,7 @@ export default new Vuex.Store({
     async initState({ commit, dispatch }, student) {
       this.registerModule('student', studentModule(student));
       this.registerModule('spells', spellsModule);
+      this.registerModule('diary', diaryModule);
 
       this.registerModule('stage', stageModule);
       dispatch('stage/init');
@@ -75,6 +77,7 @@ export default new Vuex.Store({
       commit('stage/processMessage', message);
       commit('student/processMessage', message);
       commit('spells/processMessage', message);
+      commit('diary/processMessage', message);
     }
   },
   mutations: {

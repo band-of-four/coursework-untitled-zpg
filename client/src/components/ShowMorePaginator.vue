@@ -10,13 +10,20 @@ export default {
   name: 'ShowMorePaginator',
   props: {
     itemCount: { type: Number, required: true },
-    perPage: { type: Number, required: true }
+    perPage: { type: Number, required: true },
+    page: { type: Number, required: true }
   },
   data() {
     return {
-      page: 0,
       fullPageCountAfterNextFetch: this.perPage
     };
+  },
+  watch: {
+    itemCount(newCount, oldCount) {
+      if (newCount < oldCount)
+        /* Items have been refreshed */
+        this.fullPageCountAfterNextFetch = this.perPage;
+    }
   },
   computed: {
     hasMore() {
@@ -25,9 +32,8 @@ export default {
   },
   methods: {
     requestMore() {
-      this.page += 1;
       this.fullPageCountAfterNextFetch += this.perPage;
-      this.$emit('next-page', this.page);
+      this.$emit('show-more');
     }
   }
 }

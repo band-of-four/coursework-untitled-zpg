@@ -1,7 +1,10 @@
 <template>
-<ShowMorePaginator :item-count="noteCount" :per-page="10" @next-page="loadPage">
+<ShowMorePaginator :item-count="noteCount" :page="diary.page" :per-page="diary.perPage" @show-more="loadNext">
   <h1>Дневник</h1>
-  <section v-for="s in sections">
+  <section v-show="diary.stale">
+    <a href="#" @click.prevent="refresh">Обновить</a> 
+  </section>
+  <section v-for="s in diary.sections">
     <p><strong>
       {{ s.heading.lesson || s.heading.club || s.heading.creature || (s.heading.travel && "Путешествую...") }}
       —
@@ -13,9 +16,9 @@
 </template>
 
 <script>
-import { getDiarySections } from '/api/note.js';
 import Note from '/components/Note.vue';
 import ShowMorePaginator from '/components/ShowMorePaginator.vue';
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Diary',
@@ -24,16 +27,13 @@ export default {
     sections: []
   }),
   created() {
-    this.loadPage(0);
+    this.loadNext();
   },
-  methods: {
-    async loadPage(page) {
-      this.sections = this.sections.concat(await getDiarySections(page));
-    }
-  },
+  methods: mapActions({ loadNext: 'diary/loadNext', refresh: 'diary/refresh' }),
   computed: {
+    ...mapState(['diary']),
     noteCount() {
-      return this.sections.reduce((acc, { notes }) => acc + notes.length, 0);
+      return this.diary.sections.reduce((acc, { notes }) => acc + notes.length, 0);
     }
   }
 }
