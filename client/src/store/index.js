@@ -10,6 +10,7 @@ import studentModule from './student.js';
 import stageModule from './stage.js';
 import spellsModule from './spells.js';
 import diaryModule from './diary.js';
+import relationshipsModule from './relationships.js';
 
 Vue.use(Vuex);
 
@@ -57,6 +58,7 @@ export default new Vuex.Store({
       this.registerModule('student', studentModule(student));
       this.registerModule('spells', spellsModule);
       this.registerModule('diary', diaryModule);
+      this.registerModule('relationships', relationshipsModule);
 
       this.registerModule('stage', stageModule);
       dispatch('stage/init');

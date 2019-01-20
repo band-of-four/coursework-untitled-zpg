@@ -1,25 +1,29 @@
 <template>
-<div>
+<ShowMorePaginator :item-count="relationships.items.length" :page="relationships.page" :per-page="relationships.perPage" @show-more="loadNext">
   <h1>Отношения</h1>
-  <section v-for="r in relationships">
+  <section v-show="relationships.stale">
+    <a href="#" @click.prevent="refresh">Обновить</a> 
+  </section>
+  <section v-for="r in relationships.items">
     <strong>{{ r.studentName }}</strong>
     <p>
       Отношения: {{ r.relationship }}, последнее изменение: {{ r.delta }}
     </p>
   </section>
-</div>
+</ShowMorePaginator>
 </template>
 
 <script>
-import { getRelationships } from '/api/student.js';
+import ShowMorePaginator from '/components/ShowMorePaginator.vue';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'Relationships',
-  data: () => ({
-    relationships: []
-  }),
-  async created() {
-    this.relationships = await getRelationships();
-  }
+  components: { ShowMorePaginator },
+  created() {
+    this.loadNext();
+  },
+  methods: mapActions('relationships', ['loadNext', 'refresh']),
+  computed: mapState(['relationships'])
 }
 </script>

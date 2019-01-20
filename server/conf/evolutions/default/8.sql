@@ -78,7 +78,7 @@ create function student_relationships_delta_update()
       if tg_op = 'INSERT'
       then new.delta := new.relationship;;
       end if;;
-      if tg_op = 'UPDATE' and new.delta <> 0
+      if tg_op = 'UPDATE' and new.relationship <> old.relationship
       then new.delta := old.delta + (new.relationship - old.relationship);;
       end if;;
       return new;;

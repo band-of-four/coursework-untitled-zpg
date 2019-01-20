@@ -23,14 +23,12 @@ import { mapState, mapGetters, mapActions } from 'vuex';
 export default {
   name: 'Diary',
   components: { Note, ShowMorePaginator },
-  data: () => ({
-    sections: []
-  }),
   created() {
     this.loadNext();
   },
-  methods: mapActions({ loadNext: 'diary/loadNext', refresh: 'diary/refresh' }),
+  methods: mapActions('diary', ['loadNext', 'refresh']),
   computed: {
+    ...mapState('student', ['name', 'level', 'hp']),
     ...mapState(['diary']),
     ...mapGetters({ noteCount: 'diary/noteCount' })
   }

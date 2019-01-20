@@ -1,4 +1,4 @@
-import { get, post, getResource, postResource } from './index.js';
+import { get, post, getResource, getResourcePage, postResource } from './index.js';
 
 export const STUDENT_NOT_CREATED = 'student_not_created';
 
@@ -13,6 +13,4 @@ export const postStudent = postResource('/student');
 
 export const getSpells = getResource('/student/spells');
 
-export function getRelationships(page = 0) {
-  return get(`/student/relationships?page=${page}`).then((r) => r.json());
-}
+export const getRelationships = getResourcePage('/student/relationships');
