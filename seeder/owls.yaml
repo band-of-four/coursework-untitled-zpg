@@ -1,4 +1,4 @@
-- :impl: rage_owl
+- :impl: RageOwl
   :display_name: Сова ярости
   :description: Увеличивает наносимый урон на 5 в текущем бою
   :applicable_stages:

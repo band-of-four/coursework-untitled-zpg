@@ -6,7 +6,6 @@ defmodule Seeder.Owl do
 
   @primary_key{:impl, :string, []}
   schema "owls" do
-    #field :impl, :string, primary_key: true
     field :display_name, :string
     field :description, :string
     field :applicable_stages, {:array, Seeder.Note.StudentStage}
