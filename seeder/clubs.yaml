@@ -23,3 +23,35 @@
         :text: Ну где делают таких женщин?!
       - :gender: Male
         :text: Ну где делают таких женщин?!
+  - :name: Клуб анонимных любителей Java
+    :notes:
+      - :gender: Female
+        :text: А белые сникерсы вы тоже любите?
+      - :gender: Male
+        :text: А белые сникерсы вы тоже любите?
+  - :name: Клуб легкой музыки
+    :notes:
+      - :gender: Female
+        :text: Оооу, пироженки!
+      - :gender: Male
+        :text: Кажется, мне здесь не рады...
+      - :gender: Female
+        :text: Так здорово, что девочки веселятся вместе...
+  - :name: Клуб Лейнистов
+    :notes:
+      - :gender: Female
+        :text: Возлюбим же Лейн!
+      - :gender: Male
+        :text: Возлюбим же Лейн!
+  - :name: b_four
+    :notes:
+      - :gender: Female
+        :text: Продолжай *похотливый смайлик*
+      - :gender: Male
+        :text: Хочу здохнуть
+  - :name: Орден Мокрой Собаки
+    :notes:
+      - :gender: Female
+        :text: Сколько хочется и сколько не хочется
+      - :gender: Male
+        :text: Сколько хочется и сколько не хочется

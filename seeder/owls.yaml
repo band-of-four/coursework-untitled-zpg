@@ -6,17 +6,18 @@
   :stages_active: 1
   :is_immediate: false
   :occurrence: 0.5
-  :level: 2
+  :level: 0
 - :impl: HealingOwl
   :display_name: Соводоктор
   :description: 20 пунктов к здоровью в любой момент, звучит не плохо
-  :applicable_stages:
-    - Fight
-    - Lesson
-    - Travel
-    - Infirmary
-    - Library
-    - Club
   :is_immediate: true
+  :applicable_stages: ~
   :occurrence: 0.7
-  :level: 1
+  :level: 0
+- :impl: StudentLetter
+  :display_name: Чернильная сова
+  :description: С большой силой приходит большая ответственность
+  :is_immediate: true
+  :applicable_stages: ~
+  :occurrence: 0.3
+  :level: 0

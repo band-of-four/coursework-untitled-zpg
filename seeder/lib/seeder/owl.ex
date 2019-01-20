@@ -19,7 +19,7 @@ defmodule Seeder.Owl do
     @data
     |> Enum.map(fn o ->
       %Owl{impl: o.impl, display_name: o.display_name, description: o.description,       
-        applicable_stages: o.applicable_stages, stages_active: o[:stages_active],
+        applicable_stages: o[:applicable_stages], stages_active: o[:stages_active],
         is_immediate: o.is_immediate, occurrence: o.occurrence, level: o.level}
     end)
   end

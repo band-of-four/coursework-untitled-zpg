@@ -32,5 +32,5 @@ POST    /suggestions/creature       controllers.SuggestionController.createCreat
 GET     /suggestions/approved       controllers.SuggestionController.getApproved(page: Int ?= 0)
 GET     /suggestions/lesson/names   controllers.SuggestionController.getLessonNames
 
-GET     /bot/unapproved             controllers.BotController.getUnapproved
-POST    /bot/approve                controllers.BotController.postApproved
+GET     /bot/creatures/unapproved   controllers.BotController.getUnapprovedCreature
+POST    /bot/creatures/approve      controllers.BotController.approveCreature

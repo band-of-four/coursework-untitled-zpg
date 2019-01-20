@@ -15,7 +15,7 @@ defmodule Orion.Nikki do
   end
 
   def post_approved(data) do
-    HTTPoison.post "localhost:9000/bot/approve", Poison.encode!(data), 
+    HTTPoison.post "localhost:9000/bot/creatures/approve", Poison.encode!(data), 
       [{"Content-Type", "application/json"}, {"Token", @token}]
   end
 end

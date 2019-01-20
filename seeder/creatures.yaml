@@ -22,11 +22,10 @@
       - :stage: FightLost
         :gender: Male
         :text: Нет, ну ты серьезно?..
-1:
   - :name: Слизень
     :power: 3
     :hp: 20
-    :level: 1
+    :level: 0
     :notes:
       - :stage: Fight
         :gender: Female
@@ -49,7 +48,7 @@
   - :name: Адепт ордена X
     :power: 7
     :hp: 35
-    :level: 1
+    :level: 0
     :notes:
       - :stage: Fight
         :gender: Female
@@ -72,7 +71,7 @@
   - :name: Задира
     :power: 5
     :hp: 28
-    :level: 1
+    :level: 0
     :notes:
       - :stage: Fight
         :gender: Female
@@ -92,3 +91,72 @@
       - :stage: FightLost
         :gender: Male
         :text: Меня официально зачмырили...
+  - :name: Кряеве
+    :power: 6
+    :hp: 50
+    :level: 0
+    :notes:
+      - :stage: Fight
+        :gender: Female
+        :text: Я тебе покажу, где таких женщин делают!
+      - :stage: Fight
+        :gender: Male
+        :text: Передаю привет от Каики!
+      - :stage: FightWon
+        :gender: Female
+        :text: Больше никого из-за тебя не отчислят!
+      - :stage: FightWon
+        :gender: Male
+        :text: Больше никого из-за тебя не отчислят!
+      - :stage: FightLost
+        :gender: Female
+        :text: Это... Долг?
+      - :stage: FightLost
+        :gender: Male
+        :text: Это... Долг?
+  - :name: Ононас
+    :power: 3
+    :hp: 70
+    :level: 0
+    :notes:
+      - :stage: Fight
+        :gender: Female
+        :text: А я пройду!
+      - :stage: Fight
+        :gender: Male
+        :text: А я пройду!
+      - :stage: FightWon
+        :gender: Female
+        :text: Теперь меня никто не остановит на пути к Белой Башне!
+      - :stage: FightWon
+        :gender: Male
+        :text: Теперь меня никто не остановит на пути к Белой Башне!
+      - :stage: FightLost
+        :gender: Female
+        :text: ТЕРЕРЬ Я ТОЖЕ ОРУ
+      - :stage: FightLost
+        :gender: Male
+        :text: ТЕРЕРЬ Я ТОЖЕ ОРУ
+  - :name: Отсутствие денег
+    :power: 25
+    :hp: 80
+    :level: 0
+    :notes:
+      - :stage: FightLost
+        :gender: Female
+        :text: Не в тебе счастье...
+      - :stage: FightLost
+        :gender: Male
+        :text: Не в тебе счастье...
+      - :stage: FightWon
+        :gender: Female
+        :text: А вот и зарплата!
+      - :stage: FightWon
+        :gender: Male
+        :text: А вот и зарплата!
+      - :stage: Fight
+        :gender: Female
+        :text: Бедность - не порок!
+      - :stage: Fight
+        :gender: Male
+        :text: Бедность - не порок!

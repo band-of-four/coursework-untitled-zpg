@@ -1,5 +1,6 @@
 defmodule Orion do
   alias Orion.Messenger
+  alias Orion.Nikki
 
   def run do 
     Messenger.send_message("Привет!", :start)
@@ -12,9 +13,12 @@ defmodule Orion do
     Messenger.send_message(text, :start)
     text = Messenger.next_text()
     new_notes = process_creature_notes(monster.notes)
-    IO.inspect new_notes
     new_monster = process_creature(monster, new_notes)
-    IO.inspect new_monster
+    new_notes = Enum.map(new_notes, fn note ->
+      %{id: note.id, text: note.text, is_approved: note.is_approved}
+    end)
+    new_monster = Map.put(new_monster, :notes, new_notes)
+    Nikki.post_approved(new_monster)
   end
 
   def process_creature(monster, notes) do

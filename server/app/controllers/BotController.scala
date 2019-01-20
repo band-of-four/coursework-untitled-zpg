@@ -12,22 +12,32 @@ class BotController(cc: ControllerComponents,
                     botSecuredAction: BotSecuredAction,
                     suggestionService: SuggestionService)
                    (implicit ec: ExecutionContext) extends AbstractController(cc) {
-  case class BotRequest(id: Long)
-  implicit val requestReads = Json.reads[BotRequest]
+  
+  case class ApprovedNote(id: Long, text: String, is_approved: Boolean)
+  case class ApprovedCreature(id: Long, name: String, is_approved: Boolean, notes: Seq[ApprovedNote])
+  implicit val noteFormat = Json.format[ApprovedNote]
+  implicit val creatureFormat = Json.format[ApprovedCreature]
   implicit val noteWrites = Json.writes[NoteForApproval]
   implicit val creatureWrites = Json.writes[CreatureForApproval]
 
-  def getUnapproved() = botSecuredAction async { request =>
+  def getUnapprovedCreature() = botSecuredAction async { request =>
     suggestionService.getFirstUnapprovedCreature().map {
       case Some(c) => Ok(Json.toJson(c))
       case None => NotFound
     }
   }
 
-  def postApproved() = botSecuredAction(parse.json) async { request =>
-    request.body.validate[BotRequest].fold(
+  def approveCreature() = botSecuredAction(parse.json) async { request =>
+    request.body.validate[ApprovedCreature].fold(
       err => Future.successful(UnprocessableEntity),
-      data => Future.successful(Ok(Json.obj("id" -> data.id)))
+      data => {
+        Console.print(data)
+        Future.successful(Ok)
+      }
     )
   }
+
+  //def getUnapprovedNote() {}
+
+  //def approveNote() {}
 }
