@@ -20,13 +20,13 @@ create function student_library_visit_end(in in_student_id bigint)
 
       delete from spells_students spst
         using spells s
-        where spst.student_id = student_id and spst.spell_id = s.id and s.kind = spell_kind;;
+        where spst.student_id = in_student_id and spst.spell_id = s.id and s.kind = spell_kind;;
 
       insert into spells_students (student_id, spell_id)
         values (in_student_id, spell_id);;
 
       delete from student_library_visits slv
-        where slv.student_id = student_id;;
+        where slv.student_id = in_student_id;;
     end;;
   $$
   language plpgsql;;
