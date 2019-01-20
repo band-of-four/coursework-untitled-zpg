@@ -8,12 +8,11 @@ import utils.auth.BotSecuredAction
 import scala.concurrent.{ExecutionContext, Future}
 
 class BotController(cc: ControllerComponents,
+                    botSecuredAction: BotSecuredAction,
                     suggestionService: SuggestionService)
                    (implicit ec: ExecutionContext) extends AbstractController(cc) {
   case class BotRequest(id: Long)
   implicit val requestReads = Json.reads[BotRequest]
-
-  val botSecuredAction = new BotSecuredAction(cc)
 
   def get() = botSecuredAction async { request =>
     Future.successful(Ok)

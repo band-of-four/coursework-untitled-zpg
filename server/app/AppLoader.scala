@@ -76,6 +76,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
     Props(new GameProgressionActor(gameProgressionService, socketMessengerActor)), "game-progression-actor")
   /* Auth */
   lazy val silhouette = new SilhouetteLoader(configuration, userService, wsClient)
+  lazy val botSecuredAction = new _root_.utils.auth.BotSecuredAction(configuration, controllerComponents)
   /* Controllers */
   lazy val authController = new _root_.controllers.AuthController(
     controllerComponents, silhouette.env, silhouette.credentialsProvider, silhouette.socialProviderRegistry, userService)
@@ -90,7 +91,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
   lazy val owlController = new _root_.controllers.OwlController(
     controllerComponents, silhouette.env, owlService)
   lazy val botController = new _root_.controllers.BotController(
-    controllerComponents, suggestionService)
+    controllerComponents, botSecuredAction, suggestionService)
   /* Routes */
   lazy val router: Router = new _root_.router.Routes(
     httpErrorHandler, applicationController, assets,
