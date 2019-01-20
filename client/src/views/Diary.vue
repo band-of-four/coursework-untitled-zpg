@@ -4,13 +4,13 @@
   <section v-show="diary.stale">
     <a href="#" @click.prevent="refresh">Обновить</a> 
   </section>
-  <section v-for="s in diary.sections">
+  <section v-for="sec in diary.items">
     <p><strong>
-      {{ s.heading.lesson || s.heading.club || s.heading.creature || (s.heading.travel && "Путешествую...") }}
+      {{ sec.heading.lesson || sec.heading.club || sec.heading.creature || (sec.heading.travel && "Путешествую...") }}
       —
-      {{ s.heading.date }}
+      {{ sec.heading.date }}
     </strong></p>
-    <Note v-for="n in s.notes" :key="n.id" :id="n.id" :text="n.text" :init-hearts="n.heartCount" :init-toggled="n.isHearted" />
+    <Note v-for="n in sec.notes" :key="n.id" :id="n.id" :text="n.text" :init-hearts="n.heartCount" :init-toggled="n.isHearted" />
   </section>
 </ShowMorePaginator>
 </template>
@@ -32,9 +32,7 @@ export default {
   methods: mapActions({ loadNext: 'diary/loadNext', refresh: 'diary/refresh' }),
   computed: {
     ...mapState(['diary']),
-    noteCount() {
-      return this.diary.sections.reduce((acc, { notes }) => acc + notes.length, 0);
-    }
+    ...mapGetters({ noteCount: 'diary/noteCount' })
   }
 }
 </script>
