@@ -3,7 +3,7 @@ import play.api.libs.json.JsValue
 import models.{StudentDao}
 import game.Stats
 
-class HealingOwl(studentDao: StudentDao) {
+class HealingOwl(studentDao: StudentDao) extends Owl {
   val power = 20
   override def apply(studentId: Long, payload: JsValue): Either[String, String] = {
     studentDao.findForUser(studentId) match {
