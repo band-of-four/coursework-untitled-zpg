@@ -89,8 +89,10 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
     controllerComponents, silhouette.env, noteService)
   lazy val owlController = new _root_.controllers.OwlController(
     controllerComponents, silhouette.env, owlService)
+  lazy val botController = new _root_.controllers.BotController(
+    controllerComponents, suggestionService)
   /* Routes */
   lazy val router: Router = new _root_.router.Routes(
     httpErrorHandler, applicationController, assets,
-    authController, studentController, owlController, noteController, suggestionController)
+    authController, studentController, owlController, noteController, suggestionController, botController)
 }

@@ -30,3 +30,6 @@ POST    /notes/:noteId/heart        controllers.NoteController.toggleHeart(noteI
 GET     /suggest/lesson/names       controllers.SuggestionController.getLessonNames
 POST    /suggest/text               controllers.SuggestionController.createText
 POST    /suggest/creature           controllers.SuggestionController.createCreature
+
+GET     /bot/get                    controllers.BotController.get
+POST    /bot/post                   controllers.BotController.post
