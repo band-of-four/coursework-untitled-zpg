@@ -5,3 +5,4 @@
     - Fight
   :stages_active: 1
   :is_immediate: false
+  :occurrence: 0.5

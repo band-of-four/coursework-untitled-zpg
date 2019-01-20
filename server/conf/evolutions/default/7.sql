@@ -9,6 +9,7 @@ create table owls (
   applicable_stages student_stage[],
   stages_active integer,
   is_immediate boolean not null,
+  occurrence float not null,
 
   constraint immediacy_integrity check (
     (is_immediate and stages_active is null) or
