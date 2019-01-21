@@ -78,4 +78,10 @@ class OwlDao(db: DbCtx) {
         .filter(os => os.studentId == lift(studentId) && lift(owlImpls).contains(os.owlImpl))
         .update(os => os.activeStagesLeft -> os.activeStagesLeft.flatMap(s => if (s > 1) Some(s - 1) else None))
     )
+
+  def giveLevelUp(studentId: Long): Unit =
+    run(
+      query[OwlsStudent]
+        .insert(_.studentId -> lift(studentId), _.owlImpl -> "LevelUpOwl", _.owlCount -> 1)
+      )
 }

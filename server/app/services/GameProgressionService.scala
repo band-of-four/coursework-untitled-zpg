@@ -44,7 +44,8 @@ class GameProgressionService(stageService: StageService,
             CompletedStage(updates = Seq(Resource.Diary, Resource.Relationships))
           case Stage.Lesson =>
             lessonDao.updateAttendance(student.id)
-            Console.println(lessonDao.checkAttendance(student.id))
+            if (lessonDao.checkAttendance(student.id))
+              owlService.giveLevelUp(student.id)
             stageService.writeStageNoteToDiary(student)
             stageService.setGenericStageNote(student, Stage.Travel, Durations.Travel)
             CompletedStage(updates = Seq(Resource.Diary, Resource.LessonAttendance))

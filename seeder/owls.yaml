@@ -21,3 +21,10 @@
   :applicable_stages: ~
   :occurrence: 0.3
   :level: 0
+- :impl: LevelUpOwl
+  :display_name: Сова перехода на следующий уровень
+  :description: Сова, которая бережно отнесет вашу прекрасную зачетку прямо в деканат на подпись
+  :is_immediate: true
+  :applicable_stages: ~
+  :occurrence: 0.0
+  :level: 0

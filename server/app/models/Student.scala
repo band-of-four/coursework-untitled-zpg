@@ -101,4 +101,11 @@ class StudentDao(val db: DbCtx) {
         .filter(_.id == lift(studentId))
         .update(s => s.hp -> (s.hp + lift(power)))
       )
+
+  def levelUp(studentId: Long): Unit =
+    run(
+      query[Student]
+        .filter(_.id == lift(studentId))
+        .update(s => s.level -> (s.level + 1))
+      )
 }

@@ -22,7 +22,8 @@ class OwlService(owlDao: OwlDao,
   val owlImplMap: Map[String, Owl] = Map(
     "StageSkip" -> new StageSkipOwl(),
     "StudentLetter" -> new StudentLetterOwl(studentDao, relationshipDao),
-    "HealingOwl" -> new HealingOwl(studentDao)
+    "HealingOwl" -> new HealingOwl(studentDao),
+    "LevelUpOwl" -> new LevelUpOwl(studentDao)
   )
 
   def getSorted(userId: Long): Future[Seq[OwlPreloaded]] = Future {
@@ -56,5 +57,9 @@ class OwlService(owlDao: OwlDao,
     val updateResult = f(owlImpls)
     owlDao.updatePostStageUpdate(student.id, owlImpls)
     updateResult
+  }
+
+  def giveLevelUp(studentId: Long): Unit = {
+    owlDao.giveLevelUp(studentId)
   }
 }
