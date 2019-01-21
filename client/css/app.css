@@ -1,3 +1,10 @@
 body {
   margin: 0;
+  font: 18px 'Neucha', sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.main {
+  max-width: 780px;
+  margin: 0 auto;
 }

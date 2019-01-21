@@ -1,6 +1,6 @@
 <template>
-  <section v-if="loading">Загрузка...</section>
-  <section v-else>
+  <main v-if="loading">Загрузка...</main>
+  <main v-else class="main">
     <section v-if="signedIn && student">
       <router-link to="/">Обзор</router-link>
       <router-link to="/diary">Дневник</router-link>
@@ -11,7 +11,7 @@
       <a href="/auth/signout">Выйти</a>
     </section>
     <router-view></router-view>
-  </section>
+  </main>
 </template>
 
 <script>
