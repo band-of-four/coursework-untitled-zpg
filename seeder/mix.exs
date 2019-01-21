@@ -8,6 +8,7 @@ defmodule Seeder.MixProject do
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      escript: escript()
     ]
   end
 
@@ -27,5 +28,9 @@ defmodule Seeder.MixProject do
       {:ecto_enum, "~> 1.0"},
       {:yaml_elixir, "~> 2.1"}
     ]
+  end
+
+  defp escript do
+    [main_module: Seeder]
   end
 end

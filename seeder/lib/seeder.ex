@@ -1,9 +1,22 @@
 defmodule Seeder do
   alias Seeder.{Repo, Lesson, Room, Note, Creature, Spell, Owl, Club}
 
-  def run do
+  def main(_args) do
+    run()
+  end
 
-    Ecto.Adapters.SQL.query!(Repo, "DELETE FROM students CASCADE;", [])
+  def run do
+    [
+      "DELETE FROM student_diary_entries;",
+      "DELETE FROM student_library_visits;",
+      "DELETE FROM creature_handling_skills;",
+      "DELETE FROM lesson_attendances;",
+      "DELETE FROM spells_students;",
+      "DELETE FROM owls_students;",
+      "DELETE FROM creature_fights;",
+      "DELETE FROM students;"
+    ]
+    |> Enum.each(&Ecto.Adapters.SQL.query!(Repo, &1, []))
     
     Repo.delete_all(Owl)
     Repo.delete_all(Room)
