@@ -8,3 +8,18 @@ body {
   max-width: 780px;
   margin: 0 auto;
 }
+
+.page-section {
+  margin: 48px 0;
+}
+
+/* Overview */
+
+.resource-item {
+  display: flex;
+  margin: 12px 0;
+}
+
+.resource-item__stats {
+  margin-left: auto;
+}
