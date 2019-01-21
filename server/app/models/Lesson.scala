@@ -57,4 +57,10 @@ class LessonDao(val db: DbCtx) {
 
   def updateAttendance(studentId: Long): Unit =
     run(infix"""SELECT lesson_attendance_update_at_lesson_end(${lift(studentId)})""".as[Query[String]])
+
+  def checkAttendance(studentId: Long): Boolean =
+    loadAttendance(studentId).find(a => a.attended < a.requiredAttendance) match {
+      case Some(l) => return false
+      case None => return true
+    }
 }
