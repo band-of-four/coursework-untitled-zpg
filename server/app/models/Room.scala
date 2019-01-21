@@ -25,11 +25,10 @@ class RoomDao(val db: DbCtx) {
   def findByNumber(number: Long): Room =
     run(query[Room].filter(_.number == lift(number))).head
 
-  def findClosest(kind: Room.Kind, closestToRoom: Long): Long =
+  def findInfirmaryNumber(level: Int): Long =
     run(
       query[Room]
-        .filter(r => r.number < lift(closestToRoom) && r.kind == lift(kind))
-        .sortBy(_.number)(Ord.desc)
+        .filter(r => r.level == lift(level) && r.kind == lift(Room.Kind.Infirmary: Room.Kind))
         .map(_.number)
         .take(1)
     ).head

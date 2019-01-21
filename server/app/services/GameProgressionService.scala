@@ -2,7 +2,7 @@ package services
 
 import models._
 import models.Student.Stage
-import game.{Durations, Fight, GameProgressionResource => Resource, Travel}
+import game.{Durations, Fight, Stats, Travel, GameProgressionResource => Resource}
 import game.Fight._
 import game.Travel._
 import services.GameProgressionService._
@@ -51,6 +51,10 @@ class GameProgressionService(stageService: StageService,
             libraryService.commitVisitEnd(student)
             stageService.setGenericStageNote(student, Stage.Travel, Durations.Travel)
             CompletedStage(updates = Seq(Resource.Spells))
+          case Stage.Infirmary =>
+            stageService.writeStageNoteToDiary(student)
+            stageService.setGenericStageNote(student.copy(hp = Stats.MaxHpPerLevel(student.level)), Stage.Travel, Durations.Travel)
+            CompletedStage(updates = Seq(Resource.Diary))
         }
       }
     }
@@ -66,19 +70,19 @@ class GameProgressionService(stageService: StageService,
     val spells = spellDao.load(student.id)
     val turnOutcome = Fight.computeTurn(student, opponent, spells, owls)
     turnOutcome match {
-      case FightContinues(_, opponent) =>
-        stageService.setFightNote(student, opponent.id, Durations.FightTurn)
-        creatureDao.updateInFightWith(student.id, opponent)
+      case FightContinues(updStudent, updOpponent) =>
+        stageService.setFightNote(updStudent, updOpponent.id, Durations.FightTurn)
+        creatureDao.updateInFightWith(updStudent.id, updOpponent)
         CompletedStage()
-      case StudentWon(student, opponent) =>
-        stageService.writeFightResultToDiary(student, opponent.id, Stage.FightWon)
-        creatureDao.removeFightWithStudentUpdatingSkill(student.id, skillDelta = 1)
-        enterNextRoom(student)
+      case StudentWon(updStudent, updOpponent) =>
+        stageService.writeFightResultToDiary(updStudent, opponent.id, Stage.FightWon)
+        creatureDao.removeFightWithStudentUpdatingSkill(updStudent.id, skillDelta = 1)
+        enterNextRoom(updStudent)
         CompletedStage(updates = Seq(Resource.Diary, Resource.CreatureHandlingSkills))
-      case StudentLost(student, opponent) =>
-        stageService.writeFightResultToDiary(student, opponent.id, Stage.FightLost)
-        creatureDao.removeFightWithStudentUpdatingSkill(student.id, skillDelta = 0)
-        enterInfirmary(student)
+      case StudentLost(updStudent, updOpponent) =>
+        stageService.writeFightResultToDiary(updStudent, opponent.id, Stage.FightLost)
+        creatureDao.removeFightWithStudentUpdatingSkill(updStudent.id, skillDelta = 0)
+        enterInfirmary(updStudent)
         CompletedStage(updates = Seq(Resource.Diary))
     }
   }
@@ -103,7 +107,7 @@ class GameProgressionService(stageService: StageService,
   }
 
   def enterInfirmary(student: StudentForUpdate): Unit = {
-    val infirmary = roomDao.findClosest(Room.Kind.Infirmary, student.currentRoom)
+    val infirmary = roomDao.findInfirmaryNumber(student.level)
     stageService.setGenericStageNote(student.copy(currentRoom = infirmary), Stage.Infirmary, Durations.Infirmary(student))
   }
 }
