@@ -51,13 +51,17 @@ defmodule Orion.Messenger do
       _ -> get_update(last_update_id)
     end
   end
-
-  defp build_markup(:approve) do
-    buttons = [[%Nadia.Model.KeyboardButton{text: "Одобрить"}, %Nadia.Model.KeyboardButton{text: "Отклонить"}], [%Nadia.Model.KeyboardButton{text: "Редактировать"}], [%Nadia.Model.KeyboardButton{text: "Следующая фраза"}]]
+  
+  defp build_markup(:start) do
+    buttons = [[%Nadia.Model.KeyboardButton{text: "Далее"}]]
     [reply_markup: %Nadia.Model.ReplyKeyboardMarkup{keyboard: buttons}]
   end
-  defp build_markup(:start) do
-    buttons = [[%Nadia.Model.KeyboardButton{text: "Поехали!"}]]
+  defp build_markup(:approve) do
+    buttons = [[%Nadia.Model.KeyboardButton{text: "Одобрить"}, %Nadia.Model.KeyboardButton{text: "Отклонить"}], [%Nadia.Model.KeyboardButton{text: "Редактировать"}]]
+    [reply_markup: %Nadia.Model.ReplyKeyboardMarkup{keyboard: buttons}]
+  end
+  defp build_markup(:type_choice) do
+    buttons = [[%Nadia.Model.KeyboardButton{text: "Загрузить существо"}, %Nadia.Model.KeyboardButton{text: "Загрузить фразу"}]]
     [reply_markup: %Nadia.Model.ReplyKeyboardMarkup{keyboard: buttons}]
   end
   defp build_markup(nil), do: []

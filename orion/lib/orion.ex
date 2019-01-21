@@ -3,22 +3,41 @@ defmodule Orion do
   alias Orion.Nikki
 
   def run do 
-    Messenger.send_message("Привет!", :start)
-    creature_processing()
+    data_processing()
+  end
+
+
+  def data_processing do
+    Messenger.send_message("Надеюсь на продуктивную работу сегодня!\nВыбери тип данных", :type_choice)
+    text = Messenger.next_text()
+    case text do
+      "Загрузить существо" -> creature_processing()
+      "Загрузить фразу" -> note_processing()
+      _ ->
+        Messenger.send_message("Не понимаю тебя, пожалуйста, используй кнопки", :start)
+        data_processing()
+    end
   end
 
   def creature_processing() do
-    monster = Nikki.get_unapproved_creature()
-    text = ~s(Сегодня на повестке дня - монстр по имени #{monster.name}!)
-    Messenger.send_message(text, :start)
-    text = Messenger.next_text()
-    new_notes = process_creature_notes(monster.notes)
-    new_monster = process_creature(monster, new_notes)
-    new_notes = Enum.map(new_notes, fn note ->
-      %{id: note.id, text: note.text, isApproved: note.isApproved}
-    end)
-    new_monster = Map.put(new_monster, :notes, new_notes)
-    Nikki.post_approved_creature(new_monster)
+    case Nikki.get_unapproved_creature() do
+      nil ->
+        Messenger.send_message("Нет ни одного существа для одобрения(")
+        data_processing()
+      monster ->
+        text = ~s(Сегодня на повестке дня - монстр по имени #{monster.name}!)
+        Messenger.send_message(text, :start)
+        text = Messenger.next_text()
+        new_notes = process_creature_notes(monster.notes)
+        new_monster = process_creature(monster, new_notes)
+        new_notes = Enum.map(new_notes, fn note ->
+          %{id: note.id, text: note.text, isApproved: note.isApproved}
+        end)
+        new_monster = Map.put(new_monster, :notes, new_notes)
+        Nikki.post_approved_creature(new_monster)
+        Messenger.send_message("Готово :)", :start)
+        data_processing()
+    end
   end
 
   def process_creature(monster, notes) do
@@ -45,7 +64,7 @@ defmodule Orion do
     |> case do
       nil -> %{id: monster.id, isApproved: true}
       _ ->
-        Messenger.send_message("Не могу одобрить монстра - не хватает одобренных фраз")
+        Messenger.send_message("Не могу одобрить монстра - не хватает одобренных фраз", :start)
         notes = Enum.map(notes, fn note -> %{note | isApproved: false} end)
         %{id: monster.id, isApproved: false}
       end
@@ -74,7 +93,7 @@ defmodule Orion do
       "Одобрить" -> %{id: monster.id, name: monster.name, isApproved: true}
       "Отклонить" -> %{id: monster.id, name: monster.name, isApproved: false}
       _ ->
-        Messenger.send_message("Ну и что ты хотел этим сказать? У тебя есть кнопки - используй их!")
+        Messenger.send_message("Ну и что ты хотел этим сказать? У тебя есть кнопки - используй их!", :start)
         process_creature_name(monster)
     end
   end
@@ -109,34 +128,35 @@ defmodule Orion do
       "Отклонить" ->
         {text, false}
       _ ->
-        Messenger.send_message("Ну и что ты хотел этим сказать? У тебя есть кнопки - используй их!")
+        Messenger.send_message("Ну и что ты хотел этим сказать? У тебя есть кнопки - используй их!", :start)
         process_text(head_text, mid_text, text)
     end
   end
 
   def note_processing do
-    note = Nikki.get_unapproved_note()
-    head_text =
-      case note.gender do
-        "Female" -> "Когда девочки "
-        "Male" -> "Когда мальчики "
-      end
-    mid_text =
-      case note.stage do
-        "Club" -> " приходят в клуб " <> note.name <> ", они говорят:\n"
-        "Lesson" -> " приходят на урок " <> note.name <> ", они говорят:\n"
-        "Travel" -> " путешествуют, они говорят:\n"
-        "Library" -> " приходят в библиотеку, они говорят:\n"
-        "Infirmary" -> " приходят в медпункт, они говорят:\n"
-      end
-    {new_text, isApproved} = process_text(head_text, mid_text, note.text)
-    new_note = %{id: note.id, text: new_text, isApproved: isApproved}
-    Nikki.post_approved_note(new_note)
+    case Nikki.get_unapproved_note() do
+      nil ->
+        Messenger.send_message("Нет ни одной фразы на одобрение(", :start)
+        data_processing()
+      note ->
+        head_text =
+          case note.gender do
+            "Female" -> "Когда девочки "
+            "Male" -> "Когда мальчики "
+          end
+        mid_text =
+          case note.stage do
+            "Club" -> " приходят в клуб " <> note.name <> ", они говорят:\n"
+            "Lesson" -> " приходят на урок " <> note.name <> ", они говорят:\n"
+            "Travel" -> " путешествуют, они говорят:\n"
+            "Library" -> " приходят в библиотеку, они говорят:\n"
+            "Infirmary" -> " приходят в медпункт, они говорят:\n"
+          end
+        {new_text, isApproved} = process_text(head_text, mid_text, note.text)
+        new_note = %{id: note.id, text: new_text, isApproved: isApproved}
+        Nikki.post_approved_note(new_note)
+        Messenger.send_message("Готово :)", :start)
+        data_processing()
+    end
   end
-
-  #def build_message(%{lesson: lesson, text: text, gender: gender})
-
-  #def build_message(%{club: club, text: text, gender: gender})
-
-  #def build_message(%{travel: true, text: text, gender: gender})
 end
