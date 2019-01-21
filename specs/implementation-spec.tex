@@ -154,8 +154,35 @@ abstract class Owl {
 
 Возвращаемые значения (HTTP-статус):
 \begin{itemize}[noitemsep,topsep=0pt]
-\item \textbf{200}, JSON-объект, содержащий имя существа и асоциированные с ним заметки
+\item \textbf{200}, JSON-объект, содержащий имя существа и асоциированные с ним заметки в виде массива
 \item \textbf{404}, если очередь модерации существ пуста
+\item \textbf{500}, при ошибке сервера
 \end{itemize}
 
+\texttt{\textbf{POST} /bot/creatures/approve}: Принимает Json-объект, представляющий результат валидации
+существа и асоциированных с ним заметок, инициирует обновление базы данных
+
+Возвращаемые значения (HTTP-статус):
+\begin{itemize}[noitemsep,topsep=0pt]
+\item \textbf{200}, успешное завершение сценария
+\item \textbf{422}, переданный Json-объект не является валидным
+\end{itemize}
+
+\texttt{\textbf{GET} /bot/notes/unapproved}: возвращает первую в очереди модерации заметку
+
+Возвращаемые значения (HTTP-статус):
+\begin{itemize}[noitemsep,topsep=0pt]
+\item \textbf{200}, JSON-объект, содержащий информацию о заметке (текст, фаза, пол)
+\item \textbf{404}, если очередь модерации заметок пуста
+\item \textbf{500}, при ошибке сервера
+\end{itemize}
+
+\texttt{\textbf{POST} /bot/notes/approve}: Принимает Json-объект, представляющий результат валидации
+заметки, инициирует обновление базы данных
+
+Возвращаемые значения (HTTP-статус):
+\begin{itemize}[noitemsep,topsep=0pt]
+\item \textbf{200}, успешное завершение сценария
+\item \textbf{422}, переданный Json-объект не является валидным
+\end{itemize}
 \end{document}
