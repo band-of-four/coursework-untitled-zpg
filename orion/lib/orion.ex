@@ -8,7 +8,7 @@ defmodule Orion do
   end
 
   def text_processing() do
-    monster = Nikki.get_unapproved()
+    monster = Nikki.get_unapproved_creature()
     text = ~s(Сегодня на повестке дня - монстр по имени #{monster.name}!)
     Messenger.send_message(text, :start)
     text = Messenger.next_text()

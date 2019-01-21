@@ -40,7 +40,12 @@ class BotController(cc: ControllerComponents,
     )
   }
 
-  //def getUnapprovedNote() {}
+  def getUnapprovedNote() = botSecuredAction async { request =>
+    suggestionService.getFirstUnapprovedNote().map {
+      case Some(n) => Ok(Json.toJson(n))
+      case None => NotFound
+    }
+  }
 
   //def approveNote() {}
 }

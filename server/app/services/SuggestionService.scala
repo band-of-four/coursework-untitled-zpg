@@ -57,6 +57,10 @@ class SuggestionService(noteDao: NoteDao,
     creatureDao.loadFirstUnapproved()
   }
 
+  def getFirstUnapprovedNote(): Future[Option[NoteForApproval]] = Future {
+    noteDao.loadFirstUnapproved()
+  }
+
   def getCreatedByUser(userId: Long, pagination: Pagination): Future[Seq[NoteForCreator]] = Future {
     noteDao.loadForCreator(userId, pagination)
   }

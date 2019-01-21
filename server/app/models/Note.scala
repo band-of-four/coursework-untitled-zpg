@@ -135,4 +135,13 @@ class NoteDao(db: DbCtx) {
     run(query[Note].insert(lift(
       Note(text, gender, stage, creatureId = Some(creatureId), creatorId = Some(creatorId)))
     ).returning(_.id))
+
+  def loadFirstUnapproved(): Option[NoteForApproval] =
+    run(
+      query[Note]
+        .filter(!_.isApproved)
+        .sortBy(_.id)(Ord.asc)
+        .take(1)
+        .map(n => NoteForApproval(n.id, n.stage, n.textGender, n.text))
+      ).headOption
 }
