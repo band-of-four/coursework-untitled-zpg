@@ -34,3 +34,4 @@ POST    /suggest/creature           controllers.SuggestionController.createCreat
 GET     /bot/creatures/unapproved   controllers.BotController.getUnapprovedCreature
 POST    /bot/creatures/approve      controllers.BotController.approveCreature
 GET     /bot/notes/unapproved       controllers.BotController.getUnapprovedNote
+POST    /bot/notes/approve          controllers.BotController.approveNote

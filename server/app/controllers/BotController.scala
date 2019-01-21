@@ -5,7 +5,7 @@ import play.api.mvc.{AbstractController, ControllerComponents}
 import services.SuggestionService
 import services.SuggestionService.{NoteApproved, CreatureApproved}
 import utils.auth.BotSecuredAction
-import models.{CreatureForApproval, NoteForApproval}
+import models.{CreatureForApproval, NoteForApproval, NoteForApprovalNamed}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -19,6 +19,7 @@ class BotController(cc: ControllerComponents,
   implicit val creatureFormat = Json.format[CreatureApproved]
   implicit val noteWrites = Json.writes[NoteForApproval]
   implicit val creatureWrites = Json.writes[CreatureForApproval]
+  implicit val noteNamedWrites = Json.writes[NoteForApprovalNamed]
 
   def getUnapprovedCreature() = botSecuredAction async { request =>
     suggestionService.getFirstUnapprovedCreature().map {
@@ -29,10 +30,7 @@ class BotController(cc: ControllerComponents,
 
   def approveCreature() = botSecuredAction(parse.json) async { request =>
     request.body.validate[CreatureApproved].fold(
-      err => {
-        Console.println(err)
-        Future.successful(UnprocessableEntity)
-      },
+      err => Future.successful(UnprocessableEntity),
       data => {
         suggestionService.applyApprovedCreature(data)
         Future.successful(Ok)
@@ -47,5 +45,13 @@ class BotController(cc: ControllerComponents,
     }
   }
 
-  //def approveNote() {}
+  def approveNote() = botSecuredAction(parse.json) async { request =>
+    request.body.validate[NoteApproved].fold(
+      err => Future.successful(UnprocessableEntity),
+      data => {
+        suggestionService.applyApprovedNote(data)
+        Future.successful(Ok)
+      }
+    )
+  }
 }

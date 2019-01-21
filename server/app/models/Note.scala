@@ -1,6 +1,7 @@
 package models
 
 import db.{DbCtx, Pagination}
+import services.SuggestionService.NoteApproved
 
 case class Note(text: String, textGender: Student.Gender, stage: Student.Stage,
                 lessonId: Option[Long] = None, clubId: Option[Long] = None, creatureId: Option[Long] = None,
@@ -15,6 +16,8 @@ case class NoteForCreator(id: Long, text: String, gender: Student.Gender, stage:
                           heartCount: Long)
 
 case class NoteForApproval(id: Long, stage: Student.Stage, gender: Student.Gender, text: String)
+
+case class NoteForApprovalNamed(id: Long, stage: Student.Stage, gender: Student.Gender, text: String, name: String)
 
 case class NoteHeartsUser(userId: Long, noteId: Long)
 
@@ -136,12 +139,43 @@ class NoteDao(db: DbCtx) {
       Note(text, gender, stage, creatureId = Some(creatureId), creatorId = Some(creatorId)))
     ).returning(_.id))
 
-  def loadFirstUnapproved(): Option[NoteForApproval] =
-    run(
+  def loadFirstUnapproved(): Option[NoteForApprovalNamed] = {
+    val note = run(
       query[Note]
         .filter(!_.isApproved)
         .sortBy(_.id)(Ord.asc)
         .take(1)
-        .map(n => NoteForApproval(n.id, n.stage, n.textGender, n.text))
       ).headOption
+    note match {
+      case Some(n) =>
+        val name = n.stage match {
+          case Student.Stage.Club =>
+            run(
+              query[Club]
+                .filter(_.id == lift(n.clubId.get))
+                .map(c => c.name)
+              ).head
+          case Student.Stage.Lesson =>
+            run(
+              query[Lesson]
+                .filter(_.id == lift(n.lessonId.get))
+                .map(l => l.name)
+              ).head
+          case _ => ""
+        }
+        Some(NoteForApprovalNamed(n.id, n.stage, n.textGender, n.text, name))
+      case None => None
+    }
+  }
+
+  def applyApproved(n: NoteApproved): Unit = {
+    if (!n.isApproved)
+      run(query[Note].filter(_.id == lift(n.id)).delete)
+    else
+      run(
+        query[Note]
+          .filter(_.id == lift(n.id))
+          .update(_.text -> lift(n.text), _.isApproved -> true)
+        )
+  }
 }

@@ -57,7 +57,7 @@ class SuggestionService(noteDao: NoteDao,
     creatureDao.loadFirstUnapproved()
   }
 
-  def getFirstUnapprovedNote(): Future[Option[NoteForApproval]] = Future {
+  def getFirstUnapprovedNote(): Future[Option[NoteForApprovalNamed]] = Future {
     noteDao.loadFirstUnapproved()
   }
 
@@ -67,5 +67,9 @@ class SuggestionService(noteDao: NoteDao,
   
   def applyApprovedCreature(ac: CreatureApproved): Future[Unit] = Future {
     creatureDao.applyApproved(ac)
+  }
+
+  def applyApprovedNote(an: NoteApproved): Future[Unit] = Future {
+    noteDao.applyApproved(an)
   }
 }

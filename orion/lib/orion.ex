@@ -4,10 +4,10 @@ defmodule Orion do
 
   def run do 
     Messenger.send_message("Привет!", :start)
-    text_processing()
+    creature_processing()
   end
 
-  def text_processing() do
+  def creature_processing() do
     monster = Nikki.get_unapproved_creature()
     text = ~s(Сегодня на повестке дня - монстр по имени #{monster.name}!)
     Messenger.send_message(text, :start)
@@ -18,7 +18,7 @@ defmodule Orion do
       %{id: note.id, text: note.text, isApproved: note.isApproved}
     end)
     new_monster = Map.put(new_monster, :notes, new_notes)
-    Nikki.post_approved(new_monster)
+    Nikki.post_approved_creature(new_monster)
   end
 
   def process_creature(monster, notes) do
@@ -114,21 +114,24 @@ defmodule Orion do
     end
   end
 
-  def edit_message() do
-  end
-
-  def get_unapproved_creature() do
-    string = ~s({"id": 1, "name": "Сама смерть",
-      "notes": [
-        {"id": 1, "stage": "Fight", "gender": "Female", "text": "Ну вот и все."},
-        {"id": 2, "stage": "FightWon", "gender": "Female", "text": "Я теперь бессмертна?"},
-        {"id": 3, "stage": "FightLose", "gender": "Female", "text": "Ну а чего я ожидала?"},
-        {"id": 4, "stage": "Fight", "gender": "Male", "text": "Ну вот и все."},
-        {"id": 5, "stage": "FightWon", "gender": "Male", "text": "Я теперь бессмертен?"},
-        {"id": 6, "stage": "FightLose", "gender": "Male", "text": "Ну а чего я ожидал?"}
-      ]
-    })
-    Poison.Parser.parse!(string, %{keys: :atoms})
+  def note_processing do
+    note = Nikki.get_unapproved_note()
+    head_text =
+      case note.gender do
+        "Female" -> "Когда девочки "
+        "Male" -> "Когда мальчики "
+      end
+    mid_text =
+      case note.stage do
+        "Club" -> " приходят в клуб " <> note.name <> ", они говорят:\n"
+        "Lesson" -> " приходят на урок " <> note.name <> ", они говорят:\n"
+        "Travel" -> " путешествуют, они говорят:\n"
+        "Library" -> " приходят в библиотеку, они говорят:\n"
+        "Infirmary" -> " приходят в медпункт, они говорят:\n"
+      end
+    {new_text, isApproved} = process_text(head_text, mid_text, note.text)
+    new_note = %{id: note.id, text: new_text, isApproved: isApproved}
+    Nikki.post_approved_note(new_note)
   end
 
   #def build_message(%{lesson: lesson, text: text, gender: gender})
