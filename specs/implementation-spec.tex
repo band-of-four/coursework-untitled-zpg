@@ -5,6 +5,8 @@
 \setmainfont[Ligatures=TeX]{CMU Serif}
 \setmonofont{CMU Typewriter Text}
 \usepackage[english, russian]{babel}
+% itemize
+\usepackage{enumitem}
 % Indent first paragraph
 \usepackage{indentfirst}
 \setlength{\parskip}{5pt}
@@ -48,7 +50,7 @@
 
 Выделяются следующие виды ресурсов, за обновлением которых может следить пользователь:
 
-\begin{itemize}
+\begin{itemize}[noitemsep, topsep=0pt]
 \item \textit{посещения уроков}, необходимые для перехода на следующий уровень
 \item \textit{навыки обращения с существами}, полученные в бою с ними
 \item \textit{заклинания}, отражающие боевые качества персонажа и его способность 
@@ -96,7 +98,7 @@
 устройствам одного пользователя. Данный функционал реализован актором \texttt{actors.SocketMessengerActor}.
 
 Сообщение о смене фазы формируется сервисом \texttt{services.StageService} и содержит:
-\begin{itemize}
+\begin{itemize}[noitemsep, topsep=0pt]
 \item новые характеристики персонажа
 \item заметку о новой фазе, показываемую пользователю
 \item длительность фазы и прошедшее время, позволяющее рассчитать прогресс хода
@@ -149,8 +151,9 @@ abstract class Owl {
 Следующие пути реализуют основной функционал модерации предложений:
 
 \texttt{\textbf{GET} /bot/creatures/unapproved}: возвращает первое в очереди модерации существо
+
 Возвращаемые значения (HTTP-статус):
-\begin{itemize}
+\begin{itemize}[noitemsep,topsep=0pt]
 \item \textbf{200}, JSON-объект, содержащий имя существа и асоциированные с ним заметки
 \item \textbf{404}, если очередь модерации существ пуста
 \end{itemize}
