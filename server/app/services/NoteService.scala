@@ -15,9 +15,9 @@ object NoteService {
 
   case class DiarySectionHeading(date: LocalDateTime,
                                  lesson: Option[String], club: Option[String], creature: Option[String],
-                                 travel: Boolean, infirmary: Boolean) {
+                                 travel: Boolean, infirmary: Boolean, library: Boolean) {
     override def equals(o: Any) = o match {
-      case DiarySectionHeading(_, `lesson`, `club`, `creature`, `travel`, `infirmary`) => true
+      case DiarySectionHeading(_, `lesson`, `club`, `creature`, `travel`, `infirmary`, `library`) => true
       case _ => false
     }
 
@@ -55,7 +55,8 @@ class NoteService(noteDao: NoteDao,
       .groupConsecutiveBy { note =>
         DiarySectionHeading(note.date, note.lesson, note.club, note.creature,
           travel = note.stage == Student.Stage.Travel,
-          infirmary = note.stage == Student.Stage.Infirmary)
+          infirmary = note.stage == Student.Stage.Infirmary,
+          library = note.stage == Student.Stage.Library)
       }
       .map { case (heading, notes) =>
         DiarySection(heading, notes.map(n => DiarySectionNote(n.id, n.text, n.heartCount, n.isHearted)))
