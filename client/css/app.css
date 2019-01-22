@@ -1,3 +1,5 @@
+@import "icons.css";
+
 :root {
   --main-font: 'Neucha', sans-serif;
   --heading-font: 'Kurale', serif;
@@ -86,11 +88,26 @@ body {
 }
 
 .stage-note__heading {
-  margin: 24px 16px 12px;
+  margin: 24px;
   font-size: 22px;
   font-weight: bold;
 }
 
-.stage-note__text {
-  margin: 12px 16px 24px;
+.stage-note__body {
+  display: flex;
+  margin: 24px;
 }
+
+.stage-note__heart {
+  margin-left: auto;
+}
+
+/* Hearts */
+
+.heart {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  background-color: #b3a7b0;
+}
+

@@ -6,7 +6,10 @@
       <div class="stage-note__heading">
         {{ stageNote.subject }} — {{ stageNote.label }}
       </div>
-      <div class="stage-note__text">{{ stageNote.text }}</div>
+      <div class="stage-note__body">
+        <div>{{ stageNote.text }}</div>
+        <div class="stage-note__heart heart fa-heart-mask"></div>
+      </div>
     </div>
     <div class="progress">
       <div class="progress__neg-value" :style="{ width: `${100 - progress}%` }"></div>
