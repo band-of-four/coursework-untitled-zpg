@@ -134,6 +134,11 @@ class NoteDao(db: DbCtx) {
       Note(text, gender, Student.Stage.Lesson, lessonId = Some(lessonId), creatorId = Some(creatorId)))
     ).returning(_.id))
 
+  def createForClub(creatorId: Long, text: String, gender: Student.Gender, clubId: Long): Unit =
+    run(query[Note].insert(lift(
+      Note(text, gender, Student.Stage.Club, clubId = Some(clubId), creatorId = Some(creatorId)))
+    ).returning(_.id))
+
   def createForCreature(creatorId: Long, text: String, gender: Student.Gender, stage: Student.Stage, creatureId: Long): Unit =
     run(query[Note].insert(lift(
       Note(text, gender, stage, creatureId = Some(creatureId), creatorId = Some(creatorId)))

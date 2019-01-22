@@ -21,4 +21,7 @@ class ClubDao(db: DbCtx) {
           case ((s, r), c) => c.name
         }
       )
+
+  def findIdByName(clubName: String): Long =
+    run(query[Club].filter(_.name == lift(clubName)).map(_.id)).head
 }

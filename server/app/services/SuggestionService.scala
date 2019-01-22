@@ -11,7 +11,7 @@ import scala.concurrent.{ExecutionContext, Future}
 object SuggestionService {
   case class NoteApproved(id: Long, text: String, isApproved: Boolean)
   case class CreatureApproved(id: Long, name: String, isApproved: Boolean, notes: Seq[NoteApproved])
-  case class TextSuggestion(text: String, gender: Student.Gender, lessonName: Option[String])
+  case class TextSuggestion(text: String, gender: Student.Gender, lessonName: Option[String], clubName: Option[String], stage: Option[Student.Stage])
   case class CreatureSuggestion(name: String, notes: Seq[CreatureTextSuggestion])
   case class CreatureTextSuggestion(text: String, gender: Student.Gender, stage: Student.Stage)
 
@@ -29,8 +29,12 @@ class SuggestionService(noteDao: NoteDao,
                        (implicit ec: ExecutionContext) {
   def create(creatorId: Long, suggestion: TextSuggestion): Future[Unit] = Future {
     suggestion match {
-      case TextSuggestion(text, gender, Some(lessonName)) =>
+      case TextSuggestion(text, gender, Some(lessonName), _, _) =>
         noteDao.createForLesson(creatorId, text, gender, lessonId = lessonDao.findIdByName(lessonName))
+      case TextSuggestion(text, gender, _, Some(clubName), _) =>
+        noteDao.createForClub(creatorId, text, gender, clubId = clubDao.findIdByName(clubName))
+      case TextSuggestion(text, gender, _, _, Some(stage)) =>
+        ???
     }
   }
 
