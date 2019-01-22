@@ -1,17 +1,17 @@
 <template>
 <ShowMorePaginator :item-count="noteCount" :page="diary.page" :per-page="diary.perPage" @show-more="loadNext">
-  <h1>Дневник</h1>
+  <h1 class="heading">Дневник</h1>
   <section v-show="diary.stale">
     <a href="#" @click.prevent="refresh">Обновить</a> 
   </section>
   <section v-for="sec in diarySections">
-    <p>
-      <strong>{{ sec.title }}</strong>
-      <Timeago :since="sec.date" />
-    </p>
-    <div v-for="n in sec.notes">
-      {{ n.text }}
-      <Heart :key="n.id" :id="n.id" :init-hearts="n.heartCount" :init-set="n.isHearted" />
+    <div class="diary-section-heading">
+      <span class="diary-section-heading__text">{{ sec.title }}</span>
+      <Timeago class="diary-section-heading__time" :since="sec.date" />
+    </div>
+    <div class="note" v-for="n in sec.notes">
+      <span>&mdash; {{ n.text }}</span>
+      <Heart class="note__heart" :key="n.id" :id="n.id" :init-hearts="n.heartCount" :init-set="n.isHearted" />
     </div>
   </section>
 </ShowMorePaginator>

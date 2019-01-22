@@ -1,7 +1,7 @@
 <template>
 <div>
   <section class="page-section">
-    <h1 class="page-section__heading">{{ name }}, {{ level }}-й год</h1>
+    <h1 class="heading">{{ name }}, {{ level }}-й год</h1>
     <div class="stage-note">
       <div class="stage-note__heading">
         {{ stageNote.subject }} — {{ stageNote.label }}

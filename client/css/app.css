@@ -30,13 +30,17 @@ body {
   margin: 0 auto;
 }
 
-.page-section {
-  margin: 48px 0;
-}
-
-.page-section__heading {
+.heading {
   font-family: var(--heading-font);
   letter-spacing: var(--heading-font-letter-spacing);
+}
+
+.page-section {
+  margin: 48px 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
 }
 
 /* Overview */
@@ -106,6 +110,31 @@ body {
   margin-left: auto;
 }
 
+/* Diary */
+
+.diary-section-heading {
+  line-height: 42px;
+}
+
+.diary-section-heading__text {
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+.diary-section-heading__time {
+  font-size: 16px;
+}
+
+.note {
+  display: flex;
+  margin: 16px 0;
+}
+
+.note__heart {
+  margin-left: auto;
+  width: 64px;
+}
+
 /* Hearts */
 
 .heart {
@@ -125,10 +154,14 @@ body {
   background: var(--heart-set-bg);
 }
 
+.heart.set + .heart-count {
+  color: var(--heart-set-bg);
+}
+
 .heart-count {
   display: inline-block;
   vertical-align: bottom;
   line-height: 26px;
   font-weight: bold;
-  color: var(--heart-set-bg);
+  color: var(--heart-bg);
 }
