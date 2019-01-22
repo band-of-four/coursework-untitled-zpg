@@ -1,6 +1,6 @@
 <template>
   <section class="page-section">
-  <h1>Зачетная книжка</h1>
+  <h1 class="page-section__heading">Зачетная книжка</h1>
   <section v-show="stale">
     <a href="#" @click.prevent="$emit('refresh')">Обновить</a> 
   </section>

@@ -1,5 +1,9 @@
 :root {
   --main-font: 'Neucha', sans-serif;
+  --heading-font: 'Kurale', serif;
+
+  --main-font-letter-spacing: 0.05em;
+  --heading-font-letter-spacing: 0.01em;
 
   --page-bg: #f0ebe7;
 }
@@ -10,7 +14,7 @@ body {
   background-color: var(--page-bg);
 
   font: 18px var(--main-font);
-  letter-spacing: 0.05em;
+  letter-spacing: var(--main-font-letter-spacing);
 }
 
 .main {
@@ -20,6 +24,11 @@ body {
 
 .page-section {
   margin: 48px 0;
+}
+
+.page-section__heading {
+  font-family: var(--heading-font);
+  letter-spacing: var(--heading-font-letter-spacing);
 }
 
 /* Overview */
