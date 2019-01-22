@@ -1,6 +1,15 @@
+:root {
+  --main-font: 'Neucha', sans-serif;
+
+  --page-bg: #f0ebe7;
+}
+
 body {
   margin: 0;
-  font: 18px 'Neucha', sans-serif;
+
+  background-color: var(--page-bg);
+
+  font: 18px var(--main-font);
   letter-spacing: 0.05em;
 }
 
@@ -22,4 +31,26 @@ body {
 
 .resource-item__stats {
   margin-left: auto;
+}
+
+/* Progress bar */
+
+.progress {
+  height: 16px;
+  margin-top: 26px;
+  display: flex;
+  overflow: hidden;
+
+  border: 2px solid black;
+  border-top-width: 1.8px;
+  border-radius: 200px 35px 100px 30px/12px 60px 10px 60px;
+  background-image: linear-gradient(to right, #5b4260 5%, #db7a4d);
+}
+
+.progress__neg-value {
+  height: 100%;
+  margin-left: auto;
+
+  border-bottom-left-radius: 16px 30px;
+  background-color: var(--page-bg);
 }

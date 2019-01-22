@@ -24,7 +24,9 @@
       Где-то в кармане был читательский билет
       <div>"{{ note.text }}"</div>
     </section>
-    <span>Прогресс: {{ progress }}</span>
+    <div class="progress">
+      <div class="progress__neg-value" :style="{ width: `${100 - progress}%` }"></div>
+    </div>
   </section>
   <SpellSection :spells="spells.items" :stale="spells.stale" @refresh="loadSpells" />
   <AttendanceSection :attendance="attendance.items" :stale="attendance.stale" @refresh="loadAttendance" />

@@ -11,7 +11,7 @@ export default {
   },
   getters: {
     progress({ elapsedMs, durationMs }) {
-      return Math.round((elapsedMs / durationMs) * 100);
+      return Math.min(100, Math.round((elapsedMs / durationMs) * 100));
     }
   },
   actions: {
