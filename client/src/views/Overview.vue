@@ -8,7 +8,7 @@
       </div>
       <div class="stage-note__body">
         <div>{{ stageNote.text }}</div>
-        <div class="stage-note__heart heart fa-heart-mask"></div>
+        <Heart class="stage-note__heart" :id="stageNote.id" :init-hearts="stageNote.heartCount" :init-set="stageNote.isHearted" />
       </div>
     </div>
     <div class="progress">
@@ -22,12 +22,13 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex';
+import Heart from '/components/Heart.vue';
 import SpellSection from '/components/SpellSection.vue';
 import AttendanceSection from '/components/AttendanceSection.vue';
 
 export default {
   name: 'Overview',
-  components: { SpellSection, AttendanceSection },
+  components: { Heart, SpellSection, AttendanceSection },
   created() {
     this.loadSpells();
     this.loadAttendance();
@@ -41,6 +42,7 @@ export default {
     ...mapGetters('stage', ['progress']),
     stageNote() {
       const note = this.$store.state.stage.note;
+      const { id, text, heartCount, isHearted } = note;
 
       const label = note.stage === 'Travel' ? 'портреты на стенах'
                   : note.stage === 'Fight' ? 'шум в коридоре!'
@@ -51,7 +53,7 @@ export default {
 
       const subject = note.creature || note.lesson || note.club || 'Школа';
 
-      return { label, subject, text: note.text };
+      return { label, subject, id, text, heartCount, isHearted };
     }
   }
 }

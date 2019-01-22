@@ -9,20 +9,23 @@
       <strong>{{ sec.title }}</strong>
       <Timeago :since="sec.date" />
     </p>
-    <Note v-for="n in sec.notes" :key="n.id" :id="n.id" :text="n.text" :init-hearts="n.heartCount" :init-toggled="n.isHearted" />
+    <div v-for="n in sec.notes">
+      {{ n.text }}
+      <Heart :key="n.id" :id="n.id" :init-hearts="n.heartCount" :init-set="n.isHearted" />
+    </div>
   </section>
 </ShowMorePaginator>
 </template>
 
 <script>
-import Note from '/components/Note.vue';
+import Heart from '/components/Heart.vue';
 import ShowMorePaginator from '/components/ShowMorePaginator.vue';
 import Timeago from '/components/Timeago.vue';
 import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Diary',
-  components: { Note, ShowMorePaginator, Timeago },
+  components: { Heart, ShowMorePaginator, Timeago },
   created() {
     this.refresh();
   },

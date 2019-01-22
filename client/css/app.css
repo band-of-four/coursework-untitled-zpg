@@ -108,6 +108,19 @@ body {
   display: inline-block;
   height: 20px;
   width: 20px;
-  background-color: #b3a7b0;
+  background: #d2c3d5;
+  transition: background .2s ease-in-out;
+  
+  &:hover {
+    cursor: pointer;
+    background: #896893;
+  }
 }
 
+.heart.set {
+  background: #e5ab94;
+
+  &:hover {
+    background: #cc6133;
+  }
+}

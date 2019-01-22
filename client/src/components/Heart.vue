@@ -1,10 +1,6 @@
 <template>
 <div>
-  {{ text }}
-  <a href="#" @click.prevent="toggle">
-    <span v-if="toggled">разлюбить</span>
-    <span v-else>полюбить</span>
-  </a>
+  <span class="heart fa-heart-mask" :class="{ set }" @click.prevent="toggle"></span>
   <span>({{ hearts }})</span>
 </div>
 </template>
@@ -13,24 +9,23 @@
 import { postHeart } from '/api/note.js';
 
 export default {
-  name: 'Note',
+  name: 'Heart',
   props: {
     id: { type: Number, required: true },
-    text: { type: String, required: true },
     initHearts: { type: Number, required: true },
-    initToggled: { type: Boolean, required: true }
+    initSet: { type: Boolean, required: true }
   },
   data() {
     return {
       hearts: this.initHearts,
-      toggled: this.initToggled
+      set: this.initSet
     }
   },
   methods: {
     async toggle() {
       const { heartCount, isHearted } = await postHeart(this.id);
       this.hearts = heartCount;
-      this.toggled = isHearted;
+      this.set = isHearted;
     }
   }
 }
