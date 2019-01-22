@@ -6,11 +6,18 @@
   <form @submit.prevent="create">
     <input type="text" v-model="name" placeholder="Имя персонажа">
     <br>
-    <input type="radio" id="female" value="Female" v-model="gender">
-    <label for="female">Женщина</label>
-    <br>
-    <input type="radio" id="male" value="Male" v-model="gender">
-    <label for="male">Мужчина</label>
+		<label class="radiobutton__label">
+			<input type="radio" class="radiobutton__input" id="female" value="Female" v-model="gender" />
+			<span class="radiobutton__button">
+        <span class="radiobutton__icon fa-venus-mask"></span>
+      </span>
+		</label>
+		<label class="radiobutton__label">
+			<input type="radio" class="radiobutton__input" id="male" value="Male" v-model="gender"/>
+			<span class="radiobutton__button">
+        <span class="radiobutton__icon fa-mars-mask"></span>
+      </span>
+		</label>
     <br>
   </form>
   <button @click="create">Продолжить</button>
