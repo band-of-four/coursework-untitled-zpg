@@ -1,7 +1,7 @@
 <template>
 <div>
   <span class="heart fa-heart-mask" :class="{ set }" @click.prevent="toggle"></span>
-  <span>({{ hearts }})</span>
+  <span class="heart-count" v-if="hearts > 0">{{ hearts }}</span>
 </div>
 </template>
 

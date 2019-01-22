@@ -10,6 +10,9 @@
 
   --page-bg: #f0ebe7;
   --text-fg: #261c2c;
+
+  --heart-bg: #d2c3d5;
+  --heart-set-bg: #896893;
 }
 
 body {
@@ -109,19 +112,23 @@ body {
   display: inline-block;
   height: 20px;
   width: 20px;
-  background: #d2c3d5;
+  background: var(--heart-bg);
   transition: background .2s ease-in-out;
   
   &:hover {
     cursor: pointer;
-    background: #896893;
+    background: var(--heart-set-bg);
   }
 }
 
-.heart.set {
-  background: #e5ab94;
+.heart.set, .heart.set:hover {
+  background: var(--heart-set-bg);
+}
 
-  &:hover {
-    background: #cc6133;
-  }
+.heart-count {
+  display: inline-block;
+  vertical-align: bottom;
+  line-height: 26px;
+  font-weight: bold;
+  color: var(--heart-set-bg);
 }
