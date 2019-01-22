@@ -18,6 +18,10 @@ class SuggestionController(cc: ControllerComponents,
     suggestionService.getLessonNamesForStudent(request.identity.id).map(ns => Ok(Json.toJson(ns)))
   }
 
+  def getClubNames() = silhouette.SecuredAction async { request =>
+    suggestionService.getClubNamesForStudent(request.identity.id).map(ns => Ok(Json.toJson(ns)))
+  }
+
   def createText() = silhouette.SecuredAction(parse.json) async { request =>
     request.body.validate[SuggestionService.TextSuggestion].fold(
       err => Future.successful(BadRequest),

@@ -3,6 +3,7 @@
   <h1>Предложить</h1>
   <router-link to="/suggest/lesson">Урок</router-link>
   <router-link to="/suggest/creature">Монстр</router-link>
+  <router-link to="/suggest/club">Клуб</router-link>
   <ShowMorePaginator :item-count="approved.length" :page="page" :per-page="10" @show-more="loadNext"> 
     <h2>Мои предложения</h2>
     <article v-for="s in approved">

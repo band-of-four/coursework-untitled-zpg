@@ -24,6 +24,7 @@ object SuggestionService {
 class SuggestionService(noteDao: NoteDao,
                         studentDao: StudentDao,
                         creatureDao: CreatureDao,
+                        clubDao: ClubDao,
                         lessonDao: LessonDao)
                        (implicit ec: ExecutionContext) {
   def create(creatorId: Long, suggestion: TextSuggestion): Future[Unit] = Future {
@@ -47,6 +48,10 @@ class SuggestionService(noteDao: NoteDao,
         noteDao.createForCreature(creatorId, note.text, note.gender, note.stage, creature.id)
       }
     }
+  }
+
+  def getClubNamesForStudent(studentId: Long): Future[Seq[String]] = Future {
+    clubDao.findNamesForStudentId(studentId)
   }
 
   def getLessonNamesForStudent(studentId: Long): Future[Seq[String]] = Future {

@@ -11,6 +11,7 @@ import Skills from '/views/Skills.vue';
 import Suggestions from '/views/Suggestions.vue';
 import SuggestionsLesson from '/views/suggestions/Lesson.vue';
 import SuggestionsCreature from '/views/suggestions/Creature.vue';
+import SuggestionsClub from '/views/suggestions/Club.vue';
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,7 @@ export default function (store) {
       { path: '/suggest', component: Suggestions },
       { path: '/suggest/lesson', component: SuggestionsLesson },
       { path: '/suggest/creature', component: SuggestionsCreature },
+      { path: '/suggest/club', component: SuggestionsClub }
     ]
   });
 
