@@ -1,16 +1,18 @@
 <template>
-<ShowMorePaginator :item-count="relationships.items.length" :page="relationships.page" :per-page="relationships.perPage" @show-more="loadNext">
-  <h1>Отношения</h1>
+<main>
+  <h1 class="heading">Отношения</h1>
   <section v-show="relationships.stale">
     <a href="#" @click.prevent="refresh">Обновить</a> 
   </section>
-  <section v-for="r in relationships.items">
-    <strong>{{ r.studentName }}</strong>
-    <p>
-      Отношения: {{ r.relationship }}, последнее изменение: {{ r.delta }}
-    </p>
-  </section>
-</ShowMorePaginator>
+  <ShowMorePaginator :items="relationships.items" :page="relationships.page" :per-page="relationships.perPage" @show-more="loadNext">
+    <section slot-scope="{ item }">
+      <strong>{{ item.studentName }}</strong>
+      <p>
+        Отношения: {{ item.relationship }}, последнее изменение: {{ item.delta }}
+      </p>
+    </section>
+  </ShowMorePaginator>
+</main>
 </template>
 
 <script>

@@ -1,14 +1,16 @@
 <template>
-<ShowMorePaginator :item-count="skills.items.length" :page="skills.page" :per-page="skills.perPage" @show-more="loadNext">
-  <h1>Навыки обращения с существами</h1>
+<main>
+  <h1 class="heading">Навыки обращения с существами</h1>
   <section v-show="skills.stale">
     <a href="#" @click.prevent="refresh">Обновить</a> 
   </section>
-  <section v-for="s in skills.items">
-    <strong>{{ s.creatureName }}</strong>
-    <p>Бонус: {{ s.modifier }}</p>
-  </section>
-</ShowMorePaginator>
+  <ShowMorePaginator :items="skills.items" :page="skills.page" :per-page="skills.perPage" @show-more="loadNext">
+    <section slot-scope="{ item }">
+      <strong>{{ item.creatureName }}</strong>
+      <p>Бонус: {{ item.modifier }}</p>
+    </section>
+  </ShowMorePaginator>
+</main>
 </template>
 
 <script>

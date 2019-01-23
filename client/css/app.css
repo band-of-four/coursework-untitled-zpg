@@ -26,7 +26,7 @@ body {
   letter-spacing: var(--main-font-letter-spacing);
 }
 
-.main {
+.content {
   max-width: 780px;
   margin: 0 auto;
   margin-bottom: 24px;

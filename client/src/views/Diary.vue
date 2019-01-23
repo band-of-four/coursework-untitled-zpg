@@ -1,5 +1,5 @@
 <template>
-<div>
+<main>
   <h1 class="heading">Дневник</h1>
   <section v-show="diary.stale">
     <a href="#" @click.prevent="refresh">Обновить</a> 
@@ -16,7 +16,7 @@
       </div>
     </section>
   </ShowMorePaginator>
-</div>
+</main>
 </template>
 
 <script>

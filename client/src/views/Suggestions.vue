@@ -1,21 +1,21 @@
 <template>
-<div>
-  <h1>Предложить</h1>
+<main>
+  <h1 class="heading">Предложить</h1>
   <router-link to="/suggest/lesson">Урок</router-link>
   <router-link to="/suggest/creature">Монстр</router-link>
   <router-link to="/suggest/club">Клуб</router-link>
   <router-link to="/suggest/travel">Путешествие</router-link>
   <router-link to="/suggest/library">Библиотека</router-link>
   <router-link to="/suggest/infirmary">Медкабинет</router-link>
-  <ShowMorePaginator :item-count="approved.length" :page="page" :per-page="10" @show-more="loadNext"> 
-    <h2>Мои предложения</h2>
-    <article v-for="s in approved">
-      <h4>{{ s.lesson || s.club || s.creature || (s.travel && "Путешествую...") }}</h4>
-      {{ s.gender === 'Female' ? 'Ж' : 'М' }} — {{ s.text }}
-      <strong>{{ s.heartCount }}</strong>
+  <h1 class="heading">Мои предложения</h1>
+  <ShowMorePaginator :items="approved.items" :page="page" :per-page="10" @show-more="loadNext"> 
+    <article slot-scope="{ item }">
+      <h4>{{ item.lesson || item.club || item.creature || (item.travel && "Путешествую...") }}</h4>
+      {{ item.gender === 'Female' ? 'Ж' : 'М' }} — {{ item.text }}
+      <strong>{{ item.heartCount }}</strong>
     </article>
   </ShowMorePaginator>
-</div>
+</main>
 </template>
 
 <script>
