@@ -32,7 +32,7 @@ class AppComponents(ctx: Context) extends BuiltInComponentsFromContext(ctx)
                                   with _root_.controllers.AssetsComponents {
   applicationEvolutions
 
-  def httpFilters: Seq[EssentialFilter] = Seq(securityHeadersFilter)
+  def httpFilters: Seq[EssentialFilter] = Nil
 
   lazy val db = new _root_.db.DbCtx(CompositeNamingStrategy2(SnakeCase, PluralizedTableNames),
     dbApi.database("default").dataSource.asInstanceOf[DataSource with Closeable])

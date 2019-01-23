@@ -49,9 +49,45 @@
         :text: Продолжай *похотливый смайлик*
       - :gender: Male
         :text: Хочу здохнуть
+      - :gender: Male
+        :text: Чертов курсач... Оу, это же заметки. Ну ладно
+      - :gender: Female
+        :text: Чертов курсач... Оу, это же заметки. Ну ладно
+      - :gender: Female
+        :text: Никита Роголабович, не надо арбалет!
+      - :gender: Male
+        :text: Никита Роголабович, не надо арбалет!
   - :name: Орден Мокрой Собаки
     :notes:
       - :gender: Female
         :text: Сколько хочется и сколько не хочется
       - :gender: Male
         :text: Сколько хочется и сколько не хочется
+  - :name: Альянс
+    :notes:
+      - :gender: Female
+        :text: ОРДА СОСАТб!!!
+      - :gender: Male
+        :text: ОРДА СОСАТб!!!
+  - :name: ВТ
+    :notes:
+      - :gender: Female
+        :text: Lasciate ogni speranza, voi ch'entrate
+      - :gender: Male
+        :text: Lasciate ogni speranza, voi ch'entrate
+      - :gender: Female
+        :text: Дмитрий Борисович, не надо ружье!
+      - :gender: Male
+        :text: Дмитрий Борисович, не надо ружье!
+  - :name: Бри
+    :notes:
+      - :gender: Female
+        :text: Что? Какие революции? Пойду, пожалуй...
+      - :gender: Male
+        :text: Что? Какие революции? Пойду, пожалуй...
+  - :name: Тайный сыск
+    :notes:
+      - :gender: Female
+        :text: А вы тут чилите...
+      - :gender: Male
+        :text: А вы тут чилите...

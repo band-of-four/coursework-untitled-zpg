@@ -7,10 +7,9 @@
         :text: Морским пехотинцам запрещено умирать без разрешения!
       - :gender: Male
         :text: Морским пехотинцам запрещено умирать без разрешения!
-1:
   - :name: Дискретная трансфигурация
     :required_attendance: 5
-    :level: 1
+    :level: 0
     :notes:
       - :gender: Female
         :text: Твою мать...
@@ -18,10 +17,91 @@
         :text: Твою мать...
   - :name: Основы вычислительной травологии
     :required_attendance: 7
-    :gender: Female
-    :level: 1
+    :level: 0
     :notes:
       - :gender: Female
         :text: На часах двадцать минут пятого...
       - :gender: Male
         :text: На часах двадцать минут пятого...
+  - :name: Языки системного зельеварения
+    :required_attendance: 9
+    :level: 0
+    :notes:
+      - :gender: Female
+        :text: Не такой уж ты был и Бессмертный, Сергей Игоревич
+      - :gender: Male
+        :text: Это низкоуровневое зельеварение...
+  - :name: Уход за магическими приложениями
+    :required_attendance: 11
+    :level: 0
+    :notes:
+      - :gender: Female
+        :text: А тебе больше нравится магический фронт или чудо-бэк?
+      - :gender: Male
+        :text: Не закрыл УМП - не маг!
+  - :name: Функциональные чары
+    :required_attendance: 15
+    :level: 0
+    :notes:
+      - :gender: Female
+        :text: Я не совсем понимаю
+      - :gender: Male
+        :text: Смотри, какой эликсир я сварил!
+      - :gender: Female
+        :text: Смотри, какой эликсир я сварила!
+      - :gender: Male
+        :text: Что-то про свободу от государства...
+      - :gender: Female
+        :text: Что-то про свободу от государства...
+  - :name: Основы объектно-ориентированной алхимии
+    :required_attendance: 13
+    :level: 0
+    :notes:
+      - :gender: Female
+        :text: Тааак, ингредиенты есть инстанции...
+      - :gender: Male
+        :text: Тааак, ингредиенты есть инстанции...
+  - :name: Теория высоких технологий и низкого уровня жизни
+    :required_attendance: 11
+    :level: 0
+    :notes:
+      - :gender: Female
+        :text: Мы все связаны, говорите...
+      - :gender: Male
+        :text: Мы все связаны, говорите...
+      - :gender: Female
+        :text: Так нам нужны тела или нет?
+      - :gender: Male
+        :text: Так нам нужны тела или нет?
+  - :name: Диклониусоведение
+    :required_attendance: 18
+    :level: 0
+    :notes:
+      - :gender: Female
+        :text: Сколько-сколько метров? Это важно!
+      - :gender: Male
+        :text: Сколько-сколько метров? Это важно!
+  - :name: Влияние восточной анимации на развитие человечества
+    :required_attendance: 20
+    :level: 0
+    :notes:
+      - :gender: Female
+        :text: Главное - сюжет, точно говорю!
+      - :gender: Male
+        :text: Главное - сюжет, точно говорю!
+  - :name: Написание магической документации
+    :required_attendance: 20
+    :level: 0
+    :notes:
+      - :gender: Female
+        :text: Разработчики жестокие люди...
+      - :gender: Male
+        :text: Разработчики жестокие люди...
+  - :name: Психология магических разработчиков
+    :required_attendance: 20
+    :level: 0
+    :notes:
+      - :gender: Female
+        :text: Таак, null >= 0 это true... Да как это вообще понять!?
+      - :gender: Male
+        :text: Таак, null >= 0 это true... Да как это вообще понять!?

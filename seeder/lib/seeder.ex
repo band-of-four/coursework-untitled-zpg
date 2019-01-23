@@ -14,7 +14,8 @@ defmodule Seeder do
       "DELETE FROM spells_students;",
       "DELETE FROM owls_students;",
       "DELETE FROM creature_fights;",
-      "DELETE FROM students;"
+      "DELETE FROM students;",
+      "DELETE FROM note_hearts_users;"
     ]
     |> Enum.each(&Ecto.Adapters.SQL.query!(Repo, &1, []))
     
