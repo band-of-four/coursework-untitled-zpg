@@ -196,7 +196,6 @@ body, .input, .button {
 
 .heads-up__main {
   padding: 24px;
-  transform: rotate(-0.4deg);
 }
 
 .heads-up__side {
@@ -391,11 +390,6 @@ body, .input, .button {
   border-color: var(--input-active-fg);
 }
 
-.action-link:focus, .action-link:hover {
-  outline: none !important;
-  transform: rotate(-0.4deg) scale(1.04);
-}
-
 .input--form {
   display: block;
   margin: 16px auto;
@@ -416,6 +410,16 @@ body, .input, .button {
   font-size: 20px;
 
   transition: transform 30ms ease-in-out;
+}
+
+.action-link:focus, .action-link:hover {
+  outline: none !important;
+  transform: rotate(-0.4deg) scale(1.04);
+}
+
+.action-link--inline {
+  display: inline-block;
+  margin: 0 12px;
 }
 
 .form-info {

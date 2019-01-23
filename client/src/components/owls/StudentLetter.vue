@@ -1,13 +1,15 @@
 <template>
 <form @submit.prevent="submit">
-  <h3>Чернильная сова</h3>
+  <h2 class="heading">Чернильная сова</h2>
   <p>
     На клочке бумаги написаны заветные слова... Осталось только шепнуть сове имя
     ученика, которого ждет приятный сюрприз:
   </p>
-  <input type="text" v-model="receiver" placeholder="Имя ученика">
-  <button type="submit">Отправить</button>
-  <button @click.prevent="$emit('cancel')">Пожалуй, в другой раз</button>
+  <input class="input" type="text" v-model="receiver" placeholder="Имя ученика">
+  <button class="button" type="submit">Отправить</button>
+  <a href="#" class="action-link action-link--inline" @click.prevent="$emit('cancel')">
+    Пожалуй, в другой раз
+  </a>
 </form>
 </template>
 

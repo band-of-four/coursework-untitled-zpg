@@ -16,7 +16,7 @@ import diaryModule from './diary.js';
 import relationshipsModule from './relationships.js';
 import skillsModule from './skills.js';
 
-const LOADING_SCREEN_MIN_SHOWN_MS = 1500;
+const LOADING_SCREEN_MIN_SHOWN_MS = 2000;
 
 Vue.use(Vuex);
 
