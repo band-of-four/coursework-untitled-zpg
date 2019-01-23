@@ -1,9 +1,9 @@
 <template>
 <div>
-  <input type="text" v-model="filter" placeholder="Поиск...">
-  <ul>
+  <input class="input input--wide" type="text" v-model="filter" placeholder="Поиск...">
+  <ul class="filter-list">
     <li v-for="item in filteredItems">
-      <a href="#" @click.prevent="selectItem(item)" :class="{ selected: selected === item }">{{ item }}</a>
+      <a href="#" @click.prevent="selectItem(item)" :class="{ selected: selected === item }" class="action-link action-link--inline">{{ item }}</a>
     </li>
   </ul>
 </div>

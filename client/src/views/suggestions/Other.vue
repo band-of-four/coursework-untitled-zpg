@@ -9,11 +9,9 @@
     </div>
     <form @submit.prevent="submit">
       <p class="suggest-form-info">Текст заметки:</p>
-
       <textarea class="input input--note-text" v-model="text" placeholder="Минимум 3 символа"></textarea>
 
       <p class="suggest-form-info">Пол персонажей, которым будет выпадать заметка:</p>
-
       <div class="radiobutton-group">
         <label class="radiobutton__label">
           <input type="radio" class="radiobutton__input" id="female" value="Female" v-model="gender" />
@@ -26,7 +24,6 @@
       </div>
 
       <p class="suggest-form-info">{{ error }}</p>
-
       <button class="button" type="submit">Отправить</button>
     </form>
   </div>

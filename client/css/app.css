@@ -476,6 +476,27 @@ body, .input, .button {
   transform: rotate(-0.4deg);
 }
 
+.suggest-subject {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 36px 0 24px;
+  transform: rotate(-0.4deg);
+}
+
+.input--wide {
+  width: 60%;
+}
+
+/* Filter list */
+
+.filter-list {
+  transform: rotate(-0.4deg);
+
+  & > li {
+    margin: 6px 0;
+  }
+}
+
 /* Vue animations */
 
 .fade-enter-active, .fade-leave-active {
