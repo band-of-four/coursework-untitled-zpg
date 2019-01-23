@@ -67,7 +67,7 @@ class NoteDao(db: DbCtx) {
   def loadForCreator(creatorId: Long, pagination: Pagination): Seq[NoteForCreator] =
     run(
       query[Note]
-        .filter(_.creatorId.exists(_ == lift(creatorId)))
+        .filter(n => n.isApproved && n.creatorId.exists(_ == lift(creatorId)))
         .sortBy(n => n.id)(Ord.desc)
         .paginate(lift(pagination))
         .nested

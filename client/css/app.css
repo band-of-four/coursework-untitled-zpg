@@ -429,9 +429,13 @@ body, .input, .button {
   transform: rotate(-0.4deg);
 }
 
+.radiobutton-group,
+.form-radiobutton-group {
+  transform: rotate(-0.4deg);
+}
+
 .form-radiobutton-group {
   text-align: center;
-  transform: rotate(-0.4deg);
 }
 
 /* Logo */
@@ -440,6 +444,35 @@ body, .input, .button {
   margin-bottom: 32px;
   font: 42px var(--logo-font);
   letter-spacing: var(--logo-font-letter-spacing);
+  transform: rotate(-0.4deg);
+}
+
+/* Suggestions */
+
+.suggested {
+  margin-bottom: 24px;
+}
+
+.suggested-heading {
+  display: flex;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.suggested-heading__hearts {
+  margin-left: auto;
+  font-weight: normal;
+}
+
+.input--note-text {
+  margin: 12px 0;
+  padding: 24px;
+  width: 80%;
+  resize: none;
+}
+
+.suggest-form-info {
+  margin: 12px 0;
   transform: rotate(-0.4deg);
 }
 
