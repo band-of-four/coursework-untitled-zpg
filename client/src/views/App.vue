@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading">Загрузка...</div>
+  <div class="loading" v-if="loading"></div>
   <div v-else :class="{ content: signedIn && student }">
     <section v-if="signedIn && student">
       <router-link to="/">Обзор</router-link>
