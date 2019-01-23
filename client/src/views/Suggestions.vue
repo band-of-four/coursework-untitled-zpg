@@ -10,8 +10,7 @@
   <h1 class="heading">Мои предложения</h1>
   <ShowMorePaginator :items="approved" :page="page" :per-page="10" @show-more="loadNext"> 
     <article slot-scope="{ item }">
-      <h4>{{ item.lesson || item.club || item.creature || (item.travel && "Путешествую...") }}</h4>
-      {{ item.gender === 'Female' ? 'Ж' : 'М' }} — {{ item.text }}
+      {{ item.gender === 'Female' ? 'Ж' : 'М' }}, {{noteStageLabel(item)}} — {{ item.text }}
       <strong>{{ item.heartCount }}</strong>
     </article>
   </ShowMorePaginator>
@@ -36,6 +35,16 @@ export default {
     async loadNext() {
       this.page += 1;
       this.approved = this.approved.concat(await getApproved(this.page));
+    },
+    noteStageLabel(note) {
+      return note.lesson || note.club ||
+           ( note.stage === 'Travel' ? 'Путешествия по школе'
+           : note.stage === 'Infirmary' ? 'Медкабинет'
+           : note.stage === 'Library' ? 'Библиотека'
+           : note.stage === 'Fight' ? `Битва с монстром ${note.creature}`
+           : note.stage === 'FightWon' ? `Победа над монстром ${note.creature}`
+           : note.stage === 'FightLost' ? `${note.creature} победил`
+           : '' )
     }
   }
 }
