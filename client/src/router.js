@@ -12,6 +12,7 @@ import Suggestions from '/views/Suggestions.vue';
 import SuggestionsLesson from '/views/suggestions/Lesson.vue';
 import SuggestionsCreature from '/views/suggestions/Creature.vue';
 import SuggestionsClub from '/views/suggestions/Club.vue';
+import SuggestionsOther from '/views/suggestions/Other.vue';
 
 Vue.use(VueRouter);
 
@@ -28,7 +29,10 @@ export default function (store) {
       { path: '/suggest', component: Suggestions },
       { path: '/suggest/lesson', component: SuggestionsLesson },
       { path: '/suggest/creature', component: SuggestionsCreature },
-      { path: '/suggest/club', component: SuggestionsClub }
+      { path: '/suggest/club', component: SuggestionsClub },
+      { path: '/suggest/travel', component: SuggestionsOther, props: { kind: 'Travel' } },
+      { path: '/suggest/infirmary', component: SuggestionsOther, props: { kind: 'Infirmary' } },
+      { path: '/suggest/library', component: SuggestionsOther, props: { kind: 'Library' } }
     ]
   });
 

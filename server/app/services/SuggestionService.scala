@@ -34,7 +34,7 @@ class SuggestionService(noteDao: NoteDao,
       case TextSuggestion(text, gender, _, Some(clubName), _) =>
         noteDao.createForClub(creatorId, text, gender, clubId = clubDao.findIdByName(clubName))
       case TextSuggestion(text, gender, _, _, Some(stage)) =>
-        ???
+        noteDao.createForStage(creatorId, text, gender, stage)
     }
   }
 
