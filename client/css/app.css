@@ -182,27 +182,10 @@ body, .input, .button {
 }
 
 .page-break {
-  /* https://stackoverflow.com/a/27764538 */
-  overflow: hidden;
-  position: relative;
+  background: url('/assets/wand.png') no-repeat center / auto 40px;
   margin: 32px auto;
   max-width: 320px;
-  height: 10px; 
-}
-
-.page-break__line--fwd {
-  background: linear-gradient(45deg, transparent, transparent 47%, #cc9466 47%, transparent 53%);
-}
-
-.page-break__line--bwd {
-  background: linear-gradient(-45deg, transparent, transparent 47%, #cc9466 47%, transparent 53%);
-}
-
-.page-break__line {
-  position: absolute;
-  width: 100%;
-  height: 10px;
-  background-size: 20px 20px;
+  height: 40px; 
 }
 
 /* Forms */
