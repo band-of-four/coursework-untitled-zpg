@@ -107,6 +107,10 @@ body, .input, .button {
   background-image: url(http://localhost:9000/assets/crystalball.png);
 }
 
+.icon--pumpkin {
+  background-image: url(http://localhost:9000/assets/pumpkin.png);
+}
+
 /* Overview */
 
 .resource-item {

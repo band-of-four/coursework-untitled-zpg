@@ -1,18 +1,20 @@
 <template>
-<main class="page-section">
-  <div class="page-section-header">
-    <div class="page-section-header__icon icon--stars"></div>
-    <span class="page-section-header__text page-section-header__text--large">Навыки обращения с существами</span>
-  </div>
-  <section v-show="skills.stale">
-    <a href="#" @click.prevent="refresh">Обновить</a> 
-  </section>
-  <ShowMorePaginator :items="skills.items" :page="skills.page" :per-page="skills.perPage" @show-more="loadNext">
-    <section slot-scope="{ item }">
-      <strong>{{ item.creatureName }}</strong>
-      <p>Бонус: {{ item.modifier }}</p>
+<main>
+  <div class="page-section">
+    <div class="page-section-header">
+      <div class="page-section-header__icon icon--stars"></div>
+      <span class="page-section-header__text page-section-header__text--large">Навыки обращения с существами</span>
+    </div>
+    <section v-show="skills.stale">
+      <a href="#" @click.prevent="refresh">Обновить</a> 
     </section>
-  </ShowMorePaginator>
+    <ShowMorePaginator :items="skills.items" :page="skills.page" :per-page="skills.perPage" @show-more="loadNext">
+      <section slot-scope="{ item }">
+        <strong>{{ item.creatureName }}</strong>
+        <p>Бонус: {{ item.modifier }}</p>
+      </section>
+    </ShowMorePaginator>
+  </div>
 </main>
 </template>
 

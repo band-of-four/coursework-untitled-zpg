@@ -1,24 +1,26 @@
 <template>
-<main class="page-section">
-  <div class="page-section-header">
-    <div class="page-section-header__icon icon--book"></div>
-    <span class="page-section-header__text page-section-header__text--large">Дневник</span>
-  </div>
-  <section v-show="diary.stale">
-    <a href="#" @click.prevent="refresh">Обновить</a> 
-  </section>
-  <ShowMorePaginator :item-size="sectionSize" :items="diarySections" :page="diary.page" :per-page="diary.perPage" @show-more="loadNext">
-    <section slot-scope="{ item }">
-      <div class="diary-section-heading">
-        <span class="diary-section-heading__text">{{ item.title }}</span>
-        <Timeago class="diary-section-heading__time" :since="item.date" />
-      </div>
-      <div class="note" v-for="n in item.notes">
-        <span>&mdash; {{ n.text }}</span>
-        <Heart class="note__heart" :key="n.id" :id="n.id" :init-hearts="n.heartCount" :init-set="n.isHearted" />
-      </div>
+<main>
+  <div class="page-section">
+    <div class="page-section-header">
+      <div class="page-section-header__icon icon--book"></div>
+      <span class="page-section-header__text page-section-header__text--large">Дневник</span>
+    </div>
+    <section v-show="diary.stale">
+      <a href="#" @click.prevent="refresh">Обновить</a> 
     </section>
-  </ShowMorePaginator>
+    <ShowMorePaginator :item-size="sectionSize" :items="diarySections" :page="diary.page" :per-page="diary.perPage" @show-more="loadNext">
+      <section slot-scope="{ item }">
+        <div class="diary-section-heading">
+          <span class="diary-section-heading__text">{{ item.title }}</span>
+          <Timeago class="diary-section-heading__time" :since="item.date" />
+        </div>
+        <div class="note" v-for="n in item.notes">
+          <span>&mdash; {{ n.text }}</span>
+          <Heart class="note__heart" :key="n.id" :id="n.id" :init-hearts="n.heartCount" :init-set="n.isHearted" />
+        </div>
+      </section>
+    </ShowMorePaginator>
+  </div>
 </main>
 </template>
 

@@ -1,20 +1,22 @@
 <template>
-<main class="page-section">
-  <div class="page-section-header">
-    <div class="page-section-header__icon icon--owl"></div>
-    <span class="page-section-header__text page-section-header__text--large">Совы</span>
+<main>
+  <div class="page-section">
+    <div class="page-section-header">
+      <div class="page-section-header__icon icon--owl"></div>
+      <span class="page-section-header__text page-section-header__text--large">Совы</span>
+    </div>
+    <section v-if="!dynamicOwlView">
+      <section v-show="owls.stale">
+        <a href="#" @click.prevent="loadOwls">Обновить</a> 
+      </section>
+      <section v-show="status.text" :class="{ error: status.isError }">
+        {{ status.text }}
+        <button @click.prevent="status.text = null">Закрыть</button>
+      </section>
+      <OwlList :owls="owls.items" @select="apply" />
+    </section>
+    <component v-else :is="dynamicOwlView" @submit="submitDynamic" @cancel="cancelDynamic" />
   </div>
-  <section v-if="!dynamicOwlView">
-    <section v-show="owls.stale">
-      <a href="#" @click.prevent="loadOwls">Обновить</a> 
-    </section>
-    <section v-show="status.text" :class="{ error: status.isError }">
-      {{ status.text }}
-      <button @click.prevent="status.text = null">Закрыть</button>
-    </section>
-    <OwlList :owls="owls.items" @select="apply" />
-  </section>
-  <component v-else :is="dynamicOwlView" @submit="submitDynamic" @cancel="cancelDynamic" />
 </main>
 </template>
 

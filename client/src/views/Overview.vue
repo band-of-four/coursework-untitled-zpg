@@ -1,5 +1,5 @@
 <template>
-<div>
+<main>
   <section class="page-section">
     <div class="page-section-header">
       <div class="page-section-header__icon icon--key"></div>
@@ -20,7 +20,7 @@
   </section>
   <SpellSection :spells="spells.items" :stale="spells.stale" @refresh="loadSpells" />
   <AttendanceSection :attendance="attendance.items" :stale="attendance.stale" @refresh="loadAttendance" />
-</div>
+</main>
 </template>
 
 <script>
