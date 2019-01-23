@@ -19,7 +19,7 @@ class OwlDao(db: DbCtx) {
   def load(studentId: Long): Seq[OwlPreloaded] =
     run(
       query[OwlsStudent]
-        .filter(_.studentId == lift(studentId))
+        .filter(os => os.studentId == lift(studentId) && os.owlCount > 0)
         .join(query[Owl]).on {
           case (os, o) => os.owlImpl == o.impl
         }
