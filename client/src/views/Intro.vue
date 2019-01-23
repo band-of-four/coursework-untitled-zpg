@@ -44,8 +44,10 @@ export default {
       const result = await this.$store.dispatch('createStudent', { name: this.name, gender: this.gender });
       if (result === STUDENT_NAME_TAKEN)
         this.status = 'Имя персонажа уже занято, придумай другое ;)';
-      else
+      else {
         this.$router.replace('/');
+        this.$store.commit('loaded');
+      }
     }
   }
 }

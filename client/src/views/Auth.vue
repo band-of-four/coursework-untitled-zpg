@@ -48,13 +48,13 @@ export default {
           return;
         }
       }
- 
+
       const success = await this.$store.dispatch('signIn',
         { email: this.email, password: this.password });
 
       if (success) {
-        this.$store.commit('signedIn');
         this.$router.replace('/');
+        this.$store.commit('loaded');
       }
       else
         this.status = 'Неверный логин или пароль';

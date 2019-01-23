@@ -5,6 +5,7 @@ import { API_UNAUTHENTICATED } from '/api';
 import { getStudent, postStudent, STUDENT_NOT_CREATED } from '/api/student.js';
 import { postSignIn, postSignUp } from '/api/auth.js';
 import { WS_URI, WS_OUT_GET_STAGE } from '/api/ws.js';
+import { withDelay } from '/utils.js';
 
 import studentModule from './student.js';
 import stageModule from './stage.js';
@@ -15,12 +16,14 @@ import diaryModule from './diary.js';
 import relationshipsModule from './relationships.js';
 import skillsModule from './skills.js';
 
+const LOADING_SCREEN_MIN_SHOWN_MS = 1500;
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     error: false,
-    loading: true,
+    loading: false,
     signedIn: true,
     ws: null
   },
@@ -50,13 +53,16 @@ export default new Vuex.Store({
       const success = await postSignIn(credentials);
       if (!success) return false;
 
-      await dispatch('load');
+      commit('signedInLoading');
+      await withDelay(LOADING_SCREEN_MIN_SHOWN_MS, () => dispatch('load'));
 
       return true;
     },
-    async createStudent({ commit, dispatch }, student) {
+    async createStudent({ commit, dispatch }, studentForm) {
       try {
-        await dispatch('initState', await postStudent(student));
+        const student = await postStudent(studentForm);
+        commit('loading');
+        await withDelay(LOADING_SCREEN_MIN_SHOWN_MS, () => dispatch('initState', student));
         return true;
       }
       catch (e) {
@@ -108,12 +114,19 @@ export default new Vuex.Store({
       state.signedIn = false;
     },
     studentNotCreated(state) {
-      state.loading = false;
       state.student = null;
     },
-    signedIn(state) { state.signedIn = true; },
-    wsAcquired(state, ws) {
+    loading(state) {
+      state.loading = true;
+    },
+    loaded(state) {
       state.loading = false;
+    },
+    signedInLoading(state) {
+      state.signedIn = true;
+      state.loading = true;
+    },
+    wsAcquired(state, ws) {
       state.ws = ws;
     }
   }
