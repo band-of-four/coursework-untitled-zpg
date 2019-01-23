@@ -9,6 +9,7 @@
   --heading-font-letter-spacing: 0.01em;
 
   --page-bg: #f0ebe7;
+  --standout-bg: #fbfaf9;
   --text-fg: #261c2c;
 
   --heart-bg: #d2c3d5;
@@ -28,6 +29,7 @@ body {
 .main {
   max-width: 780px;
   margin: 0 auto;
+  margin-bottom: 24px;
 }
 
 .heading {
@@ -86,7 +88,7 @@ body {
   border-width: 2px 3px 3px 2px;
   border-radius: 95% 10% 92% 1%/6% 5% 4% 95%;
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
-  background-color: #fbfaf9;
+  background-color: var(--standout-bg);
   transform: rotate(-0.2deg);
 }
 
@@ -164,4 +166,65 @@ body {
   line-height: 26px;
   font-weight: bold;
   color: var(--heart-bg);
+}
+
+/* Pagination */
+
+.pagination {
+  margin: 24px;
+  text-align: center;
+}
+
+.page-break {
+  /* https://stackoverflow.com/a/27764538 */
+  overflow: hidden;
+  position: relative;
+  margin: 32px auto;
+  max-width: 320px;
+  height: 10px; 
+}
+
+.page-break__line--fwd {
+  background: linear-gradient(45deg, transparent, transparent 47%, #cc9466 47%, transparent 53%);
+}
+
+.page-break__line--bwd {
+  background: linear-gradient(-45deg, transparent, transparent 47%, #cc9466 47%, transparent 53%);
+}
+
+.page-break__line {
+  position: absolute;
+  width: 100%;
+  height: 10px;
+  background-size: 20px 20px;
+}
+
+/* Forms */
+
+.button {
+  display: inline-block;
+  padding: 12px 24px;
+  border: 2px solid var(--text-fg);
+  border-radius: 95% 10% 92% 1%/6% 5% 4% 95%;
+  color: var(--text-fg);
+  background: var(--standout-bg);
+  text-decoration: none;
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+
+  transform: rotate(-0.4deg);
+  transition: box-shadow .2s ease-in-out;
+}
+
+.button:hover {
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+.button.popout {
+  animation: button-pop-out 400ms ease-in-out forwards;
+}
+
+@keyframes button-pop-out {
+  0% { transform: rotate(-0.4deg) scale(1); }
+  30% { transform: rotate(-0.4deg) scale(1.15); }
+  100% { transform: rotate(-0.4deg) scale(0); }
 }

@@ -34,7 +34,7 @@ export default {
            : hours < 24 && hours > 20 && hours % 10 == 1 ? `${hours} час назад`
            : hours < 24 && hours > 20 && hours % 10 > 0 && hours % 10 < 5 ? `${hours} часа назад`
            : hours < 24 ? `${hours} часов назад`
-           : formattedDate();
+           : this.formattedDate;
     },
     formattedDate() {
       return this.sinceDate.toLocaleDateString('ru-RU',
