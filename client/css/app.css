@@ -87,6 +87,26 @@ body, .input, .button {
   background-image: url(http://localhost:9000/assets/star.png);
 }
 
+.icon--book {
+  background-image: url(http://localhost:9000/assets/book.png);
+}
+
+.icon--owl {
+  background-image: url(http://localhost:9000/assets/owl.png);
+}
+
+.icon--flasks {
+  background-image: url(http://localhost:9000/assets/flasks.png);
+}
+
+.icon--stars {
+  background-image: url(http://localhost:9000/assets/stars.png);
+}
+
+.icon--ball {
+  background-image: url(http://localhost:9000/assets/crystalball.png);
+}
+
 /* Overview */
 
 .resource-item {

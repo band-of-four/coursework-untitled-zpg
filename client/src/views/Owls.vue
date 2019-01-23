@@ -1,6 +1,9 @@
 <template>
-<div>
-  <h1>Совы</h1>
+<main class="page-section">
+  <div class="page-section-header">
+    <div class="page-section-header__icon icon--owl"></div>
+    <span class="page-section-header__text page-section-header__text--large">Совы</span>
+  </div>
   <section v-if="!dynamicOwlView">
     <section v-show="owls.stale">
       <a href="#" @click.prevent="loadOwls">Обновить</a> 
@@ -12,7 +15,7 @@
     <OwlList :owls="owls.items" @select="apply" />
   </section>
   <component v-else :is="dynamicOwlView" @submit="submitDynamic" @cancel="cancelDynamic" />
-</div>
+</main>
 </template>
 
 <script>

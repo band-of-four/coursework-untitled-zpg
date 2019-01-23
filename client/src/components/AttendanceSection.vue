@@ -1,5 +1,5 @@
 <template>
-  <section class="page-section">
+<section class="page-section">
   <div class="page-section-header">
     <div class="page-section-header__icon icon--star"></div>
     <span class="page-section-header__text">Зачетная книжка</span>

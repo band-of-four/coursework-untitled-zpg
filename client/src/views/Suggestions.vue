@@ -1,6 +1,9 @@
 <template>
-<main>
-  <h1 class="heading">Предложить</h1>
+<main class="page-section">
+  <div class="page-section-header">
+    <div class="page-section-header__icon icon--ball"></div>
+    <span class="page-section-header__text page-section-header__text--large">Предложить</span>
+  </div>
   <router-link to="/suggest/lesson">Урок</router-link>
   <router-link to="/suggest/creature">Монстр</router-link>
   <router-link to="/suggest/club">Клуб</router-link>

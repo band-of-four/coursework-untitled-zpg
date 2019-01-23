@@ -1,6 +1,9 @@
 <template>
-<main>
-  <h1 class="heading">Навыки обращения с существами</h1>
+<main class="page-section">
+  <div class="page-section-header">
+    <div class="page-section-header__icon icon--stars"></div>
+    <span class="page-section-header__text page-section-header__text--large">Навыки обращения с существами</span>
+  </div>
   <section v-show="skills.stale">
     <a href="#" @click.prevent="refresh">Обновить</a> 
   </section>

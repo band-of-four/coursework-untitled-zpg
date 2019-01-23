@@ -1,5 +1,5 @@
 <template>
-  <section class="page-section">
+<section class="page-section">
   <div class="page-section-header">
     <div class="page-section-header__icon icon--potion"></div>
     <span class="page-section-header__text">Заклинания</span>

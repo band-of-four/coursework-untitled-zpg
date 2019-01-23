@@ -1,6 +1,9 @@
 <template>
-<main>
-  <h1 class="heading">Отношения</h1>
+<main class="page-section">
+  <div class="page-section-header">
+    <div class="page-section-header__icon icon--flasks"></div>
+    <span class="page-section-header__text page-section-header__text--large">Отношения</span>
+  </div>
   <section v-show="relationships.stale">
     <a href="#" @click.prevent="refresh">Обновить</a> 
   </section>
