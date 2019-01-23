@@ -280,29 +280,37 @@ body, .input, .button {
 
 /* Auth */
 
-.auth-form {
+.sprite-form {
   display: grid;
   grid: [r-start] "sprite form" 100% [r-end] / 10fr 10fr;
   height: 100vh;
 }
 
-.auth-form__sprite {
+.sprite-form__sprite {
   grid-area: sprite;
   display: flex;
   justify-content: flex-end;
 }
 
-.auth-form__form {
+.sprite-form__form {
   grid-area: form;
   display: flex;
   padding-left: 64px;
 }
 
-.auth-sprite {
-  background: url('/assets/girl.png') no-repeat center / contain;
+.auth-form-sprite,
+.intro-form-sprite {
   height: 100%;
   width: 100%;
   max-width: 360px;
+}
+
+.auth-form-sprite {
+  background: url('/assets/girl.png') no-repeat center / contain;
+}
+
+.intro-form-sprite {
+  background: url('/assets/broom.png') no-repeat center / contain;
 }
 
 /* More forms */
@@ -353,9 +361,15 @@ body, .input, .button {
   transition: transform 30ms ease-in-out;
 }
 
-.form-status {
-  transform: rotate(-0.4deg);
+.form-info {
+  display: block;
   text-align: center;
+  transform: rotate(-0.4deg);
+}
+
+.form-radiobutton-group {
+  text-align: center;
+  transform: rotate(-0.4deg);
 }
 
 /* Logo */

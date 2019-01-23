@@ -55,7 +55,13 @@ export default new Vuex.Store({
       return true;
     },
     async createStudent({ commit, dispatch }, student) {
-      return await dispatch('initState', await postStudent(student));
+      try {
+        await dispatch('initState', await postStudent(student));
+        return true;
+      }
+      catch (e) {
+        return e;
+      }
     },
     async initState({ commit, dispatch }, student) {
       this.registerModule('student', studentModule(student));

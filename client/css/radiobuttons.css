@@ -14,18 +14,18 @@
   justify-content: center;
   align-items: center;
 
-	color: #000000;
-  border: 1px solid black;
+  border: 2px solid var(--text-fg);
 	border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
   margin-top: 10px;
   margin-bottom: 10px;
   
   transition: background .2s ease-in-out;
 
   &:hover {
-    background-color: #e5ab94;
+    background-color: #c3dddf;
+    border-color: var(--input-active-fg);
   }
 }
 
@@ -33,15 +33,9 @@
   display: inline-block;
   height: 32px;
   width: 32px;
-  background: black; /*icon color*/
-  /*transform: translateX(8%) translateY(3%);*/
+  background: var(--text-fg); /*icon color*/
 }
 
 .radiobutton__input:checked + .radiobutton__button {
-	color: #D9E7FD;
-  background-color: #bada55;
-}
-
-.radiobutton__input:focus + .radiobutton__button {
-	color: #fff;
+  background-color: #c3dddf;
 }

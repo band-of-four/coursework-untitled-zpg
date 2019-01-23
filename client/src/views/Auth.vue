@@ -1,9 +1,9 @@
 <template>
-<div class="auth-form">
-  <div class="auth-form__sprite">
-    <div class="auth-sprite"></div>
+<div class="sprite-form">
+  <div class="sprite-form__sprite">
+    <div class="auth-form-sprite"></div>
   </div>
-  <div class="auth-form__form">
+  <div class="sprite-form__form">
     <form class="form" @submit.prevent="submit">
       <div class="logo">Sumaju nikki</div>
       <transition name="fade" mode="out-in">
@@ -21,7 +21,7 @@
         </div>
       </transition>
       <a class="action-link" href="/auth/social/vk">Войти с помощью Вконтакте</a>
-      <p class="form-status" v-if="status">{{ status }}</p>
+      <p class="form-info" v-if="status">{{ status }}</p>
     </form>
   </div>
 </div>
