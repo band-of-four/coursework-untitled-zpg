@@ -4,9 +4,11 @@
 :root {
   --main-font: 'Neucha', sans-serif;
   --heading-font: 'Kurale', serif;
+  --logo-font: 'Gloria Hallelujah';
 
   --main-font-letter-spacing: 0.05em;
   --heading-font-letter-spacing: 0.01em;
+  --logo-font-letter-spacing: 0;
 
   --page-bg: #f0ebe7;
   --standout-bg: #fbfaf9;
@@ -14,6 +16,8 @@
 
   --heart-bg: #d2c3d5;
   --heart-set-bg: #896893;
+
+  --input-active-fg: #265973;
 }
 
 body {
@@ -21,7 +25,9 @@ body {
 
   background-color: var(--page-bg);
   color: var(--text-fg);
+}
 
+body, .input, .button {
   font: 18px var(--main-font);
   letter-spacing: var(--main-font-letter-spacing);
 }
@@ -228,3 +234,89 @@ body {
   30% { transform: rotate(-0.4deg) scale(1.15); }
   100% { transform: rotate(-0.4deg) scale(0); }
 }
+
+/* More forms */
+
+.form-container {
+  display: flex;
+  height: 100vh;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.form-panel--left {
+  margin: auto 0;
+}
+
+.form {
+  margin: auto;
+  max-width: 250px;
+}
+
+.input {
+  padding: 8px 12px;
+
+  border: 2px solid var(--text-fg);
+  border-radius: 230px 15px 200px 20px/15px 205px 10px 150px;
+
+  transform: rotate(-0.4deg);
+}
+
+.input:focus, .button:focus {
+  outline: none !important;
+  border-color: var(--input-active-fg);
+}
+
+.action-link:focus, .action-link:hover {
+  outline: none !important;
+  transform: rotate(-0.4deg) scale(1.04);
+}
+
+.input--form {
+  display: block;
+  margin: 16px auto;
+  width: 210px;
+}
+
+.button--form {
+  display: block;
+  margin: 16px auto;
+}
+
+.action-link {
+  display: block;
+  margin: 12px 0;
+  text-align: center;
+  transform: rotate(-0.4deg);
+  color: var(--input-active-fg);
+  font-size: 20px;
+
+  transition: transform 30ms ease-in-out;
+}
+
+.form-status {
+  transform: rotate(-0.4deg);
+  text-align: center;
+}
+
+/* Logo */
+
+.logo {
+  font: 48px var(--logo-font);
+  letter-spacing: var(--logo-font-letter-spacing);
+}
+
+.logo--rot {
+  transform: rotate(-0.4deg);
+}
+
+/* Vue animations */
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s ease-in-out;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
