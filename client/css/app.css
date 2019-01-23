@@ -218,21 +218,37 @@ body, .input, .button {
   100% { transform: rotate(-0.4deg) scale(0); }
 }
 
+/* Auth */
+
+.auth-form {
+  display: grid;
+  grid: [r-start] "sprite form" 100% [r-end] / 10fr 10fr;
+  height: 100vh;
+}
+
+.auth-form__sprite {
+  grid-area: sprite;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.auth-form__form {
+  grid-area: form;
+  display: flex;
+  padding-left: 64px;
+}
+
+.auth-sprite {
+  background: url('/assets/girl.png') no-repeat center / contain;
+  height: 100%;
+  width: 100%;
+  max-width: 360px;
+}
+
 /* More forms */
 
-.form-container {
-  display: flex;
-  height: 100vh;
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-.form-panel--left {
-  margin: auto 0;
-}
-
 .form {
-  margin: auto;
+  margin: auto 0;
   max-width: 250px;
 }
 
@@ -285,11 +301,9 @@ body, .input, .button {
 /* Logo */
 
 .logo {
-  font: 48px var(--logo-font);
+  margin-bottom: 32px;
+  font: 42px var(--logo-font);
   letter-spacing: var(--logo-font-letter-spacing);
-}
-
-.logo--rot {
   transform: rotate(-0.4deg);
 }
 

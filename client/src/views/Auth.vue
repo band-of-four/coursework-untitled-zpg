@@ -1,26 +1,29 @@
 <template>
-<div class="form-container">
-  <div class="form-panel--left">
-    <div class="logo logo--rot">Sumaju nikki</div>
+<div class="auth-form">
+  <div class="auth-form__sprite">
+    <div class="auth-sprite"></div>
   </div>
-  <form class="form" @submit.prevent="submit">
-    <transition name="fade" mode="out-in">
-      <div key=1 v-if="mode === 'signin'">
-        <input class="input input--form" type="email" v-model="email" placeholder="Адрес e-mail" />
-        <input class="input input--form" type="password" v-model="password" placeholder="Пароль" />
-        <button class="button button--form" type="submit">Войти</button>
-        <a class="action-link" href="#" @click.prevent="mode = 'signup'">Впервые с нами?</a>
-      </div>
-      <div key=2 v-else>
-        <input class="input input--form" type="email" v-model="email" placeholder="Адрес e-mail" />
-        <input class="input input--form" type="password" v-model="password" placeholder="Пароль" />
-        <button class="button button--form" type="submit">Познакомиться</button>
-        <a class="action-link" href="#" @click.prevent="mode = 'signin'">Мы уже знакомы</a>
-      </div>
-    </transition>
-    <a class="action-link" href="/auth/social/vk">Войти с помощью Вконтакте</a>
-    <p class="form-status" v-if="status">{{ status }}</p>
-  </form>
+  <div class="auth-form__form">
+    <form class="form" @submit.prevent="submit">
+      <div class="logo">Sumaju nikki</div>
+      <transition name="fade" mode="out-in">
+        <div key=1 v-if="mode === 'signin'">
+          <input class="input input--form" type="email" v-model="email" placeholder="Адрес e-mail" />
+          <input class="input input--form" type="password" v-model="password" placeholder="Пароль" />
+          <button class="button button--form" type="submit">Войти</button>
+          <a class="action-link" href="#" @click.prevent="mode = 'signup'">Впервые с нами?</a>
+        </div>
+        <div key=2 v-else>
+          <input class="input input--form" type="email" v-model="email" placeholder="Адрес e-mail" />
+          <input class="input input--form" type="password" v-model="password" placeholder="Пароль" />
+          <button class="button button--form" type="submit">Познакомиться</button>
+          <a class="action-link" href="#" @click.prevent="mode = 'signin'">Мы уже знакомы</a>
+        </div>
+      </transition>
+      <a class="action-link" href="/auth/social/vk">Войти с помощью Вконтакте</a>
+      <p class="form-status" v-if="status">{{ status }}</p>
+    </form>
+  </div>
 </div>
 </template>
 
