@@ -8,7 +8,7 @@
   <router-link to="/suggest/library">Библиотека</router-link>
   <router-link to="/suggest/infirmary">Медкабинет</router-link>
   <h1 class="heading">Мои предложения</h1>
-  <ShowMorePaginator :items="approved.items" :page="page" :per-page="10" @show-more="loadNext"> 
+  <ShowMorePaginator :items="approved" :page="page" :per-page="10" @show-more="loadNext"> 
     <article slot-scope="{ item }">
       <h4>{{ item.lesson || item.club || item.creature || (item.travel && "Путешествую...") }}</h4>
       {{ item.gender === 'Female' ? 'Ж' : 'М' }} — {{ item.text }}
