@@ -1,6 +1,9 @@
 <template>
   <section class="page-section">
-  <h1 class="heading">Заклинания</h1>
+  <div class="page-section-header">
+    <div class="page-section-header__icon icon--potion"></div>
+    <span class="page-section-header__text">Заклинания</span>
+  </div>
   <section v-show="stale">
     <a href="#" @click.prevent="$emit('refresh')">Обновить</a> 
   </section>

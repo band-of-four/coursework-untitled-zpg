@@ -1,8 +1,11 @@
 <template>
 <div>
   <section class="page-section">
-    <h1 class="heading">{{ name }}, {{ level }}-й год</h1>
-    <div class="stage-note">
+    <div class="page-section-header">
+      <div class="page-section-header__icon icon--key"></div>
+      <span class="page-section-header__text page-section-header__text--large">{{ name }}, {{ level }}-й год</span>
+    </div>
+    <div class="stage-note block">
       <div class="stage-note__heading">
         {{ stageNote.subject }} — {{ stageNote.label }}
       </div>

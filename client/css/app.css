@@ -51,6 +51,42 @@ body, .input, .button {
   }
 }
 
+.page-section-header {
+  display: flex;
+  align-items: center;
+  margin: 28px 0;
+}
+
+.page-section-header__icon {
+  width: 60px;
+  height: 60px;
+  display: inline-block;
+  background-size: contain;
+}
+
+.page-section-header__text {
+  font: 28px var(--heading-font);
+  font-weight: bold;
+  letter-spacing: var(--heading-font-letter-spacing);
+  margin-left: 12px;
+}
+
+.page-section-header__text--large {
+  font-size: 34px;
+}
+
+.icon--key {
+  background-image: url(http://localhost:9000/assets/key.png);
+}
+
+.icon--potion {
+  background-image: url(http://localhost:9000/assets/potion.png);
+}
+
+.icon--star {
+  background-image: url(http://localhost:9000/assets/star.png);
+}
+
 /* Overview */
 
 .resource-item {
