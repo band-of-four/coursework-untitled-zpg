@@ -2,10 +2,7 @@
 <section>
   <div v-for="(page, i) in pages">
     <slot v-for="item in page" :item="item"></slot>
-    <div class="page-break" v-if="i + 1 < pages.length">
-      <div class="page-break__line page-break__line--fwd"></div>
-      <div class="page-break__line page-break__line--bwd"></div>
-    </div>
+    <div class="page-break" v-if="i + 1 < pages.length"></div>
   </div>
   <div class="pagination" v-show="hasMore">
     <a class="button" :class="{ popout: loading }" href="#" @click.prevent="requestMore">Показать больше</a>

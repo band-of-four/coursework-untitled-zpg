@@ -52,6 +52,7 @@ body, .input, .button {
 .heading {
   font-family: var(--heading-font);
   letter-spacing: var(--heading-font-letter-spacing);
+  margin: 36px 0 28px;
 }
 
 .page-section {
@@ -158,9 +159,9 @@ body, .input, .button {
   background-color: var(--page-bg);
 }
 
-/* Stage note */
+/* Stage note & heads-up message */
 
-.stage-note {
+.heads-up, .stage-note {
   border: solid var(--text-fg);
   border-width: 2px 3px 3px 2px;
   border-radius: 95% 10% 92% 1%/6% 5% 4% 95%;
@@ -187,6 +188,20 @@ body, .input, .button {
 
 .stage-note__heart {
   margin-left: auto;
+}
+
+.heads-up {
+  display: flex;
+}
+
+.heads-up__main {
+  padding: 24px;
+  transform: rotate(-0.4deg);
+}
+
+.heads-up__side {
+  margin: auto;
+  margin-right: 24px;
 }
 
 /* Diary */
@@ -245,6 +260,36 @@ body, .input, .button {
   color: var(--heart-bg);
 }
 
+/* Owls */
+
+.owl-heading {
+  margin-bottom: 16px;
+}
+
+.owl-heading__name {
+  margin-right: 6px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.owl-heading__count {
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.owl {
+  margin-bottom: 32px;
+}
+
+.owl, .owl__side {
+  display: flex;
+}
+
+.owl__side {
+  align-items: center;
+  margin-left: auto;
+}
+
 /* Pagination */
 
 .pagination {
@@ -266,10 +311,11 @@ body, .input, .button {
   padding: 12px 24px;
   border: 2px solid var(--text-fg);
   border-radius: 95% 10% 92% 1%/6% 5% 4% 95%;
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
   color: var(--text-fg);
   background: var(--standout-bg);
   text-decoration: none;
-  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 
   transform: rotate(-0.4deg);
   transition: box-shadow .2s ease-in-out;
@@ -401,4 +447,3 @@ body, .input, .button {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-
