@@ -46,7 +46,9 @@ class StageService(studentDao: StudentDao, noteDao: NoteDao, diaryDao: StudentDi
   }
 
   def writeStageNoteToDiary(student: StudentForUpdate): Unit =
-    diaryDao.writeStageNote(student.id, LocalDateTime.now())
+    /* now() - 1 second ensures that the fight end note we insert below does not have the since timestamp,
+     * since that would result in a primary key constraint violation */
+    diaryDao.writeStageNote(student.id, LocalDateTime.now().minus(Duration.ofSeconds(1)))
 
   def setFightNote(student: StudentForUpdate, opponentId: Long, duration: Duration): Unit = {
     val fightNote = noteDao.findIdForFight(student.copy(stage = Student.Stage.Fight), opponentId)
