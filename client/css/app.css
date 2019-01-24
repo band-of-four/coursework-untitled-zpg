@@ -423,6 +423,10 @@ body, .input, .button {
   margin: 0 12px;
 }
 
+.action-link--left {
+  text-align: left;
+}
+
 .form-info {
   display: block;
   text-align: center;
@@ -471,8 +475,17 @@ body, .input, .button {
   resize: none;
 }
 
+.input--note-text--compact {
+  padding: 12px;
+}
+
 .suggest-form-info {
   margin: 12px 0;
+  transform: rotate(-0.4deg);
+}
+
+.suggest-creature-note-label {
+  margin: 6px 0;
   transform: rotate(-0.4deg);
 }
 
