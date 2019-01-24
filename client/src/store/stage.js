@@ -1,6 +1,6 @@
 import { WS_IN_STAGE_UPDATE } from '/api/ws.js';
 
-const PROGRESS_TICK_MS = 10000;
+const PROGRESS_TICK_MS = 500;
 
 export default {
   namespaced: true,

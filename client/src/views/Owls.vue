@@ -7,7 +7,7 @@
     </div>
     <section v-if="!dynamicOwlView">
       <section v-show="owls.stale">
-        <a href="#" @click.prevent="loadOwls">Обновить</a> 
+        <a href="#" class="action-link" @click.prevent="loadOwls">Обновить</a> 
       </section>
       <section class="heads-up" v-show="status.text" :class="{ error: status.isError }">
         <div class="heads-up__main">

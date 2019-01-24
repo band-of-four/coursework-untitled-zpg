@@ -6,7 +6,7 @@
       <span class="page-section-header__text page-section-header__text--large">Отношения</span>
     </div>
     <section v-show="relationships.stale">
-      <a href="#" @click.prevent="refresh">Обновить</a> 
+      <a href="#" class="action-link" @click.prevent="refresh">Обновить</a> 
     </section>
     <ShowMorePaginator :items="relationships.items" :page="relationships.page" :per-page="relationships.perPage" @show-more="loadNext">
       <section slot-scope="{ item }">

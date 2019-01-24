@@ -6,7 +6,7 @@
       <span class="page-section-header__text page-section-header__text--large">Навыки обращения с существами</span>
     </div>
     <section v-show="skills.stale">
-      <a href="#" @click.prevent="refresh">Обновить</a> 
+      <a href="#" class="action-link" @click.prevent="refresh">Обновить</a> 
     </section>
     <ShowMorePaginator :items="skills.items" :page="skills.page" :per-page="skills.perPage" @show-more="loadNext">
       <section slot-scope="{ item }">

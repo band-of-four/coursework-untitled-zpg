@@ -6,7 +6,7 @@
       <span class="page-section-header__text page-section-header__text--large">Дневник</span>
     </div>
     <section v-show="diary.stale">
-      <a href="#" @click.prevent="refresh">Обновить</a> 
+      <a href="#" class="action-link" @click.prevent="refresh">Обновить</a> 
     </section>
     <ShowMorePaginator :item-size="sectionSize" :items="diarySections" :page="diary.page" :per-page="diary.perPage" @show-more="loadNext">
       <section slot-scope="{ item }">

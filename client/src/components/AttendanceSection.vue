@@ -5,7 +5,7 @@
     <span class="page-section-header__text">Зачетная книжка</span>
   </div>
   <section v-show="stale">
-    <a href="#" @click.prevent="$emit('refresh')">Обновить</a> 
+    <a href="#" class="action-link" @click.prevent="$emit('refresh')">Обновить</a> 
   </section>
   <div class="resource-item" v-for="att in renderedAttendance">
     <div>{{ att.lesson }}</div>

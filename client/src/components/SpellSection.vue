@@ -5,7 +5,7 @@
     <span class="page-section-header__text">Заклинания</span>
   </div>
   <section v-show="stale">
-    <a href="#" @click.prevent="$emit('refresh')">Обновить</a> 
+    <a href="#" class="action-link" @click.prevent="$emit('refresh')">Обновить</a> 
   </section>
   <div class="resource-item" v-for="spell in renderedSpells">
     <div>{{ spell.name }}</div>
