@@ -34,7 +34,7 @@ class AuthController(cc: ControllerComponents,
       auth => for {
         loginInfo <- credentialsProvider.authenticate(Credentials(auth.email, auth.password))
         user <- userService.retrieve(loginInfo).map(_.get)
-        response <- authenticate(loginInfo, LoginEvent(user, request))
+        response <- authenticate(loginInfo, LoginEvent(user, request), Ok(AuthController.Success))
       } yield response
     ).recover {
       case _: ProviderException => UnprocessableEntity(AuthController.InvalidCreds)
@@ -61,7 +61,7 @@ class AuthController(cc: ControllerComponents,
           case Right(authInfo) => for {
             profile <- p.retrieveProfile(authInfo)
             user <- userService.saveSocial(profile, authInfo)
-            response <- authenticate(profile.loginInfo, LoginEvent(user, request))
+            response <- authenticate(profile.loginInfo, LoginEvent(user, request), Redirect("/"))
           } yield response
         }
       case _ => Future.failed(new ProviderException(s"Unexpected provider $provider"))
@@ -75,10 +75,10 @@ class AuthController(cc: ControllerComponents,
     silhouette.env.authenticatorService.discard(request.authenticator, Redirect(routes.ApplicationController.index()))
   }
 
-  private def authenticate[T](loginInfo: LoginInfo, loginEvent: LoginEvent[User])(implicit request: Request[T]) = for {
+  private def authenticate[T](loginInfo: LoginInfo, loginEvent: LoginEvent[User], response: => Result)(implicit request: Request[T]) = for {
     authenticator <- silhouette.env.authenticatorService.create(loginInfo)
     serializedAuth <- silhouette.env.authenticatorService.init(authenticator)
-    response <- silhouette.env.authenticatorService.embed(serializedAuth, Ok(AuthController.Success))
+    response <- silhouette.env.authenticatorService.embed(serializedAuth, response)
   } yield {
     silhouette.env.eventBus.publish(loginEvent)
     response
