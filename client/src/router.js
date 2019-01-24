@@ -14,6 +14,8 @@ import SuggestionsCreature from '/views/suggestions/Creature.vue';
 import SuggestionsClub from '/views/suggestions/Club.vue';
 import SuggestionsOther from '/views/suggestions/Other.vue';
 
+import MobileMenu from '/views/MobileMenu.vue';
+
 Vue.use(VueRouter);
 
 export default function (store) {
@@ -32,7 +34,8 @@ export default function (store) {
       { path: '/suggest/club', component: SuggestionsClub },
       { path: '/suggest/travel', component: SuggestionsOther, props: { kind: 'Travel' } },
       { path: '/suggest/infirmary', component: SuggestionsOther, props: { kind: 'Infirmary' } },
-      { path: '/suggest/library', component: SuggestionsOther, props: { kind: 'Library' } }
+      { path: '/suggest/library', component: SuggestionsOther, props: { kind: 'Library' } },
+      { path: '/menu', component: MobileMenu }
     ]
   });
 
