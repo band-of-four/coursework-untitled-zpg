@@ -1,4 +1,4 @@
-export const WS_URI = 'ws://localhost:9000/connect';
+export const WS_URI = `ws://${window.location.host}/connect`;
 
 /* Outbound messages */
 export const WS_OUT_GET_STAGE = 'GetStage';

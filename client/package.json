@@ -7,7 +7,8 @@
     "rollup": "rollup -c",
     "postcss": "postcss css/app.css -c --verbose -o dist/app.css",
     "postcss-prod": "postcss css/app.css -c --verbose -o dist/app.prod.css",
-    "watch": "concurrently --kill-others \"npm run rollup -- -w\" \"npm run postcss -- -w --poll\""
+    "watch": "concurrently --kill-others \"npm run rollup -- -w\" \"npm run postcss -- -w --poll\"",
+    "build": "NODE_ENV=production npm run rollup && NODE_ENV=production npm run postcss"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
