@@ -1,6 +1,6 @@
 - :impl: RageOwl
   :display_name: Сова ярости
-  :description: Увеличивает наносимый урон на 5 в текущем бою
+  :description: Увеличивает наносимый урон на 5 в текущем бою.
   :applicable_stages:
     - Fight
   :stages_active: 1
@@ -9,21 +9,21 @@
   :level: 0
 - :impl: HealingOwl
   :display_name: Соводоктор
-  :description: 20 пунктов к здоровью в любой момент, звучит не плохо
+  :description: 20 пунктов к здоровью в любой момент? Звучит неплохо...
   :is_immediate: true
   :applicable_stages: ~
   :occurrence: 0.7
   :level: 0
 - :impl: StudentLetter
   :display_name: Чернильная сова
-  :description: С большой силой приходит большая ответственность
+  :description: С большой силой приходит большая ответственность.
   :is_immediate: true
   :applicable_stages: ~
   :occurrence: 0.3
   :level: 0
 - :impl: LevelUpOwl
-  :display_name: Сова перехода на следующий уровень
-  :description: Сова, которая бережно отнесет вашу прекрасную зачетку прямо в деканат на подпись
+  :display_name: Сова повышения уровня
+  :description: Бережно отнесет прекрасную зачетку вашего персонажа прямо в деканат на подпись.
   :is_immediate: true
   :applicable_stages: ~
   :occurrence: 0.0
