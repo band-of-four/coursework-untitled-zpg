@@ -1,0 +1,195 @@
+/* Forms */
+
+.button {
+  display: inline-block;
+  padding: 12px 24px;
+  border: 2px solid var(--text-fg);
+  border-radius: 95% 10% 92% 1%/6% 5% 4% 95%;
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+  color: var(--text-fg);
+  background: var(--standout-bg);
+  text-decoration: none;
+  cursor: pointer;
+
+  transform: rotate(-0.4deg);
+  transition: box-shadow .2s ease-in-out;
+}
+
+.button:hover {
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+.button.popout {
+  animation: button-pop-out 400ms ease-in-out forwards;
+}
+
+@keyframes button-pop-out {
+  0% { transform: rotate(-0.4deg) scale(1); }
+  30% { transform: rotate(-0.4deg) scale(1.15); }
+  100% { transform: rotate(-0.4deg) scale(0); }
+}
+
+/* Auth */
+
+.sprite-form {
+  display: grid;
+  grid: [r-start] "sprite form" 100% [r-end] / 10fr 10fr;
+  height: 100vh;
+}
+
+.sprite-form__sprite {
+  grid-area: sprite;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sprite-form__form {
+  grid-area: form;
+  display: flex;
+  padding-left: 64px;
+}
+
+.auth-form-sprite,
+.intro-form-sprite {
+  height: 100%;
+  width: 100%;
+  max-width: 360px;
+}
+
+.auth-form-sprite {
+  background: url('/assets/girl.png') no-repeat center / contain;
+}
+
+.intro-form-sprite {
+  background: url('/assets/broom.png') no-repeat center / contain;
+}
+
+/* More forms */
+
+.form {
+  margin: auto 0;
+  max-width: 250px;
+}
+
+.input {
+  padding: 8px 12px;
+
+  border: 2px solid var(--text-fg);
+  border-radius: 230px 15px 200px 20px/15px 205px 10px 150px;
+
+  transform: rotate(-0.4deg);
+}
+
+.input:focus, .button:focus {
+  outline: none !important;
+  border-color: var(--input-active-fg);
+}
+
+.input--form {
+  display: block;
+  margin: 16px auto;
+  width: 210px;
+}
+
+.button--form {
+  display: block;
+  margin: 16px auto;
+}
+
+.action-link {
+  display: block;
+  margin: 12px 0;
+  text-align: center;
+  transform: rotate(-0.4deg);
+  color: var(--input-active-fg);
+  font-size: 20px;
+
+  transition: transform 30ms ease-in-out;
+}
+
+.action-link:focus, .action-link:hover {
+  outline: none !important;
+  transform: rotate(-0.4deg) scale(1.04);
+}
+
+.action-link--inline {
+  display: inline-block;
+  margin: 0 12px;
+}
+
+.action-link--left {
+  text-align: left;
+}
+
+.form-info {
+  display: block;
+  text-align: center;
+  transform: rotate(-0.4deg);
+}
+
+.radiobutton-group,
+.form-radiobutton-group {
+  transform: rotate(-0.4deg);
+}
+
+.form-radiobutton-group {
+  text-align: center;
+}
+
+/* Logo */
+
+.logo {
+  margin-bottom: 32px;
+  font: 42px var(--logo-font);
+  letter-spacing: var(--logo-font-letter-spacing);
+  transform: rotate(-0.4deg);
+}
+
+/* Suggestions */
+
+.suggested {
+  margin-bottom: 24px;
+}
+
+.suggested-heading {
+  display: flex;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.suggested-heading__hearts {
+  margin-left: auto;
+  font-weight: normal;
+}
+
+.input--note-text {
+  margin: 12px 0;
+  padding: 24px;
+  width: 80%;
+  resize: none;
+}
+
+.input--note-text--compact {
+  padding: 12px;
+}
+
+.suggest-form-info {
+  margin: 12px 0;
+  transform: rotate(-0.4deg);
+}
+
+.suggest-creature-note-label {
+  margin: 6px 0;
+  transform: rotate(-0.4deg);
+}
+
+.suggest-subject {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 36px 0 24px;
+  transform: rotate(-0.4deg);
+}
+
+.input--wide {
+  width: 60%;
+}
