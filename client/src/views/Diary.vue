@@ -15,7 +15,7 @@
           <Timeago class="diary-section-heading__time" :since="item.date" />
         </div>
         <div class="note" v-for="n in item.notes">
-          <span>&mdash; {{ n.text }}</span>
+          <span class="note__text">&mdash; {{ n.text }}</span>
           <Heart class="note__heart" :key="n.id" :id="n.id" :init-hearts="n.heartCount" :init-set="n.isHearted" />
         </div>
       </section>

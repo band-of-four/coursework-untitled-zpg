@@ -1,0 +1,55 @@
+.loading {
+  height: 100vh;
+  background: url('/assets/Witch.png') no-repeat center center / contain;
+  animation: fade-in .5s forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.content {
+  max-width: 780px;
+  margin: 0 auto;
+  margin-bottom: 24px;
+}
+
+.heading {
+  font-family: var(--heading-font);
+  letter-spacing: var(--heading-font-letter-spacing);
+  margin: 36px 0 28px;
+}
+
+.page-section {
+  margin: 48px 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.page-section-header {
+  display: flex;
+  align-items: center;
+  margin: 28px 0;
+}
+
+.page-section-header__icon {
+  width: 60px;
+  height: 60px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.page-section-header__text {
+  font: 28px var(--heading-font);
+  font-weight: bold;
+  letter-spacing: var(--heading-font-letter-spacing);
+  margin-left: 12px;
+}
+
+.page-section-header__text--large {
+  font-size: 34px;
+}
